@@ -1,0 +1,171 @@
+
+body {
+	background: linear-gradient(#5499C7, #ffffffd2);
+	
+	}
+	
+iframe {
+	background-color: white;
+	padding: 0.1%;
+	border: 3px black solid;
+	margin: 0.04em 0.5em;
+	width: 20.5em;
+	height: 11.5em;
+	
+}
+
+iframe.visoresgrandes {
+	width: 20.5em;
+	height: 11.6em;
+}
+
+iframe.visoreschicos {
+	width: 20.5em;
+	height: 11.6em;
+	padding: 0.1%;
+	margin: 0.04em 0.5em;
+	border: 3px black solid;
+}
+
+#a24, #c26 {
+	background-color: black;
+}
+
+
+.contenedor {
+	margin: 0em 4.2em;
+}
+
+.cafecito{
+	position:fixed;
+	
+	bottom: 2em;
+	right: -2em;
+  	font-size:1.8em;
+	margin: 0;
+	padding: 0;
+	
+}
+
+#cafecito {
+	width:5em;
+	height:1.2em;
+	transform: rotate(90deg);
+	margin: 0;
+	padding: 0;
+	box-shadow: 0.2em 0.2em 0.5em rgb(110, 110, 110);
+	border-radius: 15%;
+
+}
+
+#more {
+	display: none;
+}
+
+.derechos {
+	display: flex;
+	align-items: center;
+ 	justify-content: center;
+	margin-top: 5%;
+	}
+
+.textoderechos {
+	background-color: #5499C7;
+	color:#FFF;
+	width: 50%;
+	border: 2px black solid;
+	border-radius: 10px;
+	font-family: "Encode Sans", Arial, sans-serif;
+}
+
+#myBtn-rights {
+	background-color: #FFF;
+	border-radius: 10px;
+	font-family: "Encode Sans", Arial, sans-serif;
+
+}
+
+#myBtn-rights:hover {
+	background-color: rgba(255, 255, 255, 0.792);
+	color: black
+}
+
+label {
+	color: white;
+	display: flex;
+	gap: 1%;
+	margin: 2%;
+	justify-content: center;
+	font-family: 'Roboto Flex', sans-serif;
+;
+	font-size: 1.2em;
+	
+}
+
+input {
+	border: 4px #D8D8D8 solid;
+	margin: 0 2%;
+		
+}
+
+.form {
+	background-color: #5499c7e0;
+	border: 2px black solid;
+	width: 35%;
+	border-radius: 10%;	
+	margin: 5% auto 0 auto;
+	
+}
+
+.cssbuttons-io-button {
+ background: #2F5998;
+ color: white;
+ font-family: inherit;
+ padding: 0.35em;
+ padding-left: 1.2em;
+ font-size: 0.55em;
+ font-weight: 500;
+ border-radius: 0.9em;
+ border: none;
+ letter-spacing: 0.05em;
+ display: flex;
+ align-items: center;
+ box-shadow: inset 0 0 1.6em -0.6em #2F5998;
+ overflow: hidden;
+ position: relative;
+ height: 2.8em;
+ padding-right: 3.3em;
+}
+
+.cssbuttons-io-button .icon {
+ background: white;
+ margin-left: 1em;
+ position: absolute;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ height: 2.2em;
+ width: 2.2em;
+ border-radius: 0.7em;
+ box-shadow: 0.1em 0.1em 0.6em 0.2em #2F5998;
+ right: 0.3em;
+ transition: all 0.3s;
+}
+
+.cssbuttons-io-button:hover .icon {
+ width: calc(100% - 0.6em);
+}
+
+.cssbuttons-io-button .icon svg {
+ width: 1.1em;
+ transition: transform 0.3s;
+ color: #2F5998;
+}
+
+.cssbuttons-io-button:hover .icon svg {
+ transform: translateX(0.1em);
+}
+
+.cssbuttons-io-button:active .icon {
+ transform: scale(0.95);
+}
