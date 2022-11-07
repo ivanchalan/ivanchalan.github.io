@@ -15,7 +15,7 @@
     <script>
       var player = new Clappr.Player(
         {
-          source: 'https://edge-live17-sl.cvattv.com.ar/live/c3eds/TelefeHD/SA_Live_dash_enc/TelefeHD.mpd',
+          source: 'https://is-tucuman.cdn.rcs.net.ar/mnp/telefe/output.mpd',
           poster: "https://elsolnoticias.com.ar/wp-content/uploads/2021/04/logo-schema.jpg",
           plugins: [DashShakaPlayback],
           shakaConfiguration: {
@@ -29,12 +29,12 @@
           },
           parentId: '#player',
           
-          drm: {
-            clearKeys: {
+          // drm: {
+          //  clearKeys: {
           // 'key-id-in-hex': 'key-in-hex',
-                'a32c08209d448cffcf2f3c3216d12953': 'c00894cd264fab3c605c646d61c9fb80',
-                                              }
-                                                 },
+         //       'a32c08209d448cffcf2f3c3216d12953': 'c00894cd264fab3c605c646d61c9fb80',
+          //                                    }
+          //                                       },
           height: "100%",
           width: "100%",
         });
