@@ -1,24 +1,39 @@
 <html>
-<head>
-  <script type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js">
-  </script>
-<style>
-body {
-padding: 0;
-margin: 0}
-</style>
-</head>
-   <body>
-  <div id="player"></div>
-  <script>
-    var player = new Clappr.Player({source: "https://is-tucuman.cdn.rcs.net.ar/mnp/tvp/output.mpd", poster: "https://vod.magma.qaotic.net/media/posters-live/tvp/tvp_disponible.jpg", 
-    width: "100%", 
-    height: "100%", 
-    
+  <head>
+    <script src="https://cdn.jsdelivr.net/gh/clappr/clappr@latest/dist/clappr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
 
-parentId: "#player", mute: true,});
-</script>
-</body>         
+    <style>
+      body {
+        margin: 0
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="player"></div>
+    <script>
+      var player = new Clappr.Player(
+        {
+          source: 'https://is-tucuman.cdn.rcs.net.ar/mnp/tvp/output.mpd',
+          poster: "https://vod.magma.qaotic.net/media/posters-live/tvp/tvp_disponible.jpg",
+          plugins: [DashShakaPlayback],
+          shakaConfiguration: {
+            preferredAudioLanguage: 'pt-BR',
+            streaming: {
+              rebufferingGoal: 15
+            }
+          },
+          shakaOnBeforeLoad: function(shaka_player) {
+            // shaka_player.getNetworkingEngine().registerRequestFilter() ...
+          },
+          parentId: '#player',
+          
+                                                 
+          height: "100%",
+          width: "100%",
+        });
+    </script>
+  </body>
 </html>
 
