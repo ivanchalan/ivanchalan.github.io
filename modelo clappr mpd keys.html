@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/gh/clappr/clappr@latest/dist/clappr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
+    <style>
+      body {
+      padding: 0;
+      margin: 0}
+      </style>
+      </head>
+
+  <body>
+    <div id="player"></div>
+    <script>
+      var player = new Clappr.Player(
+        {
+          source: 'https://edge-live15-sl.cvattv.com.ar/live/c6eds/TelefeHD/SA_Live_dash_enc/TelefeHD.mpd',
+          poster: "https://www.prensario.tv/images/galleries/4792/e1dc8733904ec35e5d081ebbf0eb2d64_750x400.gif?v=1575314114",
+          width: "100%",
+          height: "100%",
+          plugins: [DashShakaPlayback], 
+          shakaConfiguration: {
+            preferredAudioLanguage: 'es-am',
+            streaming: {
+              rebufferingGoal: 15
+            }
+          },
+          shakaOnBeforeLoad: function(shaka_player) {
+            // shaka_player.getNetworkingEngine().registerRequestFilter() ...
+          },
+          parentId: '#player',
+          
+          player.configure ({    drm: {
+              clearKeys: {
+      // 'key-id-in-hex': 'key-in-hex'
+      '3c064bba1e374e5a381dd0a344f11cec': 'a9d19bca012ae84a6cd0395a7a4809f2',
+              }}}),
+          mute: true,
+            }
+
+        );
+    </script>
+  </body>
+</html>
+
