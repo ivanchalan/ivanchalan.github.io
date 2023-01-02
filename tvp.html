@@ -2,24 +2,25 @@
   <head>
     <script src="https://cdn.jsdelivr.net/gh/clappr/clappr@latest/dist/clappr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
-
     <style>
       body {
-        margin: 0
-      }
-    </style>
-  </head>
+      padding: 0;
+      margin: 0}
+      </style>
+      </head>
 
   <body>
     <div id="player"></div>
     <script>
       var player = new Clappr.Player(
         {
-          source: 'https://cntlnk-main-edge-access.secure.footprint.net/entrypoint/c7_vivo01_dai_source-20001_all.m3u8',
-          poster: "https://vod.magma.qaotic.net/media/posters-live/tvp/tvp_disponible.jpg",
-          plugins: [DashShakaPlayback],
+          source: 'https://dtvott-abc.akamaized.net/dash_live_1156/manifest.mpd',
+          poster: "https://www.prensario.tv/images/galleries/4792/e1dc8733904ec35e5d081ebbf0eb2d64_750x400.gif?v=1575314114",
+          width: "100%",
+          height: "100%",
+          plugins: [DashShakaPlayback], 
           shakaConfiguration: {
-            preferredAudioLanguage: 'pt-BR',
+            preferredAudioLanguage: 'es-am',
             streaming: {
               rebufferingGoal: 15
             }
@@ -29,14 +30,15 @@
           },
           parentId: '#player',
           
-                                                 
-          height: "100%",
-          width: "100%",
-        });
+          drm: {
+              clearKeys: {
+      // 'key-id-in-hex': 'key-in-hex'
+      '5f789ebbb6495578b42267b650574f62":"0b37b263a0aca7b08f12014b2b7b9248',
+              }},
+          mute: true,
+            }
+
+        );
     </script>
   </body>
-  
-  <!--- https://is-tucuman.cdn.rcs.net.ar/mnp/tvp/output.mpd--->
-  
 </html>
-
