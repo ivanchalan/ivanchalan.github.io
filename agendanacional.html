@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="min-width=800px, initial-scale=1.0">
+    <meta name="viewport" content="max-width=800px, initial-scale=0.5, maximum-scale=3.0">
+    <link rel="shortcut icon" href="https://www.argentina.gob.ar/profiles/argentinagobar/themes/argentinagobar/argentinagobar_theme/favicon.ico"/>
+    <title>Usina | Agenda Nacional - Clipping de Medios del Interior</title>
     <style>
    
     body {
@@ -19,20 +21,35 @@
         padding: 0;
         margin: 0;
         border: none;
+        
     }
 
-    iframe {
-        display:block; 
-        width: 110vh;
+    #verdad {
+        display:flex; 
+        width: 100%;
         height:100vh; 
         border: none;
         padding: 0;
         margin: 0;
         background-color: #f8f9fa;
+        justify-self: center
     }
+
+   #falso {
+    width: 30%;
+    border: none;
+    padding: 0;
+    margin: 0;
+   }
+   @media only screen and (max-device-width: 800px) and (orientation: portrait), (max-width: 1224px) {
+   #falso {
+    display: none
+   }
+}
     </style>
 </head>
 <body>
-    <div><iframe src="https://docs.google.com/document/d/e/2PACX-1vS2jBn7JWUuZpZvoQmDu1ThGFGnnZhaW4DFGhgVdxBUgFkfQmj2WSKJeo59ZgwmtecXcVjODNVyv0im/pub?embedded=true"></iframe></div>
+    <div><iframe id="falso"></iframe>
+        <iframe id="verdad" src="https://docs.google.com/document/d/e/2PACX-1vS2jBn7JWUuZpZvoQmDu1ThGFGnnZhaW4DFGhgVdxBUgFkfQmj2WSKJeo59ZgwmtecXcVjODNVyv0im/pub?embedded=true"></iframe></div>
 </body>
 </html>
