@@ -169,3 +169,14 @@ input {
 .cssbuttons-io-button:active .icon {
  transform: scale(0.95);
 }
+
+@media only screen and (max-width: 1400px) {
+   iframe {
+    width: 27em;
+	height: 15em;
+	margin: 0em 0em;
+   }
+   
+   body {
+	margin-top: 0.2em;
+   }}
