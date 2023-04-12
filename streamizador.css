@@ -179,4 +179,8 @@ input {
    
    body {
 	margin-top: 0.2em;
-   }}
+   }
+   iframe.visoresgrandes {
+	width: 22.4em;
+	height: 12.6em;
+}}
