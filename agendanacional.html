@@ -54,13 +54,7 @@
     margin: 0;
    }
    
-@media only screen and (orientation: portrait) {
-   #falso {
-    display: none
-   }
-}
-
-@media only screen and (min-width: 1200px) and (max-width: 1400px) {
+@media only screen and (min-width: 1200px) and (max-width: 1400px), (orientation: portrait) and (max-width: 650px){
    #falso {
     width: 20%;
    }
@@ -78,7 +72,7 @@
    }
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 800px),  (orientation: portrait) and (max-width: 450px){
    #falso {
     display: none
    }
