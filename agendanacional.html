@@ -54,15 +54,35 @@
     margin: 0;
    }
    
-   @media only screen and (max-device-width: 800px) and (orientation: portrait), (max-width: 800px) {
+@media only screen and (orientation: portrait) {
    #falso {
     display: none
    }
 }
-        
-   @media only screen and (max-width: 1400px) {
-     #falso {
-         width: 20%; }}
+
+@media only screen and (min-width: 1200px) and (max-width: 1400px) {
+   #falso {
+    width: 20%;
+   }
+}
+
+@media only screen and (min-width: 1000px) and (max-width: 1200px) {
+   #falso {
+    width: 15%;
+   }
+}
+
+@media only screen and (min-width: 800px) and (max-width: 1000px) {
+   #falso {
+    width: 5%;
+   }
+}
+
+@media only screen and (max-width: 800px) {
+   #falso {
+    display: none
+   }
+}
     </style>
 </head>
 <body>
