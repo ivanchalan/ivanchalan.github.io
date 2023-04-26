@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"> 
+    <title>Streamizador</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="favicon.ico"/>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@500;600&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Encode+Sans&display=swap" rel="stylesheet">	
+
+	<style>
+   
+body {
+	/*background: linear-gradient(#5499C7, #ffffffd2);*/
+	/* background-image: url("https://i.ibb.co/hyzTxJk/bannerteles.png"); */
+	margin-top: 0.2em;
+
+	background-image: url(fondoolas.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+
+
+	}
+	
+iframe {
+	background-color: white;
+	padding: 0.1%;
+	border: 3px black solid;
+	margin: 0em 0.1em;
+	width: 21.1em;
+	height: 11.8em;
+	
+}
+
+iframe.visoresgrandes {
+	width: 20.5em;
+	height: 11.6em;
+}
+
+iframe.visoreschicos {
+	width: 20.5em;
+	height: 11.6em;
+	padding: 0.1%;
+	margin: 0.04em 0.5em;
+	border: 3px black solid;
+}
+
+#a24, #c26 {
+	background-color: black;
+}
+
+
+.contenedor {
+	margin: 0em 4.2em;
+}
+
+.cafecito{
+	position:fixed;
+	
+	bottom: 2em;
+	right: -2em;
+  	font-size:2em;
+	margin: 0;
+	padding: 0;
+	
+}
+
+#cafecito {
+	width:5em;
+	height:1.2em;
+	transform: rotate(90deg);
+	margin: 0;
+	padding: 0;
+	box-shadow: 0.2em 0.2em 0.5em rgb(110, 110, 110);
+	border-radius: 15%;
+
+}
+
+/*botón whatsapp*/	
+.icon-whatsapp{
+	display: none;
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:#25d366;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+  font-size:30px;
+	box-shadow: 2px 2px 3px #999;
+  z-index:100;
+}
+.my-icon-whatsapp{
+	margin-top:16px;
+}
+/*botón whatsapp*/
+/*usina app descargas*/
+.icon-usinaapp {
+	margin-top: 3em;
+	background-color: #94e1ff;
+	border: 2px black solid;
+	border-radius: 1em;
+} 
+.usinaapp {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+.boton-usina {
+  width:45%;
+  max-width:160px;
+  color: #fff;
+  margin: 20px 10px;
+  text-align:left;
+  border-radius: 5px;
+  text-decoration:none;
+  font-family: 'Lucida Grande', sans-serif;
+  font-size: 10px;
+  text-transform:uppercase;
+}
+.boton-usina.azul {
+  background-color: #14bafc73;
+  border: 2px black solid;
+  transition: background-color .250s linear;
+}
+.boton-usina.azul:hover {
+  background-color: #14bcfc;
+}
+.boton-usina i {
+  width:20%;
+  text-align:center;
+  font-size: 28px;
+  margin-right:7px;
+}
+.boton-usina .big-txt {
+  font-size: 17px;
+  text-transform: capitalize;
+}
+/*usina app descargas*/
+
+#more {
+	display: none;
+}
+
+.derechos {
+	display: flex;
+	align-items: center;
+ 	justify-content: center;
+	margin-top: 5%;
+	}
+
+.textoderechos {
+	background-color: #5499C7;
+	color:#FFF;
+	width: 50%;
+	border: 2px black solid;
+	border-radius: 10px;
+	font-family: "Encode Sans", Arial, sans-serif;
+}
+
+#myBtn-rights {
+	background-color: #FFF;
+	border-radius: 10px;
+	font-family: "Encode Sans", Arial, sans-serif;
+
+}
+
+#myBtn-rights:hover {
+	background-color: rgba(255, 255, 255, 0.792);
+	color: black
+}
+
+label {
+	color: white;
+	display: flex;
+	gap: 1%;
+	margin: 2%;
+	justify-content: center;
+	font-family: 'Roboto Flex', sans-serif;
+;
+	font-size: 1.2em;
+	
+}
+
+input {
+	border: 4px #D8D8D8 solid;
+	margin: 0 2%;
+		
+}
+
+.form {
+	background-color: #5499c7e0;
+	border: 2px black solid;
+	width: 35%;
+	border-radius: 10%;	
+	margin: 5% auto 0 auto;
+	
+}
+
+.cssbuttons-io-button {
+ background: #2F5998;
+ color: white;
+ font-family: inherit;
+ padding: 0.35em;
+ padding-left: 1.2em;
+ font-size: 0.55em;
+ font-weight: 500;
+ border-radius: 0.9em;
+ border: none;
+ letter-spacing: 0.05em;
+ display: flex;
+ align-items: center;
+ box-shadow: inset 0 0 1.6em -0.6em #2F5998;
+ overflow: hidden;
+ position: relative;
+ height: 2.8em;
+ padding-right: 3.3em;
+}
+
+.cssbuttons-io-button .icon {
+ background: white;
+ margin-left: 1em;
+ position: absolute;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ height: 2.2em;
+ width: 2.2em;
+ border-radius: 0.7em;
+ box-shadow: 0.1em 0.1em 0.6em 0.2em #2F5998;
+ right: 0.3em;
+ transition: all 0.3s;
+}
+
+.cssbuttons-io-button:hover .icon {
+ width: calc(100% - 0.6em);
+}
+
+.cssbuttons-io-button .icon svg {
+ width: 1.1em;
+ transition: transform 0.3s;
+ color: #2F5998;
+}
+
+.cssbuttons-io-button:hover .icon svg {
+ transform: translateX(0.1em);
+}
+
+.cssbuttons-io-button:active .icon {
+ transform: scale(0.95);
+}
+
+@media only screen and (min-width: 1400px) and (max-width: 1500px) {
+   iframe {
+    width: 30em;
+	height: 12.8em;
+	margin: 0em 0.5em;
+   }
+   
+   body {
+	margin-top: 0.2em;
+   }}
+   
+   @media only screen and (min-width: 1200px) and (max-width: 1400px) {
+   iframe {
+    width: 16.9em;
+	height: 9.4em;
+	margin: 0em 0.1em;
+   }
+   
+   body {
+	margin-top: 0.2em;
+   }}
+
+   #cafecito {
+	width: 5em;
+	height: 1em;
+	transform: rotate(90deg);
+	margin: 0;
+	padding: 0;
+	box-shadow: 0.2em 0.2em 0.5em rgb(110, 110, 110);
+	border-radius: 15%;
+
+}  
+
+/* INICIO MENÚ IZQUIERDO */
+
+.selector {
+	margin: 0.2em 1em 0.2em 0.2em;
+	display: none;
+	font-family: 'Encode Sans', sans-serif;
+	font-size: 0.7em;
+	font-weight: bolder;
+	width: 100%;
+	padding: 0.1em 1em 0.1em 1em;
+	
+}
+
+p {
+	margin: 0.5em 1em 0.1em 0.2em;
+	display: none;
+	font-family: 'Encode Sans', sans-serif;
+	font-size: 0.8em;
+	font-weight: bolder;
+	width: 90%;
+	padding: 0.1em 2em 0.1em 1em;
+	text-align: center;
+	
+}
+
+p a {
+	color: #5DADE2;
+}
+
+p a:hover {
+	color: black;
+}
+
+p a:visited {
+	color: #5DADE2;
+}
+.menu {
+	
+	margin: 0.05em;
+	position:fixed;
+	top: 1%;
+	left: 0;
+}
+
+.menu i.bi {
+  font-size: 1.4em;
+  line-height: 20px;
+  padding: 0.5em;
+  display: block;
+  border: 0.1em solid #1f618db9;
+  
+}
+
+.menu .select i.bi {
+  color: #1f618db9;
+  background: white;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  border-radius: 90px;
+  
+}
+
+.menu:hover .menu-selectores {
+  	transform: rotate(0deg);
+  	background-color:#1f618db9;
+	width: 17em;
+	z-index: 2;
+	position: absolute;
+	border: 0.1em solid white;
+	border-radius: 1em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 0.5em;
+	
+}
+
+.menu:hover .selector {
+  	display: inherit;
+}
+
+.menu:hover p {
+  	display: block;
+}
+
+.menu:hover .logomenu {
+  	display: flex;
+}
+
+.menu .select {
+  z-index: 20;
+  position: relative;
+}
+
+.menu .select:hover i.bi {
+  color: white;
+  background-color: #1f618db9;
+  border: 0.1em solid white;
+  transition: transform 0.4s ease-in-out;
+  transform: rotate(-90deg);
+}
+
+.menu .menu-selectores {
+  z-index: 10;
+  position: relative;
+  color: #F7F7F7;
+  transition: transform 0.4s ease-in-out;
+  transform: rotate(90deg);
+  transform-origin: top left;
+}
+
+.canales {
+	font-family: "Encode Sans";
+	font-size: 0.8em;
+	box-shadow: 0 0 4px 2px white;
+	outline: none;
+	background-color: #0f5686e0;
+	width: 50%;
+	color: white;
+	border-radius: 90px;
+	text-align: center;
+	
+		
+}
+
+optgroup {
+	font-size: 1.3em;
+	text-align: left;
+	margin-top: 1em;
+
+}
+
+option {
+	font-size: 0.9em;
+	text-align: center;
+}
+
+.logomenu {
+	display: none;
+	width: 60%;
+	margin-bottom: 0;
+	text-align: center;
+	margin: 0.2em auto 1em auto;
+}
+/*FIN MENÚ IZQUIERDO*/
+
+/*INICIO MENÚ DERECHO*/
+.selector-right {
+	margin: 0.2em 1em 0.2em 0.2em;
+	display: none;
+	font-family: 'Encode Sans', sans-serif;
+	font-size: 0.7em;
+	font-weight: bolder;
+	width: 100%;
+	padding: 0.1em 1em 0.1em 1em;
+	color: #1f618db9;
+	
+}
+
+.textright {
+	margin: 0.5em 1em 0.1em 0.2em;
+	display: none;
+	font-family: 'Encode Sans', sans-serif;
+	font-size: 0.8em;
+	font-weight: bolder;
+	width: 90%;
+	padding: 0.1em 2em 0.1em 1em;
+	text-align: center;
+	
+}
+
+.textright a {
+	color: #5DADE2;
+}
+
+.textright a:hover {
+	color: black;
+}
+
+.textright a:visited {
+	color: #5DADE2;
+}
+.menu-right {
+	color: #1f618db9;
+	margin: 0.05em;
+	position:fixed;
+	top: 1%;
+	right: 0;
+}
+
+.menu-right i.iright {
+  font-size: 1.4em;
+  line-height: 20px;
+  padding: 0.5em;
+  display: block;
+  border: 0.1em solid white;
+  
+}
+
+.menu-right .select-right i.iright {
+  color: #ffffff;
+  background: #1f618db9;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  border-radius: 90px;
+  
+}
+
+.menu-right:hover .menu-selectores-right {
+  	transform: rotate(0deg);
+  	background-color:#ffffffe1;
+	width: 17em;
+	z-index: 2;
+	position: absolute;
+	border: 0.1em solid #1f618db9;
+	border-radius: 1em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 1em;
+    right: 0;
+	color: #1f618db9;
+    
+    
+	
+}
+
+.menu-right:hover .selector-right {
+  	display: inherit;
+}
+
+.menu-right:hover .textright {
+  	display: block;
+}
+
+.menu-right:hover .logomenu-right {
+  	display: flex;
+}
+
+.menu-right .select-right {
+  z-index: 20;
+  position: relative;
+}
+
+.menu-right .select-right:hover i.iright {
+  color: #1f618db9;
+  background-color: #ffffffa4;
+  border: 0.1em solid #1f618db9;
+  transition: transform 0.4s ease-in-out;
+  transform: rotate(90deg);
+}
+
+.menu-right .menu-selectores-right {
+  z-index: 10;
+  position: relative;
+  color: #1f618db9;
+  transition: transform 0.4s ease-in-out;
+  transform: rotate(-90deg);
+  transform-origin: top right;
+}
+
+.canales-right {
+	font-family: "Encode Sans";
+	font-size: 0.8em;
+	box-shadow: 0 0 4px 2px #1f618db9;
+	outline: none;
+	background-color: #ffffffa4;
+	width: 50%;
+	color: #1f618db9;
+	border-radius: 90px;
+	text-align: center;
+    flex-direction: row;
+    margin: 0 0 0 1em;
+	
+		
+}
+
+optgroup-right {
+	font-size: 1.2em;
+	text-align: left;
+	margin-top: 1em;
+
+}
+
+option-right {
+	font-size: 0.8em;
+	text-align: center;
+}
+
+.logomenu-right {
+	display: none;
+	width: 60%;
+	margin-bottom: 0;
+	text-align: center;
+	margin: 0.2em auto 1em auto;
+
+}
+
+.labelright {
+	color: #1f618db9;
+	font-weight: bold;
+
+}
+
+/*FIN MENÚ DERECHO*/
+</style>
+</head>
+<body>
+ <!---INICIO MENÚ DERECHO--->
+ <div class="menu-right">
+	<div class="select-right">
+		<i class="iright bi bi-gear"></i>		</div>
+					
+		<div class="menu-selectores-right">
+			<img class="logomenu-right" src="logopantallitasazulsinfondo.png">
+			<div class="selector-right"><label class="labelright">Pantallita 1:</label><input class="canales-right" type="text" onchange="stream1.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 2:</label><input class="canales-right" type="text" onchange="stream2.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 3:</label><input class="canales-right" type="text" onchange="stream3.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 4:</label><input class="canales-right" type="text" onchange="stream4.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 5:</label><input class="canales-right" type="text" onchange="stream5.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 6:</label><input class="canales-right" type="text" onchange="stream6.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 7:</label><input class="canales-right" type="text" onchange="stream7.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 8:</label><input class="canales-right" type="text" onchange="stream8.src = this.value"></div>
+			<div class="selector-right"><label class="labelright">Pantallita 9:</label><input class="canales-right" type="text" onchange="stream9.src = this.value"></div>
+		
+<p class="textright">Completar solo con links de videos que permitan ser incrustados en otra web</p>
+</div>
+</div>
+
+</div>
+<!---FIN MENÚ DERECHO--->
+
+	<!--- INICIO MENÚ IZQUIERDO --->
+
+<div class="menu">
+		<div class="select">
+			<i class="bi bi-gear"></i>		</div>
+						
+			<div class="menu-selectores">
+				<img class="logomenu" src="logopantallitasblancosinfondo.png">
+				<div class="selector">
+				<label>Pantallita 1:</label><select class="canales" onchange="stream1.src = this.value">
+			<optgroup label="">
+				<option id="" value="" disabled="" selected="">A24</option>
+				<option id="blanco" value="blanco.jpg">Pantalla Blanca</option>
+			</optgroup>
+			<optgroup label="Canales de Noticias">
+				<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+				<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+				<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+				<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+				<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+				<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+				<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+				<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+				<option id="NET TV" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://unlimited1-buenosaires.dps.live/nettv/nettv.smil/playlist.m3u8">NET TV - Opción M3U8</option>
+				<option id="DNews" value="https://www.youtube.com/embed/live_stream?channel=UC4dWvSKVWJ36tJyhjDQCCaQ">DirecTV News</option>
+				<option id="Rural" value="https://www.alsolnet.com/stream/elrural/player.htm?x">Canal Rural</option>				
+			</optgroup>
+			<optgroup label="Canales de Aire">
+				<option id="AmericaTV" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://cntlnk-main-edge-access.secure.footprint.net/entrypoint/americahls-100056.m3u8">América TV - Opción M3U8</option>
+				<option id="TV Pública2" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://cntlnk-main-edge-access.secure.footprint.net/entrypoint/c7_vivo01_dai_source-20001_all.m3u8">TV Pública - Opción M3U8</option>
+				<option id="Canal 9" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://2a1773fcc0c94a639b422d1cf7ba14b7.mediatailor.us-east-1.amazonaws.com/v1/master/4c8323052bc3dbd9aa2eba0b638d8495561e8377/JW-Octubre-Channel09/live/channel09/live.isml/.m3u8">Canal 9 - Opción M3U8</option>
+				<option id="Telefe" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://mitelefe.com/Api/Videos/GetSourceUrl/694564/0/HLS">Telefe - Opción M3U8</option>
+				<option id="Canal 13" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://livetrx01.vodgc.net/eltrecetv/index.m3u8">Canal 13 - Opción M3U8</option>
+				<option id="Canal de la Ciudad" value="https://www.youtube.com/embed/live_stream?channel=UCOV_Vx1baZJY9Tfvgm-UI3w">Canal de la Ciudad</option>
+				<option id="Encuentro" value="https://www.youtube.com/embed/live_stream?channel=UC1zLDoKL-eKmd_K7qkUZ-ow">Encuentro</option>
+			</optgroup>
+			<optgroup label="Canales de Gobierno">
+				<option id="Casa Rosada" value="https://www.youtube.com/embed/live_stream?channel=UCXOIosipLXV0p_35MjTu0Aw">Casa Rosada</option>
+				<option id="Diputados TV" value="https://www.youtube.com/embed/live_stream?channel=UC5KfW9_wv4tqbIPgY8tMG-w">Diputados TV</option>
+				<option id="Senado TV" value="https://www.youtube.com/embed/live_stream?channel=UCStm2uvQKowSXrnCzTWAn6Q">Senado TV</option>
+				<option id="Min Economía" value="https://www.youtube.com/embed/live_stream?channel=UCI6m1EyjgTYMJke5UMvD9ZA">Ministerio de Economía</option>
+			</optgroup>
+			<optgroup label="Radios">
+				<option id="Mitre" value="https://www.youtube.com/embed/live_stream?channel=UCYvINPByAdCcpA0sWrF3I_w">Radio Mitre</option>
+				<option id="Radio10" value="https://www.youtube.com/embed/live_stream?channel=UCJozD5RVug7EZdTjqkGISYQ">Radio 10</option>
+				<option id="Rivadavia" value="https://www.youtube.com/embed/live_stream?channel=UCLAj5TzCrNbqe3LosSKHLcQ">Radio Rivadavia</option>
+				<option id="Continental" value="https://www.youtube.com/embed/live_stream?channel=UC7fedBVCaVPhMNI_axwg69w">Radio Continental</option>
+				<option id="Radio con vos" value="https://www.youtube.com/embed/live_stream?channel=UCxDteokWBemJvLI_I0VUGdA">Radio con Vos</option>
+				<option id="Destape" value="https://www.youtube.com/embed/live_stream?channel=UCgOvQwLB387CWMrseINhyCg">Radio El Destape</option>
+				<option id="Urbana" value="https://www.youtube.com/embed/live_stream?channel=UCC1kfsMJko54AqxtcFECt-A">Radio Urbana</option>
+				<option id="Metro" value="https://www.youtube.com/embed/live_stream?channel=UCQeyDDFM08BXZqj-e-DuMug">Radio Metro</option>
+				<option id="Destape" value="https://www.youtube.com/embed/live_stream?channel=UCgOvQwLB387CWMrseINhyCg">Radio El Destape</option>
+				<option id="Urbana" value="https://www.youtube.com/embed/live_stream?channel=UCC1kfsMJko54AqxtcFECt-A">Radio Urbana</option>
+				<option id="Rockpop" value="https://www.youtube.com/embed/live_stream?channel=UCAlQ5f7mhnkfM6jjXeJDw7g">Radio Rock 'n Pop</option>
+				<option id="750" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://us-b4-p-e-qg12-audio.cdn.mdstrm.com/live-audio-aw-bkp/6237761f64b72676f05cf6ab/playlist.m3u8?aid=60106eadf34de307dd720e7b&dnt=true&uid=Y8XuFafj4zvkCDApZ0BBlVyzxPvJLywv&sid=D0MiCtFXN8N3npHCUc0i293aCkA7qiKh&pid=9XliYSYq0ZzFzcwP2go5QxYnwFigOFxT&ref=www.pagina12.com.ar&es=us-b4-p-e-qg12-audio.cdn.mdstrm.com&ote=1682546850144&ot=uLSUPChKZBgBBAdg0IlkYA&proto=https&pz=us&cP=128000&awCollectionId=60106eadf34de307dd720e7b&aw_0_1st.playerId=mediastream-player-750-pie&liveId=6237761f64b72676f05cf6ab&referer=https%3A%2F%2Fwww.pagina12.com.ar%2F&propertyName=mediastream-player-750-pie&propertyType=web-app&propertyVersion=vv0.1.4">AM 750</option>
+				<option id="Nacional" value="https://sa.mp3.icecast.magma.edge-access.net/sc_rad1">Radio Nacional</option>
+				<option id="La100" value="https://www.youtube.com/embed/live_stream?channel=UC2zO2jZCDplwm8SVsXUcxCQ">La 100</option>
+				<option id="Cadena3" value="https://www.youtube.com/embed/live_stream?channel=UCNxohbqfDp8YxW_Mji2XMHA">Cadena 3</option>
+				<option id="Vorterix" value="https://www.youtube.com/embed/live_stream?channel=UCvCTWHCbBC0b9UIeLeNs8ug">Vorterix</option>
+				<option id="PopRadio" value="https://www.youtube.com/embed/live_stream?channel=UCtc_WjDRwCrZSEq2WEwD7XQ">Radio Pop</option>
+				<option id="NacionalRock" value="https://www.youtube.com/embed/live_stream?channel=UCW3CLjm-lNO9_RtZudI4Rgg">Nacional Rock</option>
+				<option id="Rebord" value="https://www.youtube.com/embed/live_stream?channel=UCvd-UIc-Rxtubx3uoiYbBGA">El Método Robord</option>
+			</optgroup>
+		
+		</select>
+		</div>
+		<div class="selector"><label>Pantallita 2:</label><select class="canales" onchange="stream2.src = this.value">
+			<optgroup label="">
+				<option id="" value="" disabled="" selected="">C5N</option>
+				<option id="blanco" value="blanco.jpg">Pantalla Blanca</option>
+			</optgroup>
+			<optgroup label="Canales de Noticias">
+				<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+				<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+				<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+				<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+				<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+				<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+				<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+				<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+				<option id="NET TV" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://unlimited1-buenosaires.dps.live/nettv/nettv.smil/playlist.m3u8">NET TV - Opción M3U8</option>
+			</optgroup>
+			<optgroup label="Canales de Aire">
+				<option id="AmericaTV" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://cntlnk-main-edge-access.secure.footprint.net/entrypoint/americahls-100056.m3u8">América TV - Opción M3U8</option>
+				<option id="TV Pública2" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://cntlnk-main-edge-access.secure.footprint.net/entrypoint/c7_vivo01_dai_source-20001_all.m3u8">TV Pública - Opción M3U8</option>
+				<option id="Canal 9" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://2a1773fcc0c94a639b422d1cf7ba14b7.mediatailor.us-east-1.amazonaws.com/v1/master/4c8323052bc3dbd9aa2eba0b638d8495561e8377/JW-Octubre-Channel09/live/channel09/live.isml/.m3u8">Canal 9 - Opción M3U8</option>
+				<option id="Telefe" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://mitelefe.com/Api/Videos/GetSourceUrl/694564/0/HLS">Telefe - Opción M3U8</option>
+				<option id="Canal 13" value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://livetrx01.vodgc.net/eltrecetv/index.m3u8">Canal 13 - Opción M3U8</option>
+			</optgroup>
+			<optgroup label="Canales de Gobierno">
+				<option id="Casa Rosada" value="https://www.youtube.com/embed/live_stream?channel=UCXOIosipLXV0p_35MjTu0Aw">Casa Rosada</option>
+				<option id="Diputados TV" value="https://www.youtube.com/embed/live_stream?channel=UC5KfW9_wv4tqbIPgY8tMG-w">Diputados TV</option>
+				<option id="Senado TV" value="https://www.youtube.com/embed/live_stream?channel=UCStm2uvQKowSXrnCzTWAn6Q">Senado TV</option>
+				<option id="Min Economía" value="https://www.youtube.com/embed/live_stream?channel=UCI6m1EyjgTYMJke5UMvD9ZA">Ministerio de Economía</option>
+			</optgroup>
+			<optgroup label="Radios">
+				<option id="Mitre" value="https://www.youtube.com/embed/live_stream?channel=UCYvINPByAdCcpA0sWrF3I_w">Radio Mitre</option>
+				<option id="Radio10" value="https://www.youtube.com/embed/live_stream?channel=UCJozD5RVug7EZdTjqkGISYQ">Radio 10</option>
+				<option id="Rivadavia" value="https://www.youtube.com/embed/live_stream?channel=UCLAj5TzCrNbqe3LosSKHLcQ">Radio Rivadavia</option>
+				<option id="Continental" value="https://www.youtube.com/embed/live_stream?channel=UC7fedBVCaVPhMNI_axwg69w">Radio Continental</option>
+				<option id="Radio con vos" value="https://www.youtube.com/embed/live_stream?channel=UCxDteokWBemJvLI_I0VUGdA">Radio con Vos</option>
+				<option id="Destape" value="https://www.youtube.com/embed/live_stream?channel=UCgOvQwLB387CWMrseINhyCg">Radio El Destape</option>
+				<option id="Urbana" value="https://www.youtube.com/embed/live_stream?channel=UCC1kfsMJko54AqxtcFECt-A">Radio Urbana</option>
+				<option id="Metro" value="https://www.youtube.com/embed/live_stream?channel=UCQeyDDFM08BXZqj-e-DuMug">Radio Metro</option>
+				<option id="Destape" value="https://www.youtube.com/embed/live_stream?channel=UCgOvQwLB387CWMrseINhyCg">Radio El Destape</option>
+				<option id="Urbana" value="https://www.youtube.com/embed/live_stream?channel=UCC1kfsMJko54AqxtcFECt-A">Radio Urbana</option>
+				<option id="Rockpop" value="https://www.youtube.com/embed/live_stream?channel=UCAlQ5f7mhnkfM6jjXeJDw7g">Radio Rock 'n Pop</option>
+			</optgroup>
+			</select>
+	</div>
+	<div class="selector"><label>Pantallita 3:</label><select class="canales" onchange="stream1.src = this.value">
+			<option id="" value="" disabled="" selected="">A24</option>
+		<optgroup label="Canales de Noticias">
+			<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+			<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+			<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+			<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+			<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+			<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+			<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+			<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+		</optgroup>
+		<optgroup label="Canales de Noticias">
+			<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+			<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+			<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+			<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+			<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+			<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+			<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+			<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+		</optgroup>
+	</select>
+	</div>
+	<div class="selector"><label>Pantallita 4:</label><select class="canales" onchange="stream1.src = this.value">
+			<option id="" value="" disabled="" selected="">A24</option>
+		<optgroup label="Canales de Noticias">
+			<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+			<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+			<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+			<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+			<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+			<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+			<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+			<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+		</optgroup>
+		<optgroup label="Canales de Noticias">
+			<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+			<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+			<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+			<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+			<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+			<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+			<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+			<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+		</optgroup>
+	</select>
+	</div>
+		<div class="selector"><label>Pantallita 5:</label><select class="canales" onchange="stream1.src = this.value">
+			<option id="" value="" disabled="" selected="">A24</option>
+		<optgroup label="Canales de Noticias">
+			<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+			<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+			<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+			<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+			<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+			<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+			<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+			<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+		</optgroup>
+		<optgroup label="Canales de Noticias">
+			<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+			<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+			<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+			<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+			<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+			<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+			<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+			<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+		</optgroup>
+	</select>
+	</div>
+	<div class="selector"><label>Pantallita 6:</label><select class="canales" onchange="stream1.src = this.value">
+		<option id="" value="" disabled="" selected="">A24</option>
+	<optgroup label="Canales de Noticias">
+		<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+		<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+		<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+		<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+		<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+		<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+		<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+		<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+	</optgroup>
+	<optgroup label="Canales de Noticias">
+		<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+		<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+		<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+		<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+		<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+		<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+		<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+		<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+	</optgroup>
+</select>
+</div>
+<div class="selector"><label>Pantallita 7:</label><select class="canales" onchange="stream1.src = this.value">
+	<option id="" value="" disabled="" selected="">A24</option>
+<optgroup label="Canales de Noticias">
+	<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+	<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+	<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+	<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+	<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+	<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+	<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+	<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+</optgroup>
+<optgroup label="Canales de Noticias">
+	<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+	<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+	<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+	<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+	<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+	<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+	<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+	<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+</optgroup>
+</select>
+</div>
+<div class="selector"><label>Pantallita 8:</label><select class="canales" onchange="stream1.src = this.value">
+	<option id="" value="" disabled="" selected="">A24</option>
+<optgroup label="Canales de Noticias">
+	<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+	<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+	<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+	<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+	<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+	<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+	<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+	<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+</optgroup>
+<optgroup label="Canales de Noticias">
+	<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+	<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+	<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+	<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+	<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+	<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+	<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+	<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+</optgroup>
+</select>
+</div>
+<div class="selector"><label>Pantallita 9:</label><select class="canales" onchange="stream1.src = this.value">
+	<option id="" value="" disabled="" selected="">A24</option>
+<optgroup label="Canales de Noticias">
+	<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+	<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+	<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+	<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+	<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+	<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+	<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+	<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+</optgroup>
+<optgroup label="Canales de Noticias">
+	<option id="A24" value="https://www.youtube.com/embed/live_stream?channel=UCR9120YBAqMfntqgRTKmkjQ">A24</option>
+	<option id="C5N" value="https://www.youtube.com/embed/live_stream?channel=UCFgk2Q2mVO1BklRQhSv6p0w">C5N</option>
+	<option id="Crónica" value="https://www.youtube.com/embed/live_stream?channel=UCT7KFGv6s2a-rh2Jq8ZdM1g">Crónica TV</option>
+	<option id="Canal 26" value="https://www.youtube.com/embed/live_stream?channel=UCrpMfcQNog595v5gAS-oUsQ">26 TV</option>
+	<option id="TN" value="https://www.youtube.com/embed/live_stream?channel=UCj6PcyLvpnIRT_2W_mwa9Aw">TN</option>
+	<option id="LN+" value="https://www.youtube.com/embed/4e8Iw3Frf1A">La Nación +</option>
+	<option id="TVP" value="https://www.youtube.com/embed/live_stream?channel=UCs231K71Bnu5295_x0MB5Pg">TV Pública</option>
+	<option id="IP" value="https://www.youtube.com/embed/live_stream?channel=UC1bBjOZieJWHbsFA0LwjjJA">IP Noticias</option>
+</optgroup>
+</select>
+</div>	
+<p>Para visualizar las opciones M3U8, primero es necesario instalar la extensión <a target="_blank" href="https://chrome.google.com/webstore/detail/native-hls-playback/emnphkkblegpebimobpbekeedfgemhof">Native HLS</a> en Google Chrome</p>
+ </div>
+
+	</div>
+<!--- FIN MENÚ IZQUIERDO --->
+	  
+	  <div class="contenedor">
+
+																				<!---A24--->
+	<!-- <iframe   src="https://iterltaniciate.blog/a24.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+	<!-- <iframe   src="https://iterltaniciate.blog/clappr.html?get=aHR0cHM6Ly9lZGdlNi1oci5jdmF0dHYuY29tLmFyL2xpdmUvYzdlZHMvQW1lcmljYTI0L1NBX0xpdmVfZGFzaF9lbmNfMkEvQW1lcmljYTI0Lm1wZA==" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+	<!-- <iframe  class="visoresgrandes" src="https://franzkafkapr.space/embed/mplay/a24.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+	<!-- <iframe   src="a24.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>  -->	
+ 	<iframe id="stream1"  src="https://viewsync-2.appspot.com/player.html?v=Y8t4LAkwUOA&uid=0&t=939110.23&cc=0&xdm_e=https%3A%2F%2Fviewsync.net&xdm_c=default1696&xdm_p=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+	 <!---C5N--->
+<iframe id="stream2" width="560" height="315" src="https://www.youtube.com/embed/KwgqKwXUSGE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>    
+<!-- <iframe   src="https://br.teleringa.com/embed/mpd.php?canal=C5N&amp;stream=/live/live/C5N/SA_Live_dash_enc_2A/C5N.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+
+	 <!---Crónica--->
+<iframe id="stream3"  src="https://www.youtube.com/embed/InSydaLSSlw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- <iframe   src="https://player.teleringa.com/embed/mpd.php?canal=Cronica TV&amp;stream=/live/live/CronicaTV/SA_Live_dash_enc_2A/CronicaTV.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+												 
+	 <!---26TV--->
+<!-- <iframe   src="https://otulbercycendencepa.me/canal26.html?update" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+<iframe  id="stream4" src="https://otulbercycendencepa.me/canal26.html?update" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<!-- <iframe src="https://iterltaniciate.blog/clappr.html?get=aHR0cHM6Ly9lZGdlNi1oci5jdmF0dHYuY29tLmFyL2xpdmUvYzZlZHMvMjZfVFZfSEQvU0FfTGl2
+ZV9kYXNoX2VuY18yQS8yNl9UVl9IRC5tcGQ=" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>  -->
+<!-- <iframe id="c26" src="https://televisionlibre.net/embed2/canal26.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; gyroscope; picture-in-picture ""></iframe>  -->
+<!-- <iframe   src="26.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+
+	 <!---TN--->
+<iframe  id="stream5" src="https://www.youtube.com/embed/wHn1_QVoXGM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!---<iframe   src="https://player.teleringa.com/embed/mpd.php?canal=TN (Todo Noticias)&amp;stream=/live/c3eds/TodoNoticias/SA_Live_dash_enc_2A/TodoNoticias.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>--->
+
+	 <!---LN+--->
+<iframe  id="stream6" src="https://www.youtube.com/embed/GZEwdVV5DTY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+	 <!---TVP--->
+<!-- <iframe width="560" height="315" src="tvp.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>  -->
+<iframe id="stream7" width="560" height="315" src="https://www.ver-television.online/embed1/americatv.php" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- <iframe   src="https://player.teleringa.com/embed/mpd.php?canal=TV Publica&amp;stream=/live/c3eds/Canal7/SA_Live_dash_enc_2A/Canal7.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+<!-- <iframe   src="https://revoluci0nrus4l3n4n.cc/tvp.html?update" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>  -->
+																																		 <!---IP--->
+<!-- <iframe   src="https://www.youtube.com/embed/xBfyTFjcoXc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+<!-- <iframe   src="https://content.jwplatform.com/players/iUcA3pRQ-bWH7X7KT.html?isAMP=true" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+<iframe id="stream8"  src="ip.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe id="stream9"  src="ip.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- <iframe   src="https://logi1laut4r0.solutions/ipnoticias.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+<!-- <iframe   src="https://embed.megatelevisionhd.com/hls.html?get=aHR0cHM6Ly9kMW5tcWdwaGpuMHk0LmNsb3VkZnJvbnQubmV0L2xpdmUvaXAvbGl2ZS5pc21sLzVlZTZlMTY3LTExNjctNGE4NS05ZDhkLWUwOGEzZjU1Y2ZmMy5tM3U4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+	
+	
+													<!---NET TV--->
+	 <!---<iframe   src="https://rudo.video/live/nettv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>--->									
+													<!---Telefe--->
+    <!---<iframe   src="https://player.teleringa.com/embed/mpd-tlf.php?canal=Telefe&amp;stream=live/c3eds/TelefeHD/SA_Live_dash_enc_2A/TelefeHD.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>--->
+	<!-- <iframe   src="https://logi1laut4r0.solutions/telefe.html?update3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+
+															<!---Canal 13--->
+    <!-- <iframe   src="https://player.teleringa.com/embed/mpd.php?canal=Trece&stream=/live/c3eds/ArtearHD/SA_Live_dash_enc_2A/ArtearHD.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+	<!-- <iframe   src="https://logi1laut4r0.solutions/trece.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+    
+															<!---América--->
+    <!-- <iframe   src="https://player.teleringa.com/embed/mpd.php?canal=America TV&amp;stream=/live/c3eds/AmericaTV/SA_Live_dash_enc_2A/AmericaTV.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+	<!-- <iframe   src="https://logi1laut4r0.solutions/americatv.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+															
+															<!---Canal 9--->
+    <!---<iframe   src="https://player.teleringa.com/embed/mpd.php?canal=Canal 9&amp;stream=live/c3eds/Canal9/SA_Live_dash_enc_2A/Canal9.mpd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>--->
+	<!-- <iframe   src="https://logi1laut4r0.solutions/canal9.html" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+	
+
+	</div>
+
+	<!--<a href="javascript:void(0)" onclick='document.getElementById("video1").src ="ip.html"'>Video1</a>
+	<a href="javascript:void(0)" onclick='document.getElementById("video1").src ="tvp.html"'>Video1</a>-->
+
+
+		
+
+	<!-- <a class="cafecito" href='https://cafecito.app/ivanchalan' rel='noopener' target='_blank'><img id="cafecito" srcset='https://cdn.cafecito.app/imgs/buttons/button_3.png 1x, https://cdn.cafecito.app/imgs/buttons/button_3_2x.png 2x, https://cdn.cafecito.app/imgs/buttons/button_3_3.75x.png 3.75x' src='https://cdn.cafecito.app/imgs/buttons/button_3.png' alt='Invitame un café en cafecito.app' /></a>-->
+	<section class="form"> 
+	<form>
+		<label>Streaming 1:<input type="text" onchange="stream1.src = this.value"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 2:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 3:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 4:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 5:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 6:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 7:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 8:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+		<label>Streaming 9:<input type="text"><button class="cssbuttons-io-button"> Cargar<div class="icon"><svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path></svg></div>  </button></label> 
+	
+	</form>
+	</section>
+
+<!-- botón whatsapp -->	
+<a href="https://api.whatsapp.com/send?phone=1132408340&text=Hola%21%20Quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Varela%202." class="icon-whatsapp" target="_blank">
+<i class="fa fa-whatsapp my-icon-whatsapp"></i>
+</a>
+<!-- botón whatsapp -->	
+
+<footer>
+<!-- footer usinaapp
+<div class="usinaapp">
+	<a class="icon-usinaapp" href="https://www.usina.gob.ar/landing" target="_blank"><img src="usinaapp.png"></a>
+</div>
+	<div class="usinaapp social-btns">
+		<a class="boton-usina azul usinaapp vert" href="https://my.testfairy.com/download/74V34CHS6GVJTD1H68W36D9S6GS2VQK0DBFAEQNZWZQF69N2CVG3S3HWZ8KJW/getapp?_=1637878200" target="_blank">
+		  <i class="fa fa-apple"></i>
+		  <p>Disponible en <br/> <span class="big-txt">App Store</span></p>
+		</a>
+	  
+		<a class="boton-usina azul usinaapp vert" href="https://drive.google.com/file/d/1owkLtdISUYubnVpJC-wsmxUxB9CxflOo/view" target="_blank">
+		  <i class="fa fa-play"></i>
+		  <p>Disponible en <br/> <span class="big-txt">Google Play</span></p>
+		
+		  <a class="boton-usina azul usinaapp vert" href="https://www.usina.gob.ar/login" target="_blank">
+			<i class="fa fa-desktop"></i>
+			<p>Disponible en <br/> <span class="big-txt">Versión Web</span></p>
+		</a>
+	  </div>
+footer usinaapp -->	  
+
+
+
+<div class="derechos">
+<div class="textoderechos">&#169Iván Chalandovsky. Todos los derechos reservados. El programa se encuentra protegido por derechos de autor y adhiere a la ley DMCA<span id="dots">...  </span><span id="more">. <p>El presente programa está creado para ordenar streamings y poder ver diferentes emisiones al mismo tiempo de manera local. El programa no emite, reproduce o almacena ningún tipo de contenido. El programa fue creado para uso local y restringido. Queda prohibido su uso de manera masiva. El programa no se hace cargo de cualquier violación a derechos de copyright que puedan ocurrir al insertar un streaming. El programa no se responsabiliza por el mal uso que puedan dar los usuarios.</p>
+<p>This website respects the intellectual property of others. The website takes matters of Intellectual Property very seriously and is committed to meeting the needs of content owners while helping them manage publication of their content online.
+If you believe that your copyrighted work has been copied in a way that constitutes copyright infringement and is accessible on this site, you may notify our copyright agent, as set forth in the Digital Millennium Copyright Act of 1998 (DMCA).</p>
+<p>For your complaint to be valid under the DMCA, you must	provide the following information when providing notice of the claimed copyright infringement: A physical or electronic signature of a person authorized to act on behalf of the copyright owner Identification of the copyrighted work claimed to have been infringed</p>
+<p>Identification of the material that is claimed to be infringing or to be the subject of the infringing activity and that is to be removed. Information reasonably sufficient to permit the service provider to contact the complaining party, such as an address, telephone number, and, if available, an electronic mail address. A statement that the complaining party "in good faith believes that use of the material in the manner complained of is not authorized by the copyright owner, its agent, or law". A statement that the "information in the notification is accurate", and "under penalty of perjury, the complaining party is authorized to act on behalf of the owner of an exclusive right that is allegedly infringed"</p>
+<p>The above information must be submitted as a written, faxed or emailed notification to the following</p>
+<p>Designated Agent:</p>
+<p>Attn: DMCA Office</p>
+<p>Contact Us : <a href="//www.watchdogsecurity.online/">http://www.watchdogsecurity.online</a></p>
+WE CAUTION YOU THAT UNDER FEDERAL LAW, IF YOU KNOWINGLY MISREPRESENT THAT ONLINE MATERIAL IS INFRINGING, YOU MAY BE SUBJECT TO HEAVY CIVIL PENALTIES. THESE INCLUDE MONETARY DAMAGES, COURT COSTS, AND ATTORNEYS FEES INCURRED BY US, BY ANY COPYRIGHT OWNER, OR BY ANY COPYRIGHT OWNER&apos;S LICENSEE THAT IS INJURED AS A RESULT OF OUR RELYING UPON YOUR MISREPRESENTATION. YOU MAY ALSO BE SUBJECT TO CRIMINAL PROSECUTION FOR PERJURY.</p>
+<p>This information should not be construed as legal advice, for further details on the information required for valid DMCA notifications, see 17 U.S.C. 512(c)(3).</p></span><button onclick="myFunction()" id="myBtn-rights">Ver más</button></p>
+
+
+<script>
+function myFunction() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("myBtn-rights");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Ver más"; 
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Ver menos"; 
+    moreText.style.display = "inline";
+  }
+}
+</script>
+
+
+</div>
+</footer>
+
+</body>
+</html>
