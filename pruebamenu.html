@@ -207,6 +207,36 @@
 			text-align: center;
 			margin: 0.2em auto 1em auto;
 		}
+		
+			.selectorpantallitas {
+			width: 30%;
+			background-color: #1f618db9;
+			color: white;
+			display: flex;
+			font-weight: bolder;
+			font-family: 'Encode Sans', sans-serif;
+			border: 0.1em solid white;
+			border-radius: 1em;
+			margin: 0 2%;
+			letter-spacing: 0.5em;
+
+		}
+
+		.selectorpantallitas:hover {
+			background-color: white ;
+			color: #1f618db9;
+			border: 0.1em solid #1f618db9;
+			border-radius: 1em;
+			margin: 0 2%;
+			box-shadow: 0 0 4px 2px white;
+
+
+		}
+
+		.selectorpantallitasdiv {
+			display: flex;
+			margin: 0 0 4% 0
+		}
 
 		/*FIN MENÚ IZQUIERDO*/
 
@@ -798,6 +828,13 @@
 
 		<div class="menu-selectores">
 			<img class="logomenu" src="logopantallitasblancosinfondo.png">
+			<div class="selector">
+				<div class="selectorpantallitasdiv"><label>Cantidad:</label>
+				<button onclick="frames4()" class="selectorpantallitas">4<i class="bi bi-tv"></i></button>
+				<button onclick="frames6()" class="selectorpantallitas">6<i class="bi bi-tv"></i></button>
+				<button onclick="frames9()" class="selectorpantallitas">9<i class="bi bi-tv"></i></button>
+				</div>
+			</div>
 			<div class="selector">
 				<label>Pantallita 1:</label><select class="canales" onchange="stream1.src = this.value">
 					<optgroup label="">
@@ -5478,6 +5515,87 @@
 			<iframe id="stream9" width="560" height="315" src="blanco.jpg" title="YouTube video player" frameborder="0"
 				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 				allowfullscreen></iframe>
+			<script>
+				var frame1 = document.getElementById("stream1");
+				var frame2 = document.getElementById("stream2");
+				var frame3 = document.getElementById("stream3");
+				var frame4 = document.getElementById("stream4");
+				var frame5 = document.getElementById("stream5");
+				var frame6 = document.getElementById("stream6");
+				var frame7 = document.getElementById("stream7");
+				var frame8 = document.getElementById("stream8");
+				var frame9 = document.getElementById("stream9");
+
+				var contenedor = document.getElementsByClassName("contenedor")
+
+				function frames4() {
+					frame5.style.display = "none";
+					frame6.style.display = "none";
+					frame7.style.display = "none";
+					frame8.style.display = "none";
+					frame9.style.display = "none";
+					frame1.style.width = "49%";
+					frame2.style.width = "49%";
+					frame1.style.height = "48.5%";
+					frame2.style.height = "48.5%";
+					frame3.style.width = "49%";
+					frame4.style.width = "49%";
+					frame3.style.height = "48.5%";
+					frame4.style.height = "48.5%";		
+					
+				}
+
+				function frames6() {
+					frame5.style.display = "inline";
+					frame6.style.display = "inline";
+					frame7.style.display = "none";
+					frame8.style.display = "none";
+					frame9.style.display = "none";
+					frame1.style.width = "32.2%";
+					frame2.style.width = "32.2%";
+					frame1.style.height = "31.8%";
+					frame2.style.height = "31.8%";
+					frame3.style.width = "32.2%";
+					frame4.style.width = "32.2%";
+					frame3.style.height = "31.8%";
+					frame4.style.height = "31.8%";
+					frame5.style.width = "32.2%";
+					frame6.style.width = "32.2%";
+					frame5.style.height = "31.8%";
+					frame6.style.height = "31.8%";
+					
+				}
+
+				function frames9() {
+					frame5.style.display = "inline";
+					frame6.style.display = "inline";
+					frame7.style.display = "inline";
+					frame8.style.display = "inline";
+					frame9.style.display = "inline";
+					frame1.style.width = "32.2%";
+					frame2.style.width = "32.2%";
+					frame1.style.height = "31.8%";
+					frame2.style.height = "31.8%";
+					frame3.style.width = "32.2%";
+					frame4.style.width = "32.2%";
+					frame3.style.height = "31.8%";
+					frame4.style.height = "31.8%";
+					frame5.style.width = "32.2%";
+					frame6.style.width = "32.2%";
+					frame5.style.height = "31.8%";
+					frame6.style.height = "31.8%";
+					frame7.style.width = "32.2%";
+					frame8.style.width = "32.2%";
+					frame7.style.height = "31.8%";
+					frame8.style.height = "31.8%";
+					frame9.style.width = "32.2%";
+					frame9.style.height = "31.8%";
+					
+				}
+
+				
+
+			</script>
 		</div>
 
 </body>
