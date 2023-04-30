@@ -4596,6 +4596,24 @@
 						<option class="option-right-down" id="TelefeCórdoba"
 							value="https://www.youtube.com/embed/live_stream?channel=UC3OQ66wEJaOPHK25IBdWR_g">Telefe
 						</option>
+						<script>
+						function usrpas(){
+						var login = document.getElementById("login-box");
+						var visor = document.getElementById("principal")
+
+						if (document.form.user.value=="admin" && document.form.password.value=="1234567890" ||
+							document.form.user.value=="walterf" && document.form.password.value=="2022"||
+							document.form.user.value=="alejandrar" && document.form.password.value=="2023"||
+							document.form.user.value=="tomasa" && document.form.password.value=="2022" ||
+							document.form.user.value=="javierf" && document.form.password.value=="2022"
+							)
+							{login.style.display = "none";
+							visor.style.display = "block";
+							}
+						else {alert("Error en Usuario o Contraseña. Intenta de nuevo.")}
+						}
+						document.oncontextmenu=new Function("return false");
+						</script>
 						<option class="option-right-down" id="CanalUCórdoba"
 							value="chrome-extension://emnphkkblegpebimobpbekeedfgemhof/player.html#https://stream.arcast.live/canalu/canalu/playlist.m3u8">
 							Canal U &#9733; &#9733; &#9733;</option>
@@ -5803,24 +5821,7 @@
 
 		</div>
 	</main>	
-	<script>
-		function usrpas(){
-		var login = document.getElementById("login-box");
-		var visor = document.getElementById("principal")
-		
-		if (document.form.user.value=="admin" && document.form.password.value=="1234567890" ||
-			document.form.user.value=="walterf" && document.form.password.value=="2022"||
-			document.form.user.value=="alejandrar" && document.form.password.value=="2023"||
-			document.form.user.value=="tomasa" && document.form.password.value=="2022" ||
-			document.form.user.value=="javierf" && document.form.password.value=="2022"
-			)
-			{login.style.display = "none";
-			visor.style.display = "block";
-			}
-		else {alert("Error en Usuario o Contraseña. Intenta de nuevo.")}
-		}
-		document.oncontextmenu=new Function("return false");
-		</script>
+	
 		
 		<div id="login-box">
 			<img style="width: 60%; text-align: center;	margin: 0 auto 10% auto; display: flex" src="https://ivanchalan.github.io/logopantallitasazulsinfondo.png">
