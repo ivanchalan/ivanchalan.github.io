@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="shortcut icon" href="favicon.ico"/>
+    
+<style>
+    body {
+     /*    background-color: #37bced7e;
+        background: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0) 20px,
+      rgba(0, 0, 0, 0) 40px,
+      #f3faff 40px,
+      #f3faff 60px,
+      #37bced7e 60px,
+      #37bced7e 80px) */
+      background-image: url(fondoolas.png);
+      background-repeat: repeat-y;
+			background-size: 100%;
+    }
+
+    img.escudo {
+        width: 10em;
+        height: 4em;
+        margin: 4% 3% 4% 3%;
+        justify-self: left;
+        align-self: stretch;
+    }
+
+    header {
+        background-color: #f3faff;
+        color: #14bcfc;
+        font-family: "Encode Sans", Arial, sans-serif;
+        border: 3px #005388 solid;
+        border-radius: 10px;
+        display: grid; 
+        grid-template-columns: 30% 65%; 
+        grid-template-rows: 25% 10%; 
+        gap: 2px 5px; 
+        grid-template-areas: 
+    "escudo secretaria"
+    "escudo coordinacion"; 
+    justify-content: center;
+    box-shadow: var(--shadow-elevation-high);
+}
+.escudo { grid-area: escudo; }
+
+header h1 { grid-area: secretaria; 
+        font-size: 1.5em;
+        justify-self: end;
+        align-self: start; 
+    }
+
+header h3 { grid-area: coordinacion;
+            font-size: 1.2em; 
+            align-self: start; 
+            justify-self: end;
+            margin-bottom: 0px;}
+    
+div.titulo {
+
+  display: grid; 
+  grid-template-columns: 25% 44% 25%; 
+  grid-template-rows: 30.4%; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    ". titulo ."; 
+    
+}
+
+div.titulo h2 {
+        background-color: #f3faffad;
+        color: #005388;
+        font-family: "Encode Sans", Arial, sans-serif;
+        font-size: 1.2em;
+        border: 3px #005388 solid;
+        border-radius: 10px;
+        text-align: center;
+        padding: 2%;
+        align-items: center;
+	      justify-content: center;
+        width: 100%;
+        height: 100%;
+        grid-area: titulo; 
+        box-shadow: var(--shadow-elevation-high);
+        margin: 2em 1em 3em 1em;
+        font-weight: 900;
+        
+        
+}
+
+
+    section {
+      display: grid; 
+      grid-auto-flow: row; 
+      grid-template-columns: 25% 25% 25% 25%; 
+      grid-template-rows: 50% 50%; 
+      gap: 20% 0;
+      grid-template-areas: 
+        "agendanacional agendaprovincial tapas semaforo"
+        ". ediciones-anteriores ediciones-anteriores ."; 
+        justify-content: center; 
+      align-content: center; 
+      justify-items: center; 
+      align-items: center; 
+        font-family: "Encode Sans", Arial, sans-serif;
+        font-size: 1em;
+        border-radius: 10px;
+        text-align: center;
+        padding: 2%;
+        margin: 1%;
+        
+      }
+
+.ediciones-anteriores { 
+     grid-area: ediciones-anteriores; 
+    
+}
+
+.agendanacional { grid-area: agendanacional; }
+.agendaprovincial { grid-area: agendaprovincial; }
+.tapas { grid-area: tapas; }
+.semaforo { grid-area: semaforo; }       
+        
+    
+a {
+    box-shadow: var(--shadow-elevation-high);
+    background-color: #f3faffd3;
+    border-radius: 1em;
+        
+        
+    }
+
+button.ediciones-anteriores {
+      width: 34em;
+      height: 8em;
+      --color: #005388;
+    }
+    
+    button {
+  --border: 0.2em;    /* the border width */
+  --slant: 0em;   /* control the slanted corners */
+  --color: #14bcfc; /* the color */
+    border-radius: 1em;
+    width: 15em;
+    font-size: 0.85em;
+    padding: 2em 1em;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--color);
+    background: 
+        linear-gradient(to bottom left,var(--color)  50%,#0000 50.1%) top right,
+        linear-gradient(to top   right,var(--color)  50%,#0000 50.1%) bottom left;
+    background-size: calc(var(--slant) + 1.3*var(--border)) calc(var(--slant) + 1.3*var(--border));
+    background-repeat: no-repeat;
+    box-shadow:
+        0 0 0 200px inset var(--s,#0000),
+        0 0 0 var(--border) inset var(--color);
+    clip-path: 
+        polygon(0 0, calc(100% - var(--slant)) 0, 100% var(--slant),
+                100% 100%, var(--slant) 100%,0 calc(100% - var(--slant))
+                );
+    transition: color var(--t,0.3s), background-size 0.3s;
+    
+    
+    }
+
+   #semaforo {
+      display: flex;
+      justify-content: center;
+      font-size: 3em;
+      margin-bottom: 0.3em;
+    }
+
+    #agendaicon {
+      display: flex;
+      justify-content: center;
+      font-size: 3em;
+      margin-bottom: 0.3em;
+    }
+
+  #tapasicon {
+      display: flex;
+      justify-content: center;
+      font-size: 3em;
+      margin-bottom: 0.3em;
+    }
+
+    #edicionesicon {
+      display: flex;
+      justify-content: center;
+      font-size: 3em;
+      margin-bottom: 0.3em;
+    }
+
+    button:hover,
+    button:active{
+    background-size: 100% 100%;
+    color: #fff;
+    --t: 0.2s 0.1s;
+    }
+    button:focus-visible {
+    outline-offset: calc(-1*var(--border));
+    outline: var(--border) solid #000a;
+    }
+    button:active {
+    --s: #0005;
+    transition: none;
+    }
+
+    
+    footer {
+        background-color: #37bbed;
+        border: 2px #005388 solid;
+        border-radius: 10px;
+        margin-top: 10%;
+    } 
+    
+    footer img{
+        width: 100%;
+        height: 1%;
+    }
+    :root {
+  --shadow-color: 0deg 0% 0%;
+  --shadow-elevation-low:
+    1px 0.7px 1.4px hsl(var(--shadow-color) / 0.1),
+    1.7px 1.1px 2.3px -1.2px hsl(var(--shadow-color) / 0.1),
+    4px 2.6px 5.4px -2.5px hsl(var(--shadow-color) / 0.1);
+  --shadow-elevation-medium:
+    1px 0.7px 1.4px hsl(var(--shadow-color) / 0.11),
+    3.3px 2.2px 4.5px -0.8px hsl(var(--shadow-color) / 0.11),
+    8.2px 5.4px 11px -1.7px hsl(var(--shadow-color) / 0.11),
+    20px 13.2px 27px -2.5px hsl(var(--shadow-color) / 0.11);
+  --shadow-elevation-high:
+    1px 0.7px 1.4px hsl(var(--shadow-color) / 0.1),
+    5.8px 3.8px 7.8px -0.4px hsl(var(--shadow-color) / 0.1),
+    10.9px 7.2px 14.7px -0.7px hsl(var(--shadow-color) / 0.1),
+    17.9px 11.8px 24.1px -1.1px hsl(var(--shadow-color) / 0.1),
+    28.6px 18.8px 38.5px -1.4px hsl(var(--shadow-color) / 0.1),
+    44.7px 29.4px 60.2px -1.8px hsl(var(--shadow-color) / 0.1),
+    67.9px 44.7px 91.5px -2.1px hsl(var(--shadow-color) / 0.1),
+    100px 65.9px 134.7px -2.5px hsl(var(--shadow-color) / 0.1);
+}
+
+/* boton whatsapp */
+.whatsapp-button{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:#25d366;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+  font-size: 2em;
+	box-shadow: 2px 2px 3px #999;
+  z-index:100;
+  box-shadow: var(--shadow-elevation-high);
+
+}
+
+/*usina app descargas*/
+.flex {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+.flex-usinaapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10em;
+}
+.app-btn {
+  width:45%;
+  max-width:160px;
+  color: #fff;
+  margin: 20px 10px;
+  text-align:left;
+  border-radius: 5px;
+  text-decoration:none;
+  font-family: 'Lucida Grande', sans-serif;
+  font-size: 10px;
+  text-transform:uppercase;
+}
+
+.app-btn.blu {
+  background-color: #14bafc73;
+  border: 2px black solid;
+  transition: background-color .250s linear;
+}
+
+.app-btn.blu:hover {
+  background-color: #14bcfc;
+}
+
+.app-btn i {
+  width:20%;
+  text-align:center;
+  font-size: 28px;
+  margin-right:7px;
+}
+
+.app-btn .big-txt {
+  font-size: 17px;
+  text-transform: capitalize;
+}
+
+.usinaapp {
+	background-color: #14bafc73;
+	border: 2px black solid;
+	border-radius: 1em;
+  
+
+}
+
+@media only screen and (max-device-width: 1024px) and (orientation: portrait), (max-width: 800px) {
+	header h1 {
+    font-size: 0.9em;
+    gap: 0 5em;
+  } 
+  header h3 { 
+    font-size: 0.8em;}
+  img.escudo {
+        width: 6em;
+        height: 2.5em;}
+  div.titulo h2 {
+    font-size: 0.7em;
+  }
+  button {
+    width: 8em;
+    font-size: 0.5em;
+    height: 9em;
+  }
+  
+.imagen-usinaapp {
+    width: 10em;
+    margin-top: 0.2em;
+  }
+  
+  .whatsapp-button {
+    width: 1.2em;
+    height: 1.4em;
+    font-size: 1.4em;
+  }}
+</style>
+</head>
+<body>
+    <header>
+        <img class="escudo" src="escudopresidenciaheader.png"></img>
+        <h1 classe="secretaria">Secretaría de Comunicación y Prensa</h1>
+        <h3 class="coordinacion">Coordinación de Gestión de la Información</h3>
+    </header>
+    <div class="titulo">
+        <h2>Informe de Diarios del Interior</h2>
+
+    </div>
+
+    <section>
+        <a href="https://bit.ly/agenda-nacional" class="agendanacional"><button class="agendanacional">
+          <i class="bi bi-card-heading" id="agendaicon"></i><h3">Agenda Nacional</h3>
+        </button></a>
+        <a href="https://bit.ly/agenda-nacional" class="agendaprovincial"><button class="agendaprovincial">
+          <i class="bi bi-card-heading" id="agendaicon"></i><h3">Agenda Provincial</h3>
+        </button></a>
+          
+        <a href="https://bit.ly/agenda-nacional" class="tapas"><button class="tapas">
+          <i class="bi bi-newspaper" id="tapasicon"></i><h3">Tapas del interior</h3>
+        </button></a>
+        
+        <a href="https://bit.ly/agenda-nacional" class="semaforo" ><button class="semaforo">
+          <i class="bi bi-stoplights"id="semaforo"></i>
+          <h3">Semáforo</h3>
+        </button></a>
+              
+        <a href="https://bit.ly/agenda-nacional" class="ediciones-anteriores"><button class="ediciones-anteriores">
+          <i class="bi bi-folder2-open" id="edicionesicon"></i>
+          <h3">Ediciones Anteriores</h3>
+        </button></a> 
+        
+    </section>
+
+    <a href="https://api.whatsapp.com/send?phone=1132408340&text=Hola%21%20Quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Varela%202." class="whatsapp-button" target="_blank">
+        <i class="fa fa-whatsapp my-whatsapp-button"></i>
+        </a>
+        
+        <div class="flex-usinaapp">
+            <a class="usinaapp" href="https://www.usina.gob.ar/landing" target="_blank"><img class="imagen-usinaapp" src="usinaapp.png"></a>
+        </div>
+            <div class="flex social-btns">
+                <a class="app-btn blu flex vert" href="http:apple.com" target="_blank">
+                  <i class="fa fa-apple"></i>
+                  <p>Disponible en <br/> <span class="big-txt">App Store</span></p>
+                </a>
+              
+                <a class="app-btn blu flex vert" href="http:google.com" target="_blank">
+                  <i class="fa fa-play"></i>
+                  <p>Disponible en <br/> <span class="big-txt">Google Play</span></p>
+                
+                  <a class="app-btn blu flex vert" href="https://www.usina.gob.ar/login" target="_blank">
+                    <i class="fa fa-desktop"></i>
+                    <p>Disponible en <br/> <span class="big-txt">Versión Web</span></p>
+                </a>
+              </div>
+    <footer>
+        <img src="footer.jpg"></img>
+    </footer>
+</body>
+</html>
