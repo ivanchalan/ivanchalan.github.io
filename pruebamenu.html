@@ -47,7 +47,7 @@
 			margin: 0.1% 7% 0 7%;
 			padding: 0;
 			height: 99.5%;
-			
+
 		}
 
 		#principal {
@@ -64,7 +64,7 @@
 			width: 32.78%;
 			height: 32.58%;
 			padding: 0;
-			display: inline;	
+			display: inline;
 		}
 
 		.contenedor {
@@ -824,7 +824,7 @@
 			box-shadow: 0 0 12px 10px #1f618db9;
 			border-radius: 10px;
 			font-family: 'Encode Sans', sans-serif;
-			
+
 		}
 
 		#login-box h2 {
@@ -1018,6 +1018,7 @@
 				bottom: 100%;
 			}
 		}
+
 		#punteo {
 			position: absolute;
 			z-index: 1;
@@ -1031,7 +1032,7 @@
 
 		}
 
-	#punteoheader {
+		#punteoheader {
 			cursor: move;
 			z-index: 1;
 			background-color: #2196F3;
@@ -1044,40 +1045,41 @@
 			width: 100%;
 			display: flex;
 			justify-content: space-between;
-;
-	}
+			;
+		}
 
-	#punteoarea {
-		
-		width: 100%;
-		height: 100%;
-		padding: 0;
-		margin: 0;
-		background-color: transparent;
-		color: black;
-		border: 3px solid white;
-		min-width: 100%;
-		
-	}
+		#punteoarea {
 
-	#punteoarea::placeholder {
-		color: white
-	}
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			background-color: transparent;
+			color: black;
+			border: 3px solid white;
+			min-width: 100%;
 
+		}
 
-	#punteoarea:focus {
-		background-color: #ffffffc5;
-		outline: none;
-		box-shadow: 8px 5px 10px rgba(0, 0, 0, 0.773);
+		#punteoarea::placeholder {
+			color: white
+		}
 
 
-	}
-	#punteoarea:focus::placeholder {
-		
-		color: black;
-	}
+		#punteoarea:focus {
+			background-color: #ffffffc5;
+			outline: none;
+			box-shadow: 8px 5px 10px rgba(0, 0, 0, 0.773);
 
-	#cierrepunteo {
+
+		}
+
+		#punteoarea:focus::placeholder {
+
+			color: black;
+		}
+
+		#cierrepunteo {
 			color: #2196F3;
 			background-color: white;
 			border: 2px solid #2196F3;
@@ -1090,15 +1092,15 @@
 			font-weight: bolder;
 			cursor: pointer;
 			margin: 0 1%;
-	}
-	
+		}
+
 		@media only screen and (min-width: 1300px) and (max-width: 1400px) {
 
 			body {
 				margin: 0.1% 8% 0 8%;
 
 			}
-			
+
 			main {
 				zoom: 1.1;
 			}
@@ -1109,12 +1111,13 @@
 			}
 
 			:fullscreen iframe {
-			width: 33.18%;
-			height: 33.33%;
-			margin: 0;
-			}}
+				width: 33.18%;
+				height: 33.33%;
+				margin: 0;
+			}
+		}
 
-			@media only screen and (min-width: 1100px) and (max-width: 1300px) {
+		@media only screen and (min-width: 1100px) and (max-width: 1300px) {
 
 			main {
 				zoom: 0.8;
@@ -1126,12 +1129,11 @@
 			}
 
 			:fullscreen iframe {
-			width: 33.18%;
-			height: 33.33%;
-			margin: 0;
-			}}
-
-
+				width: 33.18%;
+				height: 33.33%;
+				margin: 0;
+			}
+		}
 	</style>
 
 </head>
@@ -1192,8 +1194,10 @@
 					<div class="selectorpantallitasdiv"><label>Cantidad:</label>
 						<button onclick="frames1()" class="selectorpantallitas">1<i class="bi bi-tv"></i></button>
 						<button onclick="frames4()" class="selectorpantallitas">4<i class="bi bi-grid"></i></button>
-						<button onclick="frames6()" class="selectorpantallitas">6<i class="bi bi-grid-3x2-gap"></i></button>
-						<button onclick="frames9()" class="selectorpantallitas">9<i class="bi bi-grid-3x3-gap"></i></button>
+						<button onclick="frames6()" class="selectorpantallitas">6<i
+								class="bi bi-grid-3x2-gap"></i></button>
+						<button onclick="frames9()" class="selectorpantallitas">9<i
+								class="bi bi-grid-3x3-gap"></i></button>
 					</div>
 				</div>
 				<div class="selector" id="pantallita10">
@@ -2816,18 +2820,27 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -3204,18 +3217,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -3592,18 +3613,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -3980,18 +4009,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -4368,18 +4405,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -4757,18 +4802,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -4914,8 +4967,8 @@
 							function usrpas() {
 								var login = document.getElementById("login-box");
 								var visor = document.getElementById("principal");
-								
-		
+
+
 								if (document.form.user.value == "admin" && document.form.password.value == "1234567890" ||
 									document.form.user.value == "walterf" && document.form.password.value == "2022" ||
 									document.form.user.value == "alejandrar" && document.form.password.value == "2023" ||
@@ -4924,7 +4977,7 @@
 								) {
 									login.style.display = "none";
 									visor.style.display = "block";
-								
+
 								}
 								else { alert("Error en Usuario o Contraseña. Intenta de nuevo.") }
 							}
@@ -5165,18 +5218,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -5554,18 +5615,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -5943,18 +6012,26 @@
 								value="https://www.youtube.com/embed/live_stream?channel=UC2Xq2PK-got3Rtz9ZJ32hLQ">
 								Noticias
 								Caracol</option>
+							<option class="option-right-down" id="CNNBrasil"
+								value="https://www.youtube.com/embed/live_stream?channel=UCvdwhh_fDyWccR42-rReZLw">
+								CNN Brasil</option>
 							<option class="option-right-down" id="RecordBrasil"
 								value="https://www.youtube.com/embed/live_stream?channel=UCuiLR4p6wQ3xLEm15pEn1Xw">
 								Record
 								News Brasil</option>
+
 							<option class="option-right-down" id="Euronews"
 								value="https://www.youtube.com/embed/live_stream?channel=UCyoGb3SMlTlB8CLGVH4c8Rw">
 								Euronews
 							</option>
 							<option class="option-right-down" id="Sky"
-								value="https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ">Sky
+								value="https://www.youtube.com/embed/9Auq9mYxFEE">Sky
 								News
 							</option>
+							<option class="option-right-down" id="GB News"
+								value="https://www.youtube.com/embed/8WX6YL9JnLw">GB News
+							</option>
+
 							<option class="option-right-down" id="DW"
 								value="https://www.youtube.com/embed/live_stream?channel=UCT4Jg8h03dD0iN3Pb5L0PMA">DW
 								News
@@ -6304,7 +6381,7 @@
 						</optgroup>
 					</select>
 				</div>
-				
+
 				<p class="textright-down">Las opciones con &#9733; &#9733; &#9733; requieren la instalación de la
 					extensión <a target="_blank"
 						href="https://chrome.google.com/webstore/detail/native-hls-playback/emnphkkblegpebimobpbekeedfgemhof">Native
@@ -6322,7 +6399,8 @@
 
 				<div class="form-right-down"><button onclick="openFullscreen()" id="legalabrir"><i
 							class="bi bi-arrows-fullscreen"></i> Pantalla Completa</button></div>
-				<div class="form-right-down"><button onclick="TomarNotas()" id="legalabrir"><i class="bi bi-pen"></i> Tomar Notas</button></div>
+				<div class="form-right-down"><button onclick="TomarNotas()" id="legalabrir"><i class="bi bi-pen"></i>
+						Tomar Notas</button></div>
 				<div class="form-right-down"><button onclick="FuncionLegales()" id="legalabrir"><i
 							class="bi bi-file-text-fill"></i>
 						Información Legal</button></div>
@@ -6347,7 +6425,7 @@
 						texto.style.display = "inline"
 					}
 				</script>
-				
+
 				<script>
 					var elem = document.documentElement;
 
@@ -6818,60 +6896,62 @@
 
 
 			</script>
-		<div id="punteo">
-			<div id="punteoheader">Arrastra desde aquí para mover<button id="cierrepunteo" onclick="CerrarPunteo()">X</button> </div>
-			<textarea id="punteoarea" rows="9" cols="43" spellcheck="true" name="comentarios" placeholder="Escribe aquí tus notas"></textarea>
-		</div>
-		<script>
-			function CerrarPunteo() {
-				var texto = document.getElementById("punteo");
-				texto.style.display = "none"
-			}
-		</script>
-		<script>
-			dragElement(document.getElementById("punteo"));
-		
-			function dragElement(elmnt) {
-			var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-			if (document.getElementById(elmnt.id + "header")) {
-				// if present, the header is where you move the DIV from:
-				document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-			} else {
-				// otherwise, move the DIV from anywhere inside the DIV:
-				elmnt.onmousedown = dragMouseDown;
-			}
-		
-			function dragMouseDown(e) {
-				e = e || window.event;
-				e.preventDefault();
-				// get the mouse cursor position at startup:
-				pos3 = e.clientX;
-				pos4 = e.clientY;
-				document.onmouseup = closeDragElement;
-				// call a function whenever the cursor moves:
-				document.onmousemove = elementDrag;
-			}
-		
-			function elementDrag(e) {
-				e = e || window.event;
-				e.preventDefault();
-				// calculate the new cursor position:
-				pos1 = pos3 - e.clientX;
-				pos2 = pos4 - e.clientY;
-				pos3 = e.clientX;
-				pos4 = e.clientY;
-				// set the element's new position:
-				elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-				elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-			}
-		
-			function closeDragElement() {
-				// stop moving when mouse button is released:
-				document.onmouseup = null;
-				document.onmousemove = null;
-			}
-			}
-		</script>	
+			<div id="punteo">
+				<div id="punteoheader">Arrastra desde aquí para mover<button id="cierrepunteo"
+						onclick="CerrarPunteo()">X</button> </div>
+				<textarea id="punteoarea" rows="9" cols="43" spellcheck="true" name="comentarios"
+					placeholder="Escribe aquí tus notas"></textarea>
+			</div>
+			<script>
+				function CerrarPunteo() {
+					var texto = document.getElementById("punteo");
+					texto.style.display = "none"
+				}
+			</script>
+			<script>
+				dragElement(document.getElementById("punteo"));
+
+				function dragElement(elmnt) {
+					var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+					if (document.getElementById(elmnt.id + "header")) {
+						// if present, the header is where you move the DIV from:
+						document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+					} else {
+						// otherwise, move the DIV from anywhere inside the DIV:
+						elmnt.onmousedown = dragMouseDown;
+					}
+
+					function dragMouseDown(e) {
+						e = e || window.event;
+						e.preventDefault();
+						// get the mouse cursor position at startup:
+						pos3 = e.clientX;
+						pos4 = e.clientY;
+						document.onmouseup = closeDragElement;
+						// call a function whenever the cursor moves:
+						document.onmousemove = elementDrag;
+					}
+
+					function elementDrag(e) {
+						e = e || window.event;
+						e.preventDefault();
+						// calculate the new cursor position:
+						pos1 = pos3 - e.clientX;
+						pos2 = pos4 - e.clientY;
+						pos3 = e.clientX;
+						pos4 = e.clientY;
+						// set the element's new position:
+						elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+						elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+					}
+
+					function closeDragElement() {
+						// stop moving when mouse button is released:
+						document.onmouseup = null;
+						document.onmousemove = null;
+					}
+				}
+			</script>
 		</div>
 
 	</main>
