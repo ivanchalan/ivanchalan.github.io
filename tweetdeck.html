@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel de Listas y Búsquedas de X — 1 archivo</title>
+  <meta name="description" content="Visualizá todas tus listas de X (Twitter) y agregá búsquedas como columnas, en tiempo (cuasi) real. Deploy listo para GitHub Pages.">
+  <style>
+    :root{
+      --bg:#0f1221; --card:#181c33; --muted:#8b91b5; --text:#e8ebff; --accent:#7aa2ff; --good:#2ecc71; --bad:#ff6b6b; --border:#272b4a;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#0c1020,#121630 40%,#0f1221);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial,"Noto Sans",sans-serif}
+    header{position:sticky;top:0;z-index:20;background:rgba(15,18,33,.8);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--border)}
+    .wrap{max-width:1200px;margin:0 auto;padding:10px 16px}
+    h1{font-size:18px;margin:6px 0}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    input,button,select{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 10px;border-radius:10px;font-size:14px}
+    input::placeholder{color:#98a0c7}
+    button{cursor:pointer}
+    button.primary{background:linear-gradient(180deg,#3243a8,#25348f);border-color:#29378f}
+    button.ghost{background:transparent}
+    button.destructive{background:#3b1e24;border-color:#5a2a33;color:#ffb4b4}
+    .hint{color:var(--muted);font-size:12px}
+    .tag{font-size:12px;padding:2px 8px;border:1px solid var(--border);border-radius:999px;color:#c7ccff}
+    main{height:calc(100% - 72px)}
+    .columns{display:flex;gap:12px;overflow:auto;padding:16px;align-items:stretch;height:100%}
+    .col{display:flex;flex-direction:column;gap:8px;min-width:360px;width:360px;background:var(--card);border:1px solid var(--border);border-radius:16px}
+    .col header{position:sticky;top:0;background:transparent;border:none}
+    .col-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border)}
+    .col-title{font-weight:600;flex:1}
+    .col-actions{display:flex;gap:6px}
+    .tweets{padding:8px 10px;overflow:auto;display:flex;flex-direction:column;gap:8px;height:100%}
+    .tweet{border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;gap:10px;background:rgba(255,255,255,0.02)}
+    .avatar{width:40px;height:40px;border-radius:50%;flex:0 0 40px;object-fit:cover;border:1px solid var(--border)}
+    .t-body{flex:1;min-width:0}
+    .t-head{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}
+    .name{font-weight:700}
+    .username{color:var(--muted)}
+    .time{margin-left:auto;color:var(--muted)}
+    .t-text{white-space:pre-wrap;word-wrap:break-word;margin:6px 0;font-size:14px}
+    .t-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .copy{font-size:12px;padding:4px 8px}
+    .empty{color:var(--muted);text-align:center;padding:16px}
+    .footer{padding:6px 10px;border-top:1px solid var(--border);display:flex;justify-content:center}
+    .spinner{width:14px;height:14px;border:2px solid #4c5aa3;border-top-color:transparent;border-radius:999px;display:inline-block;animation:spin .9s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .pill{background:#1a2044;border:1px solid #2a3168;padding:4px 8px;border-radius:999px;color:#ccdcff}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px}
+    .muted{color:var(--muted)}
+    .sep{height:1px;background:var(--border);margin:8px 0}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="row" style="justify-content:space-between">
+        <h1>Panel de Listas y Búsquedas de <span class="tag">X</span></h1>
+        <div class="row">
+          <button id="btnLoadLists" class="primary">Cargar mis listas</button>
+          <button id="btnAddSearch" class="ghost">+ Columna de búsqueda</button>
+          <label class="hint">Actualiza cada <span id="pollSecsView">30</span>s</label>
+          <input id="pollSecs" type="number" min="10" value="30" title="Segundos de refresco" style="width:80px" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input id="apiBase" placeholder="Base API (p.ej. https://api.x.com/2 o https://api.twitter.com/2)" style="min-width:320px" value="https://api.x.com/2" />
+        <input id="token" placeholder="Access Token (OAuth 2.0 User Bearer)" style="min-width:340px" />
+        <input id="userId" placeholder="Mi User ID (si no lo sabés, pulsá 'Detectar ID')" style="min-width:220px" />
+        <button id="btnDetectId">Detectar ID</button>
+        <input id="proxy" placeholder="CORS proxy (opcional, ej. https://tu-proxy.example/ )" style="min-width:280px" />
+      </div>
+      <div class="row hint" style="margin-top:6px">
+        <span>Requisitos: acceso a la API de X con permisos de lectura. Esta app funciona 100% en el navegador. Si ves errores CORS, usá un proxy propio.</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="columns" class="columns" aria-live="polite"></div>
+  </main>
+
+  <template id="tplColumn">
+    <section class="col" data-kind="" data-id="">
+      <div class="col-head">
+        <div class="col-title"></div>
+        <div class="col-actions">
+          <button class="refresh" title="Refrescar">⟳</button>
+          <button class="remove destructive" title="Cerrar">✕</button>
+        </div>
+      </div>
+      <div class="tweets"></div>
+      <div class="footer"><button class="older">Cargar más</button></div>
+    </section>
+  </template>
+
+  <template id="tplTweet">
+    <article class="tweet">
+      <img class="avatar" alt="" />
+      <div class="t-body">
+        <div class="t-head">
+          <span class="name"></span>
+          <span class="username"></span>
+          <span class="time"></span>
+        </div>
+        <div class="t-text"></div>
+        <div class="t-actions">
+          <button class="copy">Copiar vínculo</button>
+          <a class="open" target="_blank" rel="noopener noreferrer">Abrir</a>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <dialog id="dlgSearch">
+    <form method="dialog" style="min-width:560px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;color:var(--text)">
+      <h3 style="margin:0 0 8px">Nueva columna de búsqueda</h3>
+      <div class="grid">
+        <input id="q" placeholder="Consulta (ej: fútbol OR basquet -rumor)"/>
+        <input id="lang" placeholder="Idioma (opcional, ej: es)"/>
+        <input id="from" placeholder="from:usuario (opcional)"/>
+        <input id="has" placeholder="has:media OR has:links (opcional)"/>
+      </div>
+      <div class="sep"></div>
+      <div class="row" style="justify-content:flex-end;gap:8px">
+        <button value="cancel">Cancelar</button>
+        <button id="ok" value="ok" class="primary">Agregar</button>
+      </div>
+      <p class="hint" style="margin-top:10px">Se usa el endpoint <span class="mono">/tweets/search/recent</span> de la API v2.</p>
+    </form>
+  </dialog>
+
+  <script>
+  const els = {
+    apiBase: document.getElementById('apiBase'),
+    token: document.getElementById('token'),
+    userId: document.getElementById('userId'),
+    proxy: document.getElementById('proxy'),
+    btnDetectId: document.getElementById('btnDetectId'),
+    btnLoadLists: document.getElementById('btnLoadLists'),
+    btnAddSearch: document.getElementById('btnAddSearch'),
+    pollSecs: document.getElementById('pollSecs'),
+    pollSecsView: document.getElementById('pollSecsView'),
+    columns: document.getElementById('columns'),
+    tplColumn: document.getElementById('tplColumn'),
+    tplTweet: document.getElementById('tplTweet'),
+    dlgSearch: document.getElementById('dlgSearch'),
+  };
+
+  // Persistencia simple en localStorage
+  const store = {
+    get k(){ return 'xlists_cfg_v1'; },
+    save(){ localStorage.setItem(this.k, JSON.stringify({
+      apiBase: els.apiBase.value.trim(),
+      token: els.token.value.trim(),
+      userId: els.userId.value.trim(),
+      proxy: els.proxy.value.trim(),
+      poll: Number(els.pollSecs.value)||30,
+      columns: state.columns
+    })); },
+    load(){ try { return JSON.parse(localStorage.getItem(this.k)||'{}'); } catch { return {}; } }
+  };
+
+  const state = {
+    columns: [], // {kind:'list'|'search', id, title, nextToken:null, timer:null, q: queryString}
+    usersCache: new Map(), // id -> user
+  };
+
+  const API = {
+    base(){ return els.apiBase.value.trim().replace(/\/?$/, ''); },
+    token(){ return els.token.value.trim(); },
+    proxy(){ let p = els.proxy.value.trim(); if(!p) return ''; return p.replace(/\/?$/, '/'); },
+    async fetch(path, params={}){
+      const url = API.base()+path + (params.qs? ('?' + new URLSearchParams(params.qs).toString()) : '');
+      const target = API.proxy() ? API.proxy()+url : url;
+      const res = await fetch(target, {
+        headers: { 'Authorization': 'Bearer ' + API.token() }
+      });
+      if(!res.ok){
+        const text = await res.text();
+        throw new Error('HTTP '+res.status+' '+res.statusText+'\n'+text);
+      }
+      return res.json();
+    },
+    me(){ return this.fetch('/users/me'); },
+    followedLists(uid){ return this.fetch(`/users/${uid}/followed_lists`, { qs: { max_results: 100 } }); },
+    listTweets(listId, nextToken){
+      const qs = {
+        max_results: 50,
+        'tweet.fields': 'created_at,public_metrics,author_id,lang,entities',
+        expansions: 'author_id',
+        'user.fields': 'id,name,username,profile_image_url,verified'
+      };
+      if(nextToken) qs.pagination_token = nextToken;
+      return this.fetch(`/lists/${listId}/tweets`, { qs });
+    },
+    searchRecent(query, nextToken){
+      const qs = {
+        max_results: 50,
+        query,
+        'tweet.fields': 'created_at,public_metrics,author_id,lang,entities',
+        expansions: 'author_id',
+        'user.fields': 'id,name,username,profile_image_url,verified'
+      };
+      if(nextToken) qs.next_token = nextToken;
+      return this.fetch('/tweets/search/recent', { qs });
+    }
+  };
+
+  function toast(msg){
+    console.log('\u2139\ufe0f', msg);
+  }
+
+  function fmtTime(iso){
+    try{
+      const d = new Date(iso);
+      return d.toLocaleString([], {dateStyle:'short', timeStyle:'short'});
+    }catch{ return iso }
+  }
+
+  function buildQuery({q,lang,from,has}){
+    const bits = [];
+    if(q) bits.push(q);
+    if(lang) bits.push(`lang:${lang}`);
+    if(from) bits.push(from);
+    if(has) bits.push(has);
+    return bits.join(' ');
+  }
+
+  function indexUsers(includes){
+    if(!includes||!includes.users) return;
+    for(const u of includes.users){ state.usersCache.set(u.id, u); }
+  }
+
+  function tweetUrl(t,user){
+    const uname = user?.username || 'i/web/status';
+    return `https://x.com/${uname}/status/${t.id}`;
+  }
+
+  function renderTweet(t){
+    const node = els.tplTweet.content.firstElementChild.cloneNode(true);
+    const u = state.usersCache.get(t.author_id) || {};
+    node.querySelector('.avatar').src = u.profile_image_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+    node.querySelector('.avatar').alt = u.username? ('@'+u.username):'';
+    node.querySelector('.name').textContent = u.name || 'Usuario';
+    node.querySelector('.username').textContent = u.username? ('@'+u.username):'';
+    node.querySelector('.time').textContent = fmtTime(t.created_at);
+    node.querySelector('.t-text').textContent = t.text || '';
+    const link = tweetUrl(t,u);
+    node.querySelector('.open').href = link;
+    node.querySelector('.copy').addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText(link); node.querySelector('.copy').textContent='¡Copiado!'; setTimeout(()=> node.querySelector('.copy').textContent='Copiar vínculo', 1200);}catch(e){ alert('No se pudo copiar: '+e.message); }
+    });
+    return node;
+  }
+
+  function createColumn({kind, id, title, query}){
+    const col = els.tplColumn.content.firstElementChild.cloneNode(true);
+    col.dataset.kind = kind; col.dataset.id = id || '';
+    col.query = query || null; // para búsquedas
+    col.nextToken = null;
+
+    col.querySelector('.col-title').innerHTML = title + ' <span class="pill">'+ (kind==='list'?'lista':'búsqueda') +'</span>';
+
+    const tweetsEl = col.querySelector('.tweets');
+    const btnOlder = col.querySelector('.older');
+
+    async function load({append=false}={}){
+      col.querySelector('.refresh').disabled = true;
+      col.querySelector('.refresh').innerHTML = '<span class="spinner"></span>';
+      try{
+        let data;
+        if(kind==='list') data = await API.listTweets(id, append? col.nextToken: null);
+        else data = await API.searchRecent(col.query, append? col.nextToken: null);
+
+        indexUsers(data.includes);
+        const arr = data.data || [];
+        if(!append) tweetsEl.innerHTML = '';
+        if(arr.length===0 && !append){ tweetsEl.innerHTML = '<div class="empty">Sin resultados por ahora.</div>'; }
+        for(const t of arr){ tweetsEl.appendChild(renderTweet(t)); }
+        col.nextToken = data.meta?.next_token || null;
+        btnOlder.style.display = col.nextToken? 'inline-flex':'none';
+      }catch(e){
+        tweetsEl.innerHTML = `<div class="empty">Error al cargar: <span class="mono">${(e.message||'')}</span></div>`;
+      }finally{
+        col.querySelector('.refresh').disabled = false;
+        col.querySelector('.refresh').textContent = '⟳';
+      }
+    }
+
+    // Eventos
+    col.querySelector('.refresh').addEventListener('click', ()=> load({append:false}));
+    col.querySelector('.remove').addEventListener('click', ()=>{
+      clearInterval(col.timer);
+      col.remove();
+      state.columns = state.columns.filter(c=> !(c.kind===kind && (c.id===id || c.query===query)));
+      store.save();
+    });
+    btnOlder.addEventListener('click', ()=> load({append:true}));
+
+    // Polling periódico
+    function setPoll(){
+      if(col.timer) clearInterval(col.timer);
+      const secs = Math.max(10, Number(els.pollSecs.value)||30);
+      col.timer = setInterval(()=> load({append:false}), secs*1000);
+    }
+
+    setPoll();
+    load({append:false});
+
+    // Guardar en estado
+    state.columns.push({kind, id, title, q: query||null});
+    store.save();
+
+    return col;
+  }
+
+  async function addAllLists(){
+    const uid = els.userId.value.trim();
+    if(!uid) return alert('Ingresá tu User ID o usá "Detectar ID".');
+    const res = await API.followedLists(uid);
+    const lists = res.data || [];
+    if(lists.length===0) return alert('No se encontraron listas seguidas.');
+
+    for(const l of lists){
+      const node = createColumn({kind:'list', id:l.id, title:`📜 ${l.name}`});
+      els.columns.appendChild(node);
+    }
+  }
+
+  // UI init
+  (function init(){
+    const cfg = store.load();
+    if(cfg.apiBase) els.apiBase.value = cfg.apiBase;
+    if(cfg.token) els.token.value = cfg.token;
+    if(cfg.userId) els.userId.value = cfg.userId;
+    if(cfg.proxy) els.proxy.value = cfg.proxy;
+    if(cfg.poll) els.pollSecs.value = cfg.poll;
+    els.pollSecsView.textContent = els.pollSecs.value;
+
+    els.pollSecs.addEventListener('input', ()=>{
+      els.pollSecsView.textContent = Math.max(10, Number(els.pollSecs.value)||30);
+      // reset timers
+      document.querySelectorAll('.col').forEach(col=>{
+        if(col.timer) clearInterval(col.timer);
+        const secs = Math.max(10, Number(els.pollSecs.value)||30);
+        col.timer = setInterval(()=> col.querySelector('.refresh').click(), secs*1000);
+      });
+      store.save();
+    });
+
+    els.btnDetectId.addEventListener('click', async ()=>{
+      try{
+        const me = await API.me();
+        const id = me.data?.id;
+        if(!id) throw new Error('No se pudo leer el ID.');
+        els.userId.value = id;
+        toast('Tu ID es '+id);
+        store.save();
+      }catch(e){ alert('Error al detectar ID: '+e.message); }
+    });
+
+    els.btnLoadLists.addEventListener('click', addAllLists);
+
+    els.btnAddSearch.addEventListener('click', async ()=>{
+      const dlg = els.dlgSearch;
+      dlg.showModal();
+      const q = dlg.querySelector('#q');
+      const lang = dlg.querySelector('#lang');
+      const from = dlg.querySelector('#from');
+      const has = dlg.querySelector('#has');
+      const ok = dlg.querySelector('#ok');
+
+      function onOk(ev){
+        if(dlg.returnValue!=="ok") return;
+        ev.preventDefault();
+        const query = buildQuery({q:q.value.trim(), lang:lang.value.trim(), from:from.value.trim(), has:has.value.trim()});
+        if(!query) { alert('Ingresá una consulta.'); return; }
+        const node = createColumn({kind:'search', title:`🔎 ${query}`, query});
+        els.columns.prepend(node);
+      }
+
+      dlg.addEventListener('close', onOk, {once:true});
+    });
+
+    // Restaurar columnas previas
+    if(Array.isArray(cfg.columns)){
+      for(const c of cfg.columns){
+        const node = createColumn({kind:c.kind, id:c.id, title:c.title, query:c.q});
+        els.columns.appendChild(node);
+      }
+    }
+  })();
+  </script>
+</body>
+</html>
