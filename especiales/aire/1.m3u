@@ -1,0 +1,43 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="A24.ar@SD" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8yfXBuQmon9WVy3ETX9fuq0w4U8Hvq391YA&s" http-user-agent="Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, como Gecko) Chrome/112.0.0.0 Mobile Safari/537.36" group-title="News",A24
+https://dai.google.com/linear/hls/pa/event/Txk1vDlZR2CCfDuUZ0ylpw/stream/e7463b30-52e5-4f48-8577-9cb0a4d01593:SCL2/variant/b20e54831be1870c77de57c177c43ab4/bandwidth/2800000.m3u8
+#EXTINF:-1 tvg-id="AmericaTV.ar@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Am%C3%A9rica_TV_%28Nuevo_logo_Junio_2020%29.png/512px-Am%C3%A9rica_TV_%28Nuevo_logo_Junio_2020%29.png" http-user-agent="Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, como Gecko) Chrome/112.0.0.0 Mobile Safari/537.36" group-title="General",America TV
+https://prepublish.f.qaotic.net/a07/americahls-100056/playlist_720p.m3u8
+#EXTINF:-1 tvg-id="TyCSports.ar@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/TyC_Sports_logo.svg/512px-TyC_Sports_logo.svg.png" group-title="Sports",TyC Sports
+https://live-04-11-tyc24.vodgc.net/tyc24/index_tyc24_1080.m3u8
+#EXTINF:-1 tvg-id="ESPN" tvg-logo="https://bestleague.world/img/espn.webp" group-title="Sports",ESPN
+https://bgfuzq.fubohd.com/espn/mono.m3u8?token=b7d4cf80994b6b2e740b324909a3779de31d9c58-17-1772254257-1772236257
+#EXTINF:-1 tvg-id="ESPN 2" tvg-logo="https://bestleague.world/img/espn2.webp" group-title="Sports",ESPN 2
+https://rm8zcvk3.fubohd.com/espn2/mono.m3u8?token=d6cacd941b80358b75e88680a22822480eaab4f6-41-1772254308-1772236308
+#EXTINF:-1 tvg-id="ESPN 3" tvg-logo="https://bestleague.world/img/espn3.webp" group-title="Sports",ESPN 3
+https://a2vlca.fubohd.com/espn3/mono.m3u8?token=f3ca7b29975eb90a35ef9164a1f8b07f798cc524-f3-1772254375-1772236375
+#EXTINF:-1 tvg-id="ESPN Premium" tvg-logo="https://bestleague.world/img/espnpr.webp" group-title="Sports",ESPN Premium
+https://x4bnd7lq.fubohd.com/espnpremium/mono.m3u8?token=fa189ad7d322a2b648096c0bc39a030c2e5f6b16-d0-1772254724-1772236724
+#EXTINF:-1 tvg-id="ESPN USA" tvg-logo="https://bestleague.world/img/espndep.png" group-title="Sports",ESPN USA
+https://agvyby.fubohd.com/espndeportes/mono.m3u8?token=0a18b2e32dcd560028cd3af6fb66f845a43b164e-4-1772254796-1772236796
+#EXTINF:-1 tvg-id="Fox 1" tvg-logo="https://bestleague.world/img/foxnew.png" group-title="Sports",Fox 1
+https://ym9yzq.fubohd.com/foxsports/mono.m3u8?token=39730ed7107849b097e1a69db4e52fb4290beb93-70-1772254578-1772236578
+#EXTINF:-1 tvg-id="Fox 2" tvg-logo="https://bestleague.world/img/foxnew2.png" group-title="Sports",Fox 2
+https://ag9wzq.fubohd.com/foxsports2/mono.m3u8?token=422d201aaeed7ee3cfac780f9ef3c028c7d7c46a-fe-1772254643-1772236643
+#EXTINF:-1 tvg-id="DSports" tvg-logo="https://bestleague.world/img/dsports.webp" group-title="Sports",DSports
+https://tyg2mnl9.fubohd.com/dsports/mono.m3u8?token=c80c1a28355d392eaa29e829abae7d8580af7237-43-1772254444-1772236444
+#EXTINF:-1 tvg-id="DSports 2" tvg-logo="https://bestleague.world/img/dsports2.webp" group-title="Sports",DSports 2
+https://qzv4jmsc.fubohd.com/dsports2/mono.m3u8?token=9e3bc061fa2a89ebd5ca24f6a1a0e88d307025ae-41-1772254500-1772236500
+#EXTINF:-1 tvg-id="TNT Sports" tvg-logo="https://bestleague.world/img/tntar.svg" group-title="Sports",TNT Sports
+https://wf6kt.envivoslatam.org/tntsports/index.m3u8?token=4b66b652737d0351c143831173e0f69dedf6e379-e5-1772283122-1772229122&ip=201.216.219.177
+#EXTINF:-1 tvg-id="TNT AR" tvg-logo="https://bestleague.world/img/tntar.svg" group-title="Sports",TNT Sports AR
+https://ub2dr.envivoslatam.org/tntsports/index.m3u8?token=2f09e6661a360bc28ba25f22a55b60c92ab43719-e5-1772283274-1772229274&ip=201.216.219.177
+#EXTINF:-1 tvg-id="Telefe" tvg-logo="https://bestleague.world/img/telefe.png" group-title="Sports",Telefe
+https://wf6kt.envivoslatam.org/telefe/index.m3u8?token=16c540a86757e5053e934b74f3821234e8094228-c2-1772283377-1772229377&ip=201.216.219.177
+#EXTINF:-1 tvg-id="DAZN F1" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz7M3ARUDuqh9L7UJQ7a37gjMBbfaYYEhAZeaJZMs4qQ&s" group-title="Sports",DAZN F1
+https://deportes.ksdjugfsddeports.com:9092/MjAxLjIxNi4yMTkuMTc3/27_.m3u8?token=S3ubQxEr2xQrBIsSrR0eQw&expires=1772272412
+#EXTINF:-1 tvg-id="DAZN Liga" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm3IibjK1mQka3Hb_3oMvNCENmShgB0sFV7g&s" group-title="Sports",DAZN La Liga
+https://deportes.ksdjugfsddeports.com:9092/MjAxLjIxNi4yMTkuMTc3/28_.m3u8?token=C5cT0aCYMUqf8NRiGx9Fww&expires=1772272577
+#EXTINF:-1 tvg-id="Telemundo" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPn1KluxDJ_m-YgPyOf3jyiXsshGHaXydT_A&s" group-title="Sports",Telemundo
+https://regionales.saohgdasregions.fun:9092/MjAxLjIxNi4yMTkuMTc3/8_.m3u8?token=2h6UU_ixz6_Ot60IwOc_dg&expires=1772283453
+#EXTINF:-1 tvg-id="Sky La Liga" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwhThBXgT5KVlGrhbDUGYVJrWIu6vLiEdpuA&s" group-title="Sports",Sky La Liga
+https://deportes.ksdjugfsddeports.com:9092/MjAxLjIxNi4yMTkuMTc3/37_.m3u8?token=tlAOPgg_W-fGkWvAXFIM5w&expires=1772272629
+#EXTINF:-1 tvg-id="Sky Sports" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwhThBXgT5KVlGrhbDUGYVJrWIu6vLiEdpuA&s" group-title="Sports",Sky Sports
+https://af7a8b4e.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/TEctZ2JfdGFsa1NQT1JUX0hMUw/playlist.m3u8
+#EXTINF:-1 tvg-id="NBC" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyalgBBK2-CZRwNQoqX3S41sl73hkUct-tlA&s" group-title="Sports",NBC
+https://livehub-voidnet.onrender.com/cluster/streamcore/us/NBC_REDIS.m3u8
