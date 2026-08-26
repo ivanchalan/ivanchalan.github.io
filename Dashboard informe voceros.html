@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analítico de Medios - Seguimiento Temático</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS para Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Fuentes Google: Montserrat y Lora -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: #f4f5f7; 
+            color: #232D4F; 
+        }
+        h1, h2, h3, h4, h5, h6, .font-serif {
+            font-family: 'Lora', serif;
+        }
+        .bg-official { background-color: #232D4F; }
+        .text-official { color: #232D4F; }
+        .border-official { border-color: #E7BA61; }
+        .accent-gold { color: #E7BA61; }
+
+        /* Estilos para formateo enriquecido en el editor de notas */
+        #custom-notes-editor ul {
+            list-style-type: disc;
+            padding-left: 1.25rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+        #custom-notes-editor ol {
+            list-style-type: decimal;
+            padding-left: 1.25rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+        #custom-notes-editor u {
+            text-decoration: underline;
+        }
+
+        /* Placeholder para editor de notas */
+        [contenteditable=true]:empty:before {
+            content: attr(placeholder);
+            color: #9ca3af;
+            pointer-events: none;
+            display: block;
+        }
+    </style>
+
+    <script id="embedded-data">
+        var embeddedExcelData = null;
+    </script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Banner Institucional -->
+    <header class="bg-official shadow-md border-b-4 border-official" style="border-bottom-color: #E7BA61;">
+        <div class="w-full px-6 py-3 flex justify-between items-center" style="background-color: #232D4F;">
+            <div class="flex items-center">
+                <img src="https://ivanchalan.github.io/logousinachico.jpg" alt="Logo Usina" class="h-12 object-contain" style="height: 65px">
+            </div>
+            <div class="flex items-center">
+                <img src="https://ivanchalan.github.io/logopresidencia.jpg" alt="Logo Presidencia" class="h-12 object-contain" style="height: 85px">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <div class="text-center my-2">
+            <h1 class="text-2xl sm:text-3xl font-bold text-[#232D4F]">Seguimiento Temático de Medios</h1>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1">Tablero de Control y Análisis de Cobertura</p>
+        </div>
+
+        <!-- Drop Zone / Upload Section -->
+        <section id="drop-zone" onclick="document.getElementById('file-input').click()" class="bg-white rounded-lg shadow-sm p-10 text-center border-2 border-dashed border-gray-300 hover:border-[#232D4F] transition-colors cursor-pointer">
+            <input type="file" id="file-input" accept=".xlsx, .xls, .csv" class="hidden">
+            <div class="space-y-4 max-w-lg mx-auto">
+                <div class="w-16 h-16 mx-auto rounded-full bg-[#232D4F] text-[#E7BA61] flex items-center justify-center shadow">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <div class="text-lg font-semibold text-gray-800">Cargar Archivo Excel de Seguimiento Temático</div>
+                <p class="text-sm text-gray-500">Arrastra tu archivo aquí o <span class="text-[#232D4F] font-bold underline">haz clic para seleccionar</span></p>
+                <p class="text-xs text-gray-400">Procesa las 4 columnas de temas (Columnas F, G, H e I).</p>
+            </div>
+        </section>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" class="hidden space-y-6">
+
+            <!-- Active Filter Bar Header (Sticky top-0) -->
+            <div id="active-filter" class="hidden sticky top-0 z-50 bg-white/95 backdrop-blur-md p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4 border-b border-gray-200 transition-all" style="border-left-color: #E7BA61;">
+                <div class="flex items-center space-x-2">
+                    <span class="font-bold text-sm text-gray-600">Filtro Activo:</span>
+                    <span id="filter-text" class="text-sm font-semibold text-[#232D4F]"></span>
+                </div>
+                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-xs font-medium transition-colors" onclick="resetFilters()">
+                    Limpiar Filtro
+                </button>
+            </div>
+
+            <!-- KPIs Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #232D4F;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total de Notas</p>
+                    <p id="kpi-total" class="text-3xl font-bold text-[#232D4F] mt-1 font-serif">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #E7BA61;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Grupos de actores</p>
+                    <p id="kpi-secciones" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #37185b;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Medios Monitoreados</p>
+                    <p id="kpi-medios" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #5CB85C;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Voceros / Actores</p>
+                    <p id="kpi-actores" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta Editable de Notas u Observaciones con Barra Completa de Formato -->
+            <div id="custom-notes-card" class="bg-white p-5 rounded-lg shadow border-l-4" style="border-left-color: #232D4F;">
+                <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                    <h3 class="text-lg font-bold text-[#232D4F]">Notas u Observaciones</h3>
+                    <div id="notes-toolbar" class="flex flex-wrap items-center gap-1.5">
+                        <button type="button" onclick="document.execCommand('bold', false, null)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-[#232D4F] font-bold rounded text-xs border border-gray-300 transition-colors shadow-sm" title="Negrita (Ctrl+B)">
+                            <strong>B</strong>
+                        </button>
+                        <button type="button" onclick="document.execCommand('italic', false, null)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-[#232D4F] font-serif italic rounded text-xs border border-gray-300 transition-colors shadow-sm" title="Cursiva (Ctrl+I)">
+                            <em>I</em>
+                        </button>
+                        <button type="button" onclick="document.execCommand('underline', false, null)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-[#232D4F] underline rounded text-xs border border-gray-300 transition-colors shadow-sm" title="Subrayado (Ctrl+U)">
+                            <u>U</u>
+                        </button>
+                        <span class="w-px h-4 bg-gray-300 mx-0.5"></span>
+                        <button type="button" onclick="document.execCommand('insertUnorderedList', false, null)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-[#232D4F] rounded text-xs border border-gray-300 transition-colors shadow-sm flex items-center gap-1" title="Lista con viñetas">
+                            • Lista
+                        </button>
+                        <button type="button" onclick="document.execCommand('insertOrderedList', false, null)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-[#232D4F] rounded text-xs border border-gray-300 transition-colors shadow-sm flex items-center gap-1" title="Lista numerada">
+                            1. Lista
+                        </button>
+                        <span class="w-px h-4 bg-gray-300 mx-0.5"></span>
+                        <select onchange="document.execCommand('fontSize', false, this.value)" class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-[#232D4F] rounded text-xs border border-gray-300 transition-colors shadow-sm focus:outline-none">
+                            <option value="2">Normal</option>
+                            <option value="1">Pequeño</option>
+                            <option value="3">Mediano</option>
+                            <option value="4">Grande</option>
+                            <option value="5">Título</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="custom-notes-editor" contenteditable="true" class="text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#232D4F] min-h-[90px]" placeholder="Escriba aquí sus observaciones..."></div>
+            </div>
+
+            <!-- Dynamic Conclusions -->
+            <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-left-color: #E7BA61;">
+                <h3 class="text-lg font-bold text-[#232D4F] mb-2">Conclusiones e Insights</h3>
+                <div id="dynamic-conclusions" class="text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded border border-gray-100">
+                    <p class="italic text-gray-400">Cargue datos para generar conclusiones.</p>
+                </div>
+            </div>
+
+            <!-- Charts Section 1 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                <!-- Chart 1: Secciones -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Distribución por tipo de actor</h3>
+                        <p class="text-xs text-gray-500">Haz clic en un sector para filtrar.</p>
+                    </div>
+                    <div class="relative h-72 w-full">
+                        <canvas id="chartSections"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Tipo de Medio -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Distribución por Tipo de Medio</h3>
+                        <p class="text-xs text-gray-500">Haz clic en un sector para filtrar.</p>
+                    </div>
+                    <div class="relative h-72 w-full">
+                        <canvas id="chartTipoMedio"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Medios Completos -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Todos los Medios Monitoreados</h3>
+                        <p class="text-xs text-gray-500">Listado completo de medios con número de notas.</p>
+                    </div>
+                    <div id="chartMediaContainer" class="relative min-h-[280px]">
+                        <canvas id="chartMedia"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 4: Actores Completos -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Todos los Voceros / Actores</h3>
+                        <p class="text-xs text-gray-500">Listado completo de voceros con presencia en notas.</p>
+                    </div>
+                    <div id="chartActoresContainer" class="relative min-h-[280px]">
+                        <canvas id="chartActores"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de Frecuencia de Temas: Barras Horizontales (#E7BA61) -->
+            <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #E7BA61;">
+                <div>
+                    <h3 class="text-lg font-bold text-[#232D4F] mb-1">Frecuencia de Temas</h3>
+                    <p class="text-xs text-gray-500">Visualización de la presencia acumulada de temas en las 4 columnas. Haz clic en una barra para filtrar.</p>
+                </div>
+                <div id="chartTopicsContainer" class="relative min-h-[280px]">
+                    <canvas id="chartTopics"></canvas>
+                </div>
+            </div>
+
+            <!-- Data Table Section -->
+            <div class="bg-white rounded-lg shadow overflow-hidden border-t-2" style="border-top-color: #232D4F;">
+                <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F]">Registro General de Notas</h3>
+                        <p id="table-count" class="text-xs text-gray-500">Mostrando registros</p>
+                    </div>
+                    <input type="text" id="table-search" placeholder="Buscar en la tabla..." class="px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-[#232D4F] w-full sm:w-72" oninput="filterTableBySearch()">
+                </div>
+                <div class="overflow-x-auto max-h-96">
+                    <table id="data-table" class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-50 sticky top-0" id="table-head"></thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Export Option -->
+            <div class="flex justify-center pt-4 pb-8" id="export-section-container">
+                <button id="btn-export" onclick="exportDashboard()" class="bg-[#232D4F] hover:bg-opacity-90 text-[#E7BA61] font-semibold px-8 py-3 rounded-lg shadow-lg transition-all flex items-center gap-2 text-base border border-[#E7BA61]">
+                    <svg class="w-5 h-5 text-[#E7BA61]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Exportar Reporte Interactivo Completo
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#232D4F] text-gray-300 text-xs py-6 mt-12 border-t-2" style="border-color: #E7BA61;">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2 font-light">
+            <p>Tablero analítico oficial - Procesamiento íntegramente local en cliente.</p>
+            <p>&copy; 2026 - Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        let globalData = [];
+        let currentFilteredData = [];
+        let charts = {};
+
+        window.onload = () => {
+            if (typeof embeddedExcelData !== 'undefined' && embeddedExcelData && embeddedExcelData.length > 0) {
+                globalData = embeddedExcelData;
+                showDashboard();
+                processData(globalData);
+            }
+        };
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+
+        if (dropZone) {
+            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-[#232D4F]'); });
+            dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('border-[#232D4F]'); });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-[#232D4F]');
+                if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+            });
+        }
+
+        if (fileInput) {
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) handleFile(e.target.files[0]);
+            });
+        }
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', cellDates: true, raw: false });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rawMatrix = XLSX.utils.sheet_to_json(firstSheet, { header: 1, raw: false });
+                    
+                    const parsedData = parseStructuredMatrix(rawMatrix);
+                    
+                    if (parsedData.length > 0) {
+                        globalData = parsedData;
+                        showDashboard();
+                        processData(globalData);
+                    } else {
+                        alert("No se pudieron extraer datos del archivo.");
+                    }
+                } catch (err) {
+                    alert("Error al procesar el archivo Excel: " + err.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showDashboard() {
+            const dz = document.getElementById('drop-zone');
+            if (dz) dz.classList.add('hidden');
+            const dc = document.getElementById('dashboard-content');
+            if (dc) dc.classList.remove('hidden');
+        }
+
+        function formatCellValue(val, headerName) {
+            if (val === undefined || val === null) return "";
+
+            let lowerHeader = String(headerName || '').toLowerCase().trim();
+
+            if (val instanceof Date) {
+                if (isNaN(val.getTime())) return "";
+
+                let hh = String(val.getUTCHours()).padStart(2, '0');
+                let mm = String(val.getUTCMinutes()).padStart(2, '0');
+                let ss = val.getUTCSeconds();
+                let year = val.getUTCFullYear();
+
+                if (lowerHeader.includes('hora') || lowerHeader.includes('time') || year === 1899 || year === 1900) {
+                    return ss > 0 ? `${hh}:${mm}:${String(ss).padStart(2, '0')}` : `${hh}:${mm}`;
+                }
+
+                let month = String(val.getUTCMonth() + 1).padStart(2, '0');
+                let day = String(val.getUTCDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            if (typeof val === 'number' && lowerHeader.includes('hora')) {
+                let totalSeconds = Math.round(val * 86400);
+                let hours = Math.floor(totalSeconds / 3600) % 24;
+                let minutes = Math.floor((totalSeconds % 3600) / 60);
+                let seconds = totalSeconds % 60;
+                let hh = String(hours).padStart(2, '0');
+                let mm = String(minutes).padStart(2, '0');
+                return seconds > 0 ? `${hh}:${mm}:${String(seconds).padStart(2, '0')}` : `${hh}:${mm}`;
+            }
+
+            return String(val).trim();
+        }
+
+        function parseStructuredMatrix(matrix) {
+            let headerIdx = -1;
+            let headers = [];
+
+            for (let i = 0; i < matrix.length; i++) {
+                let row = matrix[i];
+                if (!row || row.length === 0) continue;
+                let strRow = row.map(c => String(c || '').toLowerCase().trim());
+                if (strRow.some(s => s.includes('medio')) && strRow.some(s => s.includes('actor') || s.includes('tema') || s.includes('día') || s.includes('dia') || s.includes('eje'))) {
+                    headerIdx = i;
+                    headers = row.map((h, idx) => h ? String(h).trim() : `Col_${idx}`);
+                    break;
+                }
+            }
+
+            if (headerIdx === -1) return [];
+
+            if (!headers[5] || headers[5].startsWith('Col_')) headers[5] = "Tema 1";
+            if (!headers[6] || headers[6].startsWith('Col_')) headers[6] = "Tema 2";
+            if (!headers[7] || headers[7].startsWith('Col_')) headers[7] = "Tema 3";
+            if (!headers[8] || headers[8].startsWith('Col_')) headers[8] = "Tema 4";
+
+            let result = [];
+            let currentSection = "General";
+
+            for (let i = headerIdx + 1; i < matrix.length; i++) {
+                let row = matrix[i];
+                if (!row || row.length === 0) continue;
+
+                let col0 = row[0] !== undefined && row[0] !== null ? String(row[0]).trim() : "";
+                let otherCols = row.slice(1).filter(c => c !== undefined && c !== null && String(c).trim() !== "");
+
+                if (col0 !== "" && otherCols.length === 0) {
+                    currentSection = col0;
+                    continue;
+                }
+
+                if (row.some(c => c !== undefined && c !== null && String(c).trim() !== "")) {
+                    let item = { "Sección": currentSection };
+                    headers.forEach((h, idx) => {
+                        let val = row[idx];
+                        item[h] = formatCellValue(val, h);
+                    });
+
+                    let explicitTopics = [5, 6, 7, 8].map(colIdx => {
+                        let val = row[colIdx];
+                        return formatCellValue(val, headers[colIdx]);
+                    }).filter(v => v !== "" && v !== "-" && v.toLowerCase() !== "no definido");
+
+                    item['_topics_cols'] = explicitTopics;
+
+                    result.push(item);
+                }
+            }
+            return result;
+        }
+
+        function getVal(row, keys) {
+            for (let k in row) {
+                if (keys.some(key => k.toLowerCase().trim() === key)) {
+                    return row[k];
+                }
+            }
+            return "";
+        }
+
+        function getRowTopics(row) {
+            let topics = [];
+            if (row._topics_cols && row._topics_cols.length > 0) {
+                topics = [...row._topics_cols];
+            }
+            
+            for (let k in row) {
+                if (k.startsWith('_')) continue;
+                let lowerK = k.toLowerCase().trim();
+                if (lowerK.includes('tema') || lowerK.includes('eje') || lowerK.includes('subtema') || lowerK.includes('categoría') || lowerK.includes('categoria')) {
+                    let val = String(row[k] || '').trim();
+                    if (val && val !== '-' && val.toLowerCase() !== 'no definido' && !topics.includes(val)) {
+                        topics.push(val);
+                    }
+                }
+            }
+            return topics;
+        }
+
+        function processData(dataToRender) {
+            currentFilteredData = dataToRender;
+
+            let total = dataToRender.length;
+            let sectionCounts = {}, tipoMedioCounts = {}, mediaCounts = {}, actorCounts = {}, topicCounts = {};
+
+            dataToRender.forEach(row => {
+                let sec = row['Sección'] || 'General';
+                sectionCounts[sec] = (sectionCounts[sec] || 0) + 1;
+
+                let tipo = getVal(row, ['tipo de medio', 'tipo', 'formato']) || 'Otros';
+                tipoMedioCounts[tipo] = (tipoMedioCounts[tipo] || 0) + 1;
+
+                let medio = getVal(row, ['medio', 'fuente', 'outlet']) || 'No definido';
+                mediaCounts[medio] = (mediaCounts[medio] || 0) + 1;
+
+                let actor = getVal(row, ['actor', 'vocero', 'protagonista']) || 'No definido';
+                if (actor !== 'No definido' && actor !== '') {
+                    actorCounts[actor] = (actorCounts[actor] || 0) + 1;
+                }
+
+                let topics = getRowTopics(row);
+                topics.forEach(t => {
+                    topicCounts[t] = (topicCounts[t] || 0) + 1;
+                });
+            });
+
+            document.getElementById('kpi-total').innerText = total.toLocaleString();
+            document.getElementById('kpi-secciones').innerText = Object.keys(sectionCounts).length;
+            document.getElementById('kpi-medios').innerText = Object.keys(mediaCounts).length;
+            document.getElementById('kpi-actores').innerText = Object.keys(actorCounts).length;
+
+            generateConclusions(total, sectionCounts, mediaCounts, actorCounts, topicCounts);
+
+            const secSorted = Object.entries(sectionCounts).sort((a,b) => b[1]-a[1]);
+            const tipoSorted = Object.entries(tipoMedioCounts).sort((a,b) => b[1]-a[1]);
+            const mediaSorted = Object.entries(mediaCounts).sort((a,b) => b[1]-a[1]);
+            const actorSorted = Object.entries(actorCounts).sort((a,b) => b[1]-a[1]);
+            const topicSorted = Object.entries(topicCounts).sort((a,b) => b[1]-a[1]);
+
+            renderCharts(secSorted, tipoSorted, mediaSorted, actorSorted);
+            renderTopicsChart(topicSorted);
+            renderTable(dataToRender);
+        }
+
+        function generateConclusions(total, sections, media, actors, topics) {
+            if (!total) return;
+            let topSec = Object.keys(sections).reduce((a, b) => sections[a] > sections[b] ? a : b, '');
+            let topMed = Object.keys(media).reduce((a, b) => media[a] > media[b] ? a : b, '');
+            let topAct = Object.keys(actors).length ? Object.keys(actors).reduce((a, b) => actors[a] > actors[b] ? a : b, '') : 'N/A';
+            let topTop = Object.keys(topics).length ? Object.keys(topics).reduce((a, b) => topics[a] > topics[b] ? a : b, '') : 'N/A';
+
+            let html = `<p class="mb-1">• Se analizaron <strong>${total.toLocaleString()} registros</strong> de cobertura mediática.</p>`;
+            if (topSec) html += `<p class="mb-1">• La sección con mayor volumen fue <strong>${topSec}</strong> (${sections[topSec]} publicaciones).</p>`;
+            if (topMed) html += `<p class="mb-1">• El medio con mayor nivel de noticias fue <strong>${topMed}</strong> (${media[topMed]} menciones).</p>`;
+            if (topAct && topAct !== 'N/A') html += `<p class="mb-1">• El vocero / actor principal fue <strong>${topAct}</strong>.</p>`;
+            if (topTop && topTop !== 'N/A') html += `<p class="mb-1">• El tema predominante en las 4 columnas analizadas fue <strong>${topTop}</strong> (${topics[topTop]} menciones acumuladas).</p>`;
+            html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier barra o sector para filtrar el tablero.</p>`;
+
+            document.getElementById('dynamic-conclusions').innerHTML = html;
+        }
+
+        function setFilter(type, value) {
+            const activeFilterEl = document.getElementById('active-filter');
+            activeFilterEl.classList.remove('hidden');
+            document.getElementById('filter-text').innerText = `${type}: ${value}`;
+            
+            let filtered = globalData.filter(row => {
+                if (type === 'Sección') return (row['Sección'] || 'General') === value;
+                if (type === 'Tipo de Medio') return getVal(row, ['tipo de medio', 'tipo', 'formato']) === value;
+                if (type === 'Medio') return getVal(row, ['medio', 'fuente', 'outlet']) === value;
+                if (type === 'Actor') return getVal(row, ['actor', 'vocero', 'protagonista']) === value;
+                if (type === 'Tema') {
+                    let rowTopics = getRowTopics(row);
+                    return rowTopics.some(t => t.toLowerCase() === value.toLowerCase());
+                }
+                return true;
+            });
+            processData(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('active-filter').classList.add('hidden');
+            processData(globalData);
+        }
+
+        function renderCharts(secData, tipoData, mediaData, actorData) {
+            Chart.defaults.color = '#232D4F';
+            Chart.defaults.font.family = "'Montserrat', sans-serif";
+            Object.keys(charts).forEach(k => {
+                if (charts[k] && k !== 'topics') charts[k].destroy();
+            });
+
+            // 1. Secciones
+            charts.sections = new Chart(document.getElementById('chartSections').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: secData.map(d => d[0]),
+                    datasets: [{ data: secData.map(d => d[1]), backgroundColor: ['#232D4F', '#E7BA61', '#37185b', '#5CB85C', '#8B5CF6', '#D9534F'] }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    onClick: (e, el) => { if(el.length) setFilter('Sección', secData[el[0].index][0]); }
+                }
+            });
+
+            // 2. Tipo de Medio
+            charts.tipoMedio = new Chart(document.getElementById('chartTipoMedio').getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: tipoData.map(d => d[0]),
+                    datasets: [{ data: tipoData.map(d => d[1]), backgroundColor: ['#232D4F', '#E7BA61', '#37185b', '#D9534F'] }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    onClick: (e, el) => { if(el.length) setFilter('Tipo de Medio', tipoData[el[0].index][0]); }
+                }
+            });
+
+            const mediaHeight = Math.max(280, mediaData.length * 28);
+            document.getElementById('chartMediaContainer').style.height = `${mediaHeight}px`;
+
+            const actorHeight = Math.max(280, actorData.length * 28);
+            document.getElementById('chartActoresContainer').style.height = `${actorHeight}px`;
+
+            // 3. Medios Completos
+            charts.media = new Chart(document.getElementById('chartMedia').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: mediaData.map(d => d[0]),
+                    datasets: [{ label: 'Notas', data: mediaData.map(d => d[1]), backgroundColor: '#232D4F', borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } } },
+                    onClick: (e, el) => { if(el.length) setFilter('Medio', mediaData[el[0].index][0]); }
+                }
+            });
+
+            // 4. Actores Completos
+            charts.actores = new Chart(document.getElementById('chartActores').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: actorData.map(d => d[0]),
+                    datasets: [{ label: 'Menciones', data: actorData.map(d => d[1]), backgroundColor: '#37185b', borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } } },
+                    onClick: (e, el) => { if(el.length) setFilter('Actor', actorData[el[0].index][0]); }
+                }
+            });
+        }
+
+        // Gráfico de Barras Horizontales para Frecuencia de Temas (#E7BA61)
+        function renderTopicsChart(topicSortedData) {
+            const container = document.getElementById('chartTopicsContainer');
+            if (!topicSortedData || topicSortedData.length === 0) {
+                container.style.height = '120px';
+                return;
+            }
+
+            const topicHeight = Math.max(280, topicSortedData.length * 28);
+            container.style.height = `${topicHeight}px`;
+
+            if (charts.topics) charts.topics.destroy();
+
+            charts.topics = new Chart(document.getElementById('chartTopics').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: topicSortedData.map(d => d[0]),
+                    datasets: [{
+                        label: 'Frecuencia de noticias',
+                        data: topicSortedData.map(d => d[1]),
+                        backgroundColor: '#E7BA61',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } } },
+                    onClick: (e, el) => { 
+                        if(el.length) setFilter('Tema', topicSortedData[el[0].index][0]); 
+                    }
+                }
+            });
+        }
+
+        function renderTable(data) {
+            const thead = document.getElementById('table-head');
+            const tbody = document.getElementById('table-body');
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                document.getElementById('table-count').innerText = "0 registros encontrados";
+                return;
+            }
+
+            document.getElementById('table-count').innerText = `Mostrando ${data.length.toLocaleString()} registros`;
+
+            const headers = Object.keys(data[0]).filter(k => !k.startsWith('_'));
+            let headerRow = '<tr>';
+            headers.forEach(h => {
+                headerRow += `<th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">${h}</th>`;
+            });
+            headerRow += '</tr>';
+            thead.innerHTML = headerRow;
+
+            let bodyHTML = '';
+            data.slice(0, 150).forEach(row => {
+                bodyHTML += '<tr class="hover:bg-gray-50 border-b border-gray-100">';
+                headers.forEach(h => {
+                    let val = row[h] !== undefined ? row[h] : '';
+                    bodyHTML += `<td class="px-4 py-2.5 text-xs text-gray-700">${val}</td>`;
+                });
+                bodyHTML += '</tr>';
+            });
+            tbody.innerHTML = bodyHTML;
+        }
+
+        function filterTableBySearch() {
+            const query = document.getElementById('table-search').value.toLowerCase();
+            if (!query) {
+                renderTable(currentFilteredData);
+                return;
+            }
+            const filtered = currentFilteredData.filter(row => {
+                return Object.values(row).some(val => String(val).toLowerCase().includes(query));
+            });
+            renderTable(filtered);
+        }
+
+        function exportDashboard() {
+            if (globalData.length === 0) {
+                alert("No hay datos cargados para exportar.");
+                return;
+            }
+
+            const scriptTag = document.getElementById('embedded-data');
+            const safeJson = JSON.stringify(globalData).replace(/</g, '\\u003c');
+            scriptTag.textContent = "var embeddedExcelData = " + safeJson + ";";
+            
+            const clone = document.documentElement.cloneNode(true);
+
+            clone.querySelectorAll('canvas').forEach(canvas => {
+                const cleanCanvas = document.createElement('canvas');
+                cleanCanvas.id = canvas.id;
+                canvas.parentNode.replaceChild(cleanCanvas, canvas);
+            });
+
+            const notesCard = clone.querySelector('#custom-notes-card');
+            const notesEditor = clone.querySelector('#custom-notes-editor');
+            const notesToolbar = clone.querySelector('#notes-toolbar');
+
+            if (notesEditor) {
+                const textContent = notesEditor.innerText.trim();
+                if (!textContent || textContent === '') {
+                    if (notesCard) notesCard.remove();
+                } else {
+                    notesEditor.removeAttribute('contenteditable');
+                    notesEditor.removeAttribute('placeholder');
+                    notesEditor.className = "text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded border border-gray-100";
+                    if (notesToolbar) notesToolbar.remove();
+                }
+            }
+
+            const exportSection = clone.querySelector('#export-section-container');
+            if (exportSection) exportSection.remove();
+
+            const dz = clone.querySelector('#drop-zone');
+            if (dz) dz.remove();
+
+            const htmlContent = "<!DOCTYPE html>\n" + clone.outerHTML;
+            
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Reporte_Seguimiento_Medios_Interactivo.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
