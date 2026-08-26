@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento Temático de Medios del Interior - Tablero de Control y Análisis de Cobertura</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS para leer Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Google Charts para Mapas -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- Google Fonts: Montserrat y Lora -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: #f4f5f7; 
+            color: #232D4F; 
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', serif;
+        }
+        .bg-official { background-color: #232D4F; }
+        .text-official { color: #232D4F; }
+        .border-official { border-color: #E7BA61; }
+        .accent-gold { color: #E7BA61; }
+        .word-tag { 
+            transition: all 0.2s ease; 
+            cursor: pointer; 
+            display: inline-block; 
+            margin: 3px; 
+            padding: 4px 10px; 
+            border-radius: 9999px; 
+            background-color: #e2e8f0; 
+            color: #232D4F; 
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            font-family: 'Montserrat', sans-serif;
+        }
+        .word-tag:hover { 
+            background-color: #232D4F; 
+            color: #E7BA61; 
+            transform: translateY(-1px); 
+        }
+        .editor-btn {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #232D4F;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .editor-btn:hover {
+            background-color: #e2e8f0;
+        }
+        #custom-notes-editor {
+            min-height: 80px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        #custom-notes-editor[contenteditable="true"]:empty:before {
+            content: attr(placeholder);
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Banner Superior Institucional -->
+    <header class="bg-official shadow-md border-b-4 border-official" style="border-bottom-color: #E7BA61;">
+        <div class="w-full px-6 py-3 flex justify-between items-center" style="background-color: #232D4F;">
+            <!-- Logo Izquierdo: Usina -->
+            <div class="flex items-center">
+                <img src="https://ivanchalan.github.io/logousinachico.jpg" alt="Logo Usina" class="h-12 object-contain" style="height: 65px">
+            </div>
+            <!-- Logo Derecho: Presidencia -->
+            <div class="flex items-center">
+                <img src="https://ivanchalan.github.io/logopresidencia.jpg" alt="Logo Presidencia" class="h-12 object-contain" style="height: 85px">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Upload Section -->
+        <section id="upload-section" class="bg-white rounded-lg shadow-sm p-10 text-center border-2 border-dashed border-gray-300 hover:border-[#232D4F] transition-colors cursor-pointer">
+            <input type="file" id="excel-file" accept=".xlsx, .xls, .csv" class="hidden">
+            <div class="space-y-4 max-w-lg mx-auto">
+                <div class="w-16 h-16 mx-auto rounded-full bg-[#232D4F] text-[#E7BA61] flex items-center justify-center shadow">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <div class="text-lg font-semibold text-gray-800">Cargar Archivo Excel de Agenda Nacional</div>
+                <p class="text-sm text-gray-500">Arrastra tu archivo aquí o <span class="text-[#232D4F] font-bold underline">haz clic para seleccionar</span></p>
+                <p class="text-xs text-gray-400">Procesamiento local seguro y privado. Analiza automáticamente las columnas de Tema, Secciones, Valoración y Provincias.</p>
+            </div>
+        </section>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" class="hidden space-y-6">
+
+            <!-- Encabezado del Tablero -->
+            <div class="text-center py-2">
+                <h1 class="text-2xl sm:text-3xl font-bold text-[#232D4F]">Seguimiento Temático de Medios del Interior</h1>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1">Tablero de Control y Análisis de Cobertura</p>
+            </div>
+
+            <!-- Filtros Activos Flotantes -->
+            <div id="filter-bar-container" class="sticky top-4 z-50 hidden transition-all duration-300">
+                <div class="bg-white p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4" style="border-left-color: #E7BA61;">
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-sm text-gray-600">Filtros Activos:</span>
+                        <div id="active-filters" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <button id="reset-filters" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1.5 rounded text-sm font-medium transition-colors">
+                        Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPIs Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #232D4F;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Menciones</p>
+                    <p id="kpi-total" class="text-3xl font-bold text-[#232D4F] mt-1 font-serif">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #38A89D;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Medios Registrados</p>
+                    <p id="kpi-medios" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #E7BA61;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Secciones Activas</p>
+                    <p id="kpi-secciones" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #5CB85C;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Menciones Positivas</p>
+                    <p id="kpi-positivas" class="text-3xl font-bold text-green-700 mt-1 font-serif">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #D9534F;">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Menciones Negativas</p>
+                    <p id="kpi-negativas" class="text-3xl font-bold text-red-700 mt-1 font-serif">0</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta de Notas u Observaciones Personalizadas -->
+            <div id="custom-notes-card" class="bg-white p-5 rounded-lg shadow border-l-4 border-t-2" style="border-left-color: #232D4F; border-top-color: #232D4F;">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
+                    <h3 class="text-lg font-bold text-[#232D4F]">Notas u Observaciones</h3>
+                    
+                    <!-- Toolbar wysiwyg -->
+                    <div id="editor-toolbar" class="flex flex-wrap gap-1 text-xs">
+                        <button type="button" class="editor-btn" onclick="execCmd('bold')"><b>B</b></button>
+                        <button type="button" class="editor-btn" onclick="execCmd('italic')"><i>I</i></button>
+                        <button type="button" class="editor-btn" onclick="execCmd('underline')"><u>U</u></button>
+                        <span class="border-r border-gray-300 mx-1"></span>
+                        <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')">- Lista</button>
+                        <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')">1. Lista</button>
+                        <span class="border-r border-gray-300 mx-1"></span>
+                        <select onchange="execCmd('fontSize', this.value); this.selectedIndex=0;" class="editor-btn">
+                            <option value="" disabled selected>Tamaño</option>
+                            <option value="1">Muy Pequeño</option>
+                            <option value="2">Pequeño</option>
+                            <option value="3">Normal</option>
+                            <option value="4">Grande</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="custom-notes-editor" contenteditable="true" class="p-4 bg-gray-50 border border-gray-200 rounded text-sm text-gray-700 outline-none focus:bg-white focus:border-[#232D4F] transition-colors" placeholder="Escriba aquí sus observaciones..."></div>
+            </div>
+
+            <!-- Conclusiones e Insights -->
+            <div class="bg-white p-5 rounded-lg shadow border-t-2 border-l-4" style="border-top-color: #232D4F; border-left-color: #E7BA61;">
+                <h3 class="text-lg font-bold text-[#232D4F] mb-1">Conclusiones e Insights</h3>
+                <p class="text-xs text-gray-500 mb-4">Análisis dinámico de los datos cargados.</p>
+                <div id="insights-container" class="text-sm text-gray-700 space-y-2 bg-gray-50 p-4 rounded border border-gray-100">
+                    <p class="italic text-gray-400">Cargue datos para generar conclusiones.</p>
+                </div>
+            </div>
+
+            <!-- Charts Section 1: Sección y Valoración -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Gráfico 1: Por Sección -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #232D4F;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Menciones por Sección</h3>
+                        <p class="text-xs text-gray-500 mb-4">Haz clic en una barra para filtrar el tablero.</p>
+                    </div>
+                    <div class="relative h-72">
+                        <canvas id="chartSeccion"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico 2: Por Valoración -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #232D4F;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Distribución por Valoración</h3>
+                        <p class="text-xs text-gray-500 mb-4">Haz clic en un sector para filtrar.</p>
+                    </div>
+                    <div class="relative h-72 flex justify-center">
+                        <canvas id="chartValoracion"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section 2: Gráfico Consolidado de Temas -->
+            <div class="bg-white p-5 rounded-lg shadow border-t-2" style="border-top-color: #E7BA61;">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Frecuencia de Temas (Consolidado 3 Columnas)</h3>
+                        <p class="text-xs text-gray-500">Suma y analiza la repetición de temas combinando las 3 columnas de Tema del archivo. Haz clic en una barra para filtrar.</p>
+                    </div>
+                    <div id="topic-cols-info" class="text-xs text-gray-400 mt-2 sm:mt-0 italic bg-gray-50 px-3 py-1 rounded border border-gray-200">
+                        Columnas detectadas: Evaluando...
+                    </div>
+                </div>
+                <div class="relative h-80">
+                    <canvas id="chartTemasConsolidado"></canvas>
+                </div>
+            </div>
+
+            <!-- Maps Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 border-t-2 pt-2" style="border-top-color: transparent;">
+                <!-- Mapa Positivo -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #5CB85C;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Mapa de Noticias Positivas</h3>
+                        <p class="text-xs text-gray-500 mb-4">A mayor intensidad, más menciones. Haz clic en una provincia para filtrar.</p>
+                    </div>
+                    <div class="relative h-80 flex justify-center w-full">
+                        <div id="map-positive" class="w-full h-full flex items-center justify-center"></div>
+                    </div>
+                </div>
+
+                <!-- Mapa Negativo -->
+                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #D9534F;">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Mapa de Noticias Negativas</h3>
+                        <p class="text-xs text-gray-500 mb-4">A mayor intensidad, más menciones. Haz clic en una provincia para filtrar.</p>
+                    </div>
+                    <div class="relative h-80 flex justify-center w-full">
+                        <div id="map-negative" class="w-full h-full flex items-center justify-center"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section 3: Top Medios -->
+            <div class="bg-white p-5 rounded-lg shadow border-t-2" style="border-top-color: #232D4F;">
+                <div>
+                    <h3 class="text-lg font-bold text-[#232D4F] mb-1">Top Medios con Mayor Cobertura</h3>
+                    <p class="text-xs text-gray-500 mb-4">Medios de comunicación con más registros asociados (mostrando hasta 20 principales).</p>
+                </div>
+                <div class="relative h-80">
+                    <canvas id="chartMedios"></canvas>
+                </div>
+            </div>
+
+            <!-- Nube de Palabras de Títulos -->
+            <div class="bg-white p-5 rounded-lg shadow border-t-2" style="border-top-color: #E7BA61;">
+                <h3 class="text-lg font-bold text-[#232D4F] mb-1">Nube de Palabras Clave (Títulos de Noticias)</h3>
+                <p class="text-xs text-gray-500 mb-4">Haz clic en cualquier término para filtrar instantáneamente el tablero.</p>
+                <div id="word-cloud-container" class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded border border-gray-100 max-h-48 overflow-y-auto"></div>
+            </div>
+
+            <!-- Data Table Section -->
+            <div class="bg-white rounded-lg shadow overflow-hidden border-t-2" style="border-top-color: #232D4F;">
+                <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#232D4F]">Detalle de Registros y Títulos</h3>
+                        <p id="table-count" class="text-xs text-gray-500">Mostrando registros filtrados</p>
+                    </div>
+                    <input type="text" id="table-search" placeholder="Buscar en títulos, temas o medios..." class="px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:border-[#232D4F] w-full sm:w-72">
+                </div>
+                <div class="overflow-x-auto max-h-96">
+                    <table id="data-table" class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-50 sticky top-0" id="table-head"></thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Botón de Exportar Informe Interactivo -->
+            <div class="flex justify-center pt-4 pb-8" id="export-section-container">
+                <button id="export-btn" type="button" onclick="exportInteractiveReport()" class="bg-[#232D4F] hover:bg-opacity-90 text-[#E7BA61] font-semibold px-8 py-3 rounded-lg shadow-lg transition-all flex items-center gap-2 text-base border border-[#E7BA61]">
+                    <svg class="w-5 h-5 text-[#E7BA61]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Exportar Informe Interactivo Completo
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#232D4F] text-gray-300 text-xs py-6 mt-12 border-t-2" style="border-color: #E7BA61;">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2 font-light">
+            <p>Tablero analítico oficial - Procesamiento íntegramente local en cliente.</p>
+            <p>&copy; 2026 - Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Script de lógica y renderizado -->
+    <script>
+        let rawData = [];
+        let filteredData = [];
+        let headers = [];
+        let charts = {};
+        let currentFilters = {};
+        let googleChartsLoaded = false;
+
+        function execCmd(command, value = null) {
+            document.execCommand(command, false, value);
+        }
+
+        google.charts.load('current', { 'packages': ['geochart'] });
+        google.charts.setOnLoadCallback(() => {
+            googleChartsLoaded = true;
+            if (filteredData && filteredData.length > 0) {
+                renderMaps();
+            }
+        });
+
+        const uploadSection = document.getElementById('upload-section');
+        const fileInput = document.getElementById('excel-file');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const activeFiltersContainer = document.getElementById('active-filters');
+        const resetFiltersBtn = document.getElementById('reset-filters');
+        const tableSearch = document.getElementById('table-search');
+
+        const stopwords = new Set(['a','ante','bajo','cabe','con','contra','de','desde','durante','en','entre','hacia','hasta','mediante','para','por','según','sin','so','sobre','tras','versus','vía','el','la','los','las','un','una','unos','unas','y','e','ni','o','u','pero','sino','porque','que','se','su','sus','le','les','lo','al','del','es','son','fue','ha','han','está','están','este','esta','estos','estas','como','más','ya','sí','porque','cuando','muy','sin','también','me','hasta','hay','donde','quien','todo','nos','todos','uno','contra','otros','fuese','haya','fueron','estaba','estado','tenía','tienen']);
+
+        if (uploadSection) {
+            uploadSection.addEventListener('click', () => fileInput.click());
+            uploadSection.addEventListener('dragover', (e) => { e.preventDefault(); uploadSection.classList.add('border-[#232D4F]'); });
+            uploadSection.addEventListener('dragleave', () => { uploadSection.classList.remove('border-[#232D4F]'); });
+            uploadSection.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadSection.classList.remove('border-[#232D4F]');
+                if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+            });
+        }
+        if (fileInput) {
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) handleFile(e.target.files[0]);
+            });
+        }
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    const json = XLSX.utils.sheet_to_json(worksheet, {header: 1, defval: ''});
+                    if (json.length < 2) throw new Error("El archivo no contiene suficientes filas.");
+
+                    headers = json[0].map(h => String(h).trim());
+                    const rows = json.slice(1).filter(row => row.some(cell => cell !== ''));
+
+                    rawData = rows.map(row => {
+                        let obj = {};
+                        headers.forEach((h, index) => {
+                            obj[h] = row[index] !== undefined ? row[index] : '';
+                        });
+                        return obj;
+                    });
+
+                    filteredData = [...rawData];
+                    if (uploadSection) uploadSection.classList.add('hidden');
+                    if (dashboardContent) dashboardContent.classList.remove('hidden');
+
+                    updateDashboard();
+                } catch (error) {
+                    alert("Error al procesar el archivo Excel: " + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function getTopicColumns() {
+            let topicCols = headers.filter(h => /tema|temática|eje|categoría/i.test(h));
+            if (topicCols.length === 0) {
+                topicCols = headers.filter(h => h.toLowerCase().includes('tema'));
+            }
+            return topicCols.slice(0, 3);
+        }
+
+        function updateDashboard() {
+            applyFilters();
+            updateKPIs();
+            renderCharts();
+            if (googleChartsLoaded) renderMaps();
+            renderWordCloud();
+            renderTable();
+            updateInsights();
+            updateFilterUI();
+        }
+
+        function applyFilters() {
+            filteredData = rawData.filter(row => {
+                for (let key in currentFilters) {
+                    if (key === 'Palabra') {
+                        let titleText = String(row['Título'] || '').toLowerCase();
+                        if (!titleText.includes(currentFilters['Palabra'])) return false;
+                    } else if (key === 'TemaConsolidado') {
+                        const topicCols = getTopicColumns();
+                        const filterVal = String(currentFilters['TemaConsolidado']).toLowerCase().trim();
+                        const match = topicCols.some(col => String(row[col] || '').toLowerCase().trim() === filterVal);
+                        if (!match) return false;
+                    } else if (key === 'Valoración') {
+                        const rowVal = String(row['Valoración'] || '').toUpperCase().trim();
+                        const filterVal = String(currentFilters['Valoración'] || '').toUpperCase().trim();
+                        if (rowVal !== filterVal) return false;
+                    } else {
+                        if (String(row[key] || '').trim() !== String(currentFilters[key] || '').trim()) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            });
+        }
+
+        function updateKPIs() {
+            document.getElementById('kpi-total').textContent = filteredData.length.toLocaleString();
+            
+            const mediosUnicos = new Set(filteredData.map(r => r['Medio'])).size;
+            const seccionesUnicas = new Set(filteredData.map(r => r['Sección'])).size;
+            const positivas = filteredData.filter(r => String(r['Valoración'] || '').toUpperCase().trim() === 'POSITIVO').length;
+            const negativas = filteredData.filter(r => String(r['Valoración'] || '').toUpperCase().trim() === 'NEGATIVO').length;
+
+            document.getElementById('kpi-medios').textContent = mediosUnicos;
+            document.getElementById('kpi-secciones').textContent = seccionesUnicas;
+            document.getElementById('kpi-positivas').textContent = positivas;
+            document.getElementById('kpi-negativas').textContent = negativas;
+        }
+
+        function renderCharts() {
+            if (typeof Chart === 'undefined') return;
+            renderBarChart('chartSeccion', 'Sección', '#232D4F', null);
+            renderValuationChart('chartValoracion');
+            renderTopicsConsolidatedChart('chartTemasConsolidado');
+            renderBarChart('chartMedios', 'Medio', '#232D4F', 20);
+        }
+
+        function renderBarChart(canvasId, column, color, limit) {
+            const canvasElem = document.getElementById(canvasId);
+            if (!canvasElem) return;
+            const ctx = canvasElem.getContext('2d');
+            const counts = {};
+            
+            filteredData.forEach(row => {
+                let val = row[column] || 'No especificado';
+                counts[val] = (counts[val] || 0) + 1;
+            });
+
+            let sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+            if (limit) sorted = sorted.slice(0, limit);
+
+            const labels = sorted.map(item => item[0]);
+            const data = sorted.map(item => item[1]);
+
+            if (charts[canvasId]) charts[canvasId].destroy();
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: color,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { font: { size: 10, family: 'Montserrat' }, maxRotation: 30 } },
+                        y: { beginAtZero: true }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            currentFilters[column] = labels[index];
+                            updateDashboard();
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderValuationChart(canvasId) {
+            const canvasElem = document.getElementById(canvasId);
+            if (!canvasElem) return;
+            const ctx = canvasElem.getContext('2d');
+            const counts = { 'POSITIVO': 0, 'NEUTRO': 0, 'NEGATIVO': 0 };
+            
+            filteredData.forEach(row => {
+                let val = String(row['Valoración'] || '').toUpperCase().trim();
+                if (counts[val] !== undefined) {
+                    counts[val]++;
+                } else if (val) {
+                    counts[val] = 1;
+                }
+            });
+
+            const labels = Object.keys(counts);
+            const data = Object.values(counts);
+            const backgroundColors = labels.map(l => {
+                if (l === 'POSITIVO') return '#5CB85C';
+                if (l === 'NEGATIVO') return '#D9534F';
+                return '#7F8C8D';
+            });
+
+            if (charts[canvasId]) charts[canvasId].destroy();
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, family: 'Montserrat' } } } 
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            currentFilters['Valoración'] = labels[index];
+                            updateDashboard();
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTopicsConsolidatedChart(canvasId) {
+            const canvasElem = document.getElementById(canvasId);
+            if (!canvasElem) return;
+            const ctx = canvasElem.getContext('2d');
+            const topicCols = getTopicColumns();
+
+            const topicInfoElem = document.getElementById('topic-cols-info');
+            if (topicCols.length > 0 && topicInfoElem) {
+                topicInfoElem.textContent = `Columnas analizadas: ${topicCols.join(', ')}`;
+            } else if (topicInfoElem) {
+                topicInfoElem.textContent = 'No se detectaron columnas con la palabra "Tema".';
+            }
+
+            const counts = {};
+            filteredData.forEach(row => {
+                topicCols.forEach(col => {
+                    let val = String(row[col] || '').trim();
+                    if (val && val !== 'undefined' && val !== 'null' && val !== '-') {
+                        counts[val] = (counts[val] || 0) + 1;
+                    }
+                });
+            });
+
+            const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 12);
+            const labels = sorted.map(item => item[0]);
+            const data = sorted.map(item => item[1]);
+
+            if (charts[canvasId]) charts[canvasId].destroy();
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Frecuencia Total',
+                        data: data,
+                        backgroundColor: '#E7BA61',
+                        borderColor: '#232D4F',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Total menciones en las 3 columnas: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, ticks: { font: { family: 'Montserrat', size: 11 } } },
+                        y: { ticks: { font: { family: 'Montserrat', size: 11 } } }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            currentFilters['TemaConsolidado'] = labels[index];
+                            updateDashboard();
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMaps() {
+            if (!window.google || !google.visualization || !google.visualization.arrayToDataTable) return;
+
+            let provCol = headers.length >= 5 ? headers[4] : null;
+            if (!provCol) {
+                provCol = headers.find(h => /provincia|ubicación|jurisdicción/i.test(h));
+            }
+
+            let posMapElement = document.getElementById('map-positive');
+            let negMapElement = document.getElementById('map-negative');
+
+            if (!provCol) {
+                if (posMapElement) posMapElement.innerHTML = '<p class="text-sm text-gray-500 text-center w-full">El archivo no contiene una columna de provincia identificable.</p>';
+                if (negMapElement) negMapElement.innerHTML = '<p class="text-sm text-gray-500 text-center w-full">El archivo no contiene una columna de provincia identificable.</p>';
+                return;
+            }
+
+            let posCounts = {};
+            let negCounts = {};
+
+            filteredData.forEach(row => {
+                let prov = row[provCol];
+                if (!prov) return;
+                
+                let val = String(row['Valoración'] || '').toUpperCase().trim();
+                if (val === 'POSITIVO') {
+                    posCounts[prov] = (posCounts[prov] || 0) + 1;
+                } else if (val === 'NEGATIVO') {
+                    negCounts[prov] = (negCounts[prov] || 0) + 1;
+                }
+            });
+
+            let posDataArr = [['Provincia', 'Menciones Positivas']];
+            for (let p in posCounts) posDataArr.push([p, posCounts[p]]);
+            if (posDataArr.length === 1) posDataArr.push(['Argentina', 0]);
+
+            let negDataArr = [['Provincia', 'Menciones Negativas']];
+            for (let p in negCounts) negDataArr.push([p, negCounts[p]]);
+            if (negDataArr.length === 1) negDataArr.push(['Argentina', 0]);
+
+            let posData = google.visualization.arrayToDataTable(posDataArr);
+            let negData = google.visualization.arrayToDataTable(negDataArr);
+
+            let posOptions = {
+                region: 'AR',
+                resolution: 'provinces',
+                colorAxis: {colors: ['#e5f5e0', '#006d2c']},
+                backgroundColor: 'transparent',
+                datalessRegionColor: '#f4f5f7',
+                defaultColor: '#f4f5f7',
+                legend: 'none',
+                tooltip: { textStyle: { fontName: 'Montserrat' } }
+            };
+
+            let negOptions = {
+                region: 'AR',
+                resolution: 'provinces',
+                colorAxis: {colors: ['#fee0d2', '#de2d26']},
+                backgroundColor: 'transparent',
+                datalessRegionColor: '#f4f5f7',
+                defaultColor: '#f4f5f7',
+                legend: 'none',
+                tooltip: { textStyle: { fontName: 'Montserrat' } }
+            };
+
+            if (posMapElement) posMapElement.innerHTML = '';
+            if (negMapElement) negMapElement.innerHTML = '';
+
+            let posChart = new google.visualization.GeoChart(posMapElement);
+            let negChart = new google.visualization.GeoChart(negMapElement);
+
+            posChart.draw(posData, posOptions);
+            negChart.draw(negData, negOptions);
+
+            google.visualization.events.addListener(posChart, 'select', function() {
+                var selection = posChart.getSelection();
+                if (selection.length > 0) {
+                    var province = posData.getValue(selection[0].row, 0);
+                    if(province !== 'Argentina') {
+                        currentFilters[provCol] = province;
+                        updateDashboard();
+                    }
+                }
+            });
+
+            google.visualization.events.addListener(negChart, 'select', function() {
+                var selection = negChart.getSelection();
+                if (selection.length > 0) {
+                    var province = negData.getValue(selection[0].row, 0);
+                    if(province !== 'Argentina') {
+                        currentFilters[provCol] = province;
+                        updateDashboard();
+                    }
+                }
+            });
+        }
+
+        function renderWordCloud() {
+            const container = document.getElementById('word-cloud-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const wordCounts = {};
+            filteredData.forEach(row => {
+                let title = String(row['Título'] || '').toLowerCase();
+                let clean = title.replace(/[^\w\sáéíóúüñ]/gi, '');
+                let words = clean.split(/\s+/);
+                words.forEach(w => {
+                    w = w.trim();
+                    if (w.length > 3 && !stopwords.has(w)) {
+                        wordCounts[w] = (wordCounts[w] || 0) + 1;
+                    }
+                });
+            });
+
+            const sortedWords = Object.entries(wordCounts).sort((a,b) => b[1] - a[1]).slice(0, 35);
+            if (sortedWords.length === 0) {
+                container.innerHTML = `<span class="text-xs text-gray-400 italic">No hay suficientes palabras para mostrar.</span>`;
+                return;
+            }
+
+            sortedWords.forEach(([word, count]) => {
+                let tag = document.createElement('span');
+                tag.className = 'word-tag';
+                let fontSize = Math.min(0.85 + (count * 0.05), 1.4);
+                tag.style.fontSize = `${fontSize}rem`;
+                tag.textContent = `${word} (${count})`;
+                tag.title = `Filtrar por palabra: ${word}`;
+                tag.onclick = () => {
+                    currentFilters['Palabra'] = word;
+                    updateDashboard();
+                };
+                container.appendChild(tag);
+            });
+        }
+
+        function updateInsights() {
+            const container = document.getElementById('insights-container');
+            if (!container) return;
+            if (filteredData.length === 0) {
+                container.innerHTML = `<p class="text-gray-500">No hay datos para los filtros seleccionados.</p>`;
+                return;
+            }
+
+            let secCounts = {};
+            filteredData.forEach(r => secCounts[r['Sección']] = (secCounts[r['Sección']] || 0) + 1);
+            let topSec = Object.entries(secCounts).sort((a,b) => b[1] - a[1])[0];
+
+            let topicCols = getTopicColumns();
+            let topicCounts = {};
+            filteredData.forEach(r => {
+                topicCols.forEach(col => {
+                    let t = String(r[col] || '').trim();
+                    if (t && t !== '-' && t !== 'undefined') {
+                        topicCounts[t] = (topicCounts[t] || 0) + 1;
+                    }
+                });
+            });
+            let topTopic = Object.entries(topicCounts).sort((a,b) => b[1] - a[1])[0];
+
+            let valCounts = { 'POSITIVO': 0, 'NEUTRO': 0, 'NEGATIVO': 0 };
+            filteredData.forEach(r => {
+                let v = String(r['Valoración'] || '').toUpperCase().trim();
+                if (valCounts[v] !== undefined) valCounts[v]++;
+            });
+
+            let totalVal = filteredData.length;
+            let negPct = totalVal > 0 ? ((valCounts['NEGATIVO'] / totalVal) * 100).toFixed(1) : 0;
+            let posPct = totalVal > 0 ? ((valCounts['POSITIVO'] / totalVal) * 100).toFixed(1) : 0;
+
+            let html = `<p>• Se analizan <strong>${filteredData.length.toLocaleString()}</strong> registros totales.</p>`;
+            if (topSec) {
+                html += `<p>• La sección principal es <strong>${topSec[0]}</strong> (${topSec[1]} menciones).</p>`;
+            }
+            if (topTopic) {
+                html += `<p>• El tema recurrente más destacado es <strong>"${topTopic[0]}"</strong> (${topTopic[1]} menciones en las 3 columnas).</p>`;
+            }
+            html += `<p>• Distribución de tono: <strong>${posPct}%</strong> positivo y <strong>${negPct}%</strong> negativo.</p>`;
+            html += `<p class="text-xs text-gray-400 mt-2">💡 Haz clic en cualquier gráfico o mapa para profundizar tu análisis.</p>`;
+
+            container.innerHTML = html;
+        }
+
+        function renderTable() {
+            const thead = document.getElementById('table-head');
+            const tbody = document.getElementById('table-body');
+            if (!thead || !tbody) return;
+            
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                document.getElementById('table-count').textContent = "0 registros encontrados";
+                return;
+            }
+
+            document.getElementById('table-count').textContent = `Mostrando ${filteredData.length.toLocaleString()} registros`;
+
+            let headerRow = '<tr>';
+            headers.forEach(h => {
+                headerRow += `<th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">${h}</th>`;
+            });
+            headerRow += '</tr>';
+            thead.innerHTML = headerRow;
+
+            const searchTerm = tableSearch ? tableSearch.value.toLowerCase() : '';
+            const rowsToDisplay = filteredData.filter(row => {
+                if (!searchTerm) return true;
+                return Object.values(row).some(val => String(val).toLowerCase().includes(searchTerm));
+            }).slice(0, 150);
+
+            let bodyHTML = '';
+            rowsToDisplay.forEach(row => {
+                bodyHTML += '<tr class="hover:bg-gray-50">';
+                headers.forEach(h => {
+                    let val = row[h] !== undefined ? row[h] : '';
+                    if (h === 'Valoración') {
+                        let colorClass = 'bg-gray-100 text-gray-800';
+                        let vUpper = String(val).toUpperCase().trim();
+                        if (vUpper === 'POSITIVO') colorClass = 'bg-green-100 text-green-800';
+                        else if (vUpper === 'NEGATIVO') colorClass = 'bg-red-100 text-red-800';
+                        else if (vUpper === 'NEUTRO') colorClass = 'bg-gray-200 text-gray-700';
+                        val = `<span class="px-2 py-0.5 rounded text-xs font-semibold ${colorClass}">${val}</span>`;
+                    }
+                    bodyHTML += `<td class="px-4 py-2.5 text-xs text-gray-700">${val}</td>`;
+                });
+                bodyHTML += '</tr>';
+            });
+            tbody.innerHTML = bodyHTML;
+        }
+
+        function updateFilterUI() {
+            const container = document.getElementById('active-filters');
+            const filterBar = document.getElementById('filter-bar-container');
+            if (!container || !filterBar) return;
+            
+            const keys = Object.keys(currentFilters);
+            if (keys.length === 0) {
+                filterBar.classList.add('hidden');
+                return;
+            }
+
+            filterBar.classList.remove('hidden');
+            let html = '';
+            for (let key in currentFilters) {
+                let displayKey = key === 'TemaConsolidado' ? 'Tema' : key;
+                html += `<span class="bg-blue-50 text-[#232D4F] border border-[#232D4F]/20 text-xs font-semibold px-2.5 py-1 rounded flex items-center gap-1">
+                    ${displayKey}: <strong>${currentFilters[key]}</strong>
+                    <button onclick="removeFilter('${key}')" class="ml-1 text-[#232D4F] hover:text-red-700 font-bold">&times;</button>
+                </span>`;
+            }
+            container.innerHTML = html;
+        }
+
+        window.removeFilter = function(key) {
+            delete currentFilters[key];
+            updateDashboard();
+        }
+
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', () => {
+                currentFilters = {};
+                updateDashboard();
+            });
+        }
+
+        if (tableSearch) {
+            tableSearch.addEventListener('input', () => {
+                renderTable();
+            });
+        }
+
+        function exportInteractiveReport() {
+            try {
+                if (!rawData || rawData.length === 0) {
+                    alert("No hay datos cargados para exportar.");
+                    return;
+                }
+
+                const cloneDoc = document.cloneNode(true);
+
+                cloneDoc.querySelectorAll('canvas').forEach(c => {
+                    const parent = c.parentElement;
+                    const id = c.id;
+                    c.remove();
+                    const newCanvas = cloneDoc.createElement('canvas');
+                    newCanvas.id = id;
+                    parent.appendChild(newCanvas);
+                });
+
+                const posMap = cloneDoc.getElementById('map-positive');
+                const negMap = cloneDoc.getElementById('map-negative');
+                if (posMap) posMap.innerHTML = '';
+                if (negMap) negMap.innerHTML = '';
+
+                const uploadSec = cloneDoc.getElementById('upload-section');
+                if (uploadSec) uploadSec.remove();
+
+                const notesCard = cloneDoc.getElementById('custom-notes-card');
+                const notesEditor = cloneDoc.getElementById('custom-notes-editor');
+                const editorToolbar = cloneDoc.getElementById('editor-toolbar');
+
+                const textContent = notesEditor ? notesEditor.innerText.trim() : '';
+                if (!textContent || textContent === '') {
+                    if (notesCard) notesCard.remove();
+                } else {
+                    if (editorToolbar) editorToolbar.remove();
+                    if (notesEditor) {
+                        notesEditor.removeAttribute('contenteditable');
+                        notesEditor.classList.remove('bg-gray-50', 'outline-none');
+                        notesEditor.classList.add('bg-white');
+                    }
+                }
+
+                const exportContainer = cloneDoc.getElementById('export-section-container');
+                if (exportContainer) exportContainer.remove();
+
+                const safeRawData = JSON.stringify(rawData).replace(/</g, '\\u003c');
+                const safeHeaders = JSON.stringify(headers).replace(/</g, '\\u003c');
+
+                const injectionScript = cloneDoc.createElement('script');
+                injectionScript.textContent = `
+                    window.isExportedReport = true;
+                    window.preloadedRawData = ${safeRawData};
+                    window.preloadedHeaders = ${safeHeaders};
+                `;
+                cloneDoc.body.appendChild(injectionScript);
+
+                const htmlContent = "<!DOCTYPE html>\n" + cloneDoc.documentElement.outerHTML;
+
+                const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `Informe_Agenda_Temas_${new Date().toISOString().slice(0,10)}.html`;
+                document.body.appendChild(link);
+                link.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            } catch (err) {
+                alert("Error al generar la exportación: " + err.message);
+            }
+        }
+
+        function initExportedReport() {
+            if (window.isExportedReport && window.preloadedRawData && window.preloadedRawData.length > 0) {
+                rawData = window.preloadedRawData;
+                headers = window.preloadedHeaders;
+                filteredData = [...rawData];
+                
+                if (uploadSection) uploadSection.classList.add('hidden');
+                if (dashboardContent) dashboardContent.classList.remove('hidden');
+                
+                const checkLibs = setInterval(() => {
+                    if (typeof Chart !== 'undefined') {
+                        clearInterval(checkLibs);
+                        updateDashboard();
+                    }
+                }, 100);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initExportedReport);
+        } else {
+            initExportedReport();
+        }
+    </script>
+</body>
+</html>
