@@ -127,7 +127,7 @@
                 </div>
             </div>
 
-            <!-- Tarjeta Editable de Notas u Observaciones con Barra Completa de Formato -->
+            <!-- Tarjeta Editable de Notas u Observaciones -->
             <div id="custom-notes-card" class="bg-white p-5 rounded-lg shadow border-l-4" style="border-left-color: #232D4F;">
                 <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
                     <h3 class="text-lg font-bold text-[#232D4F]">Análisis y datos del Informe</h3>
@@ -213,6 +213,17 @@
                     <div id="chartActoresContainer" class="relative min-h-[280px]">
                         <canvas id="chartActores"></canvas>
                     </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de Línea de Tiempo: Evolución Diaria (#232D4F) -->
+            <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
+                <div>
+                    <h3 class="text-lg font-bold text-[#232D4F] mb-1">Evolución Temporal de Cobertura</h3>
+                    <p class="text-xs text-gray-500">Cantidad de notas por día (según la primera columna del Excel). Haz clic en un punto para filtrar por fecha.</p>
+                </div>
+                <div class="relative h-64 w-full">
+                    <canvas id="chartTimeline"></canvas>
                 </div>
             </div>
 
@@ -409,6 +420,8 @@
                         item[h] = formatCellValue(val, h);
                     });
 
+                    item['_first_col_header'] = headers[0];
+
                     let explicitTopics = [5, 6, 7, 8].map(colIdx => {
                         let val = row[colIdx];
                         return formatCellValue(val, headers[colIdx]);
@@ -454,7 +467,7 @@
             currentFilteredData = dataToRender;
 
             let total = dataToRender.length;
-            let sectionCounts = {}, tipoMedioCounts = {}, mediaCounts = {}, actorCounts = {}, topicCounts = {};
+            let sectionCounts = {}, tipoMedioCounts = {}, mediaCounts = {}, actorCounts = {}, topicCounts = {}, dateCounts = {};
 
             dataToRender.forEach(row => {
                 let sec = row['Sección'] || 'General';
@@ -475,6 +488,14 @@
                 topics.forEach(t => {
                     topicCounts[t] = (topicCounts[t] || 0) + 1;
                 });
+
+                let firstColKey = row['_first_col_header'] || (Object.keys(row).filter(k => !k.startsWith('_') && k !== 'Sección')[0]);
+                if (firstColKey && row[firstColKey] !== undefined) {
+                    let dVal = String(row[firstColKey]).trim();
+                    if (dVal && dVal !== '-' && dVal.toLowerCase() !== 'no definido') {
+                        dateCounts[dVal] = (dateCounts[dVal] || 0) + 1;
+                    }
+                }
             });
 
             document.getElementById('kpi-total').innerText = total.toLocaleString();
@@ -490,7 +511,17 @@
             const actorSorted = Object.entries(actorCounts).sort((a,b) => b[1]-a[1]);
             const topicSorted = Object.entries(topicCounts).sort((a,b) => b[1]-a[1]);
 
+            const dateSorted = Object.entries(dateCounts).sort((a, b) => {
+                let dA = new Date(a[0]);
+                let dB = new Date(b[0]);
+                if (!isNaN(dA.getTime()) && !isNaN(dB.getTime())) {
+                    return dA - dB;
+                }
+                return a[0].localeCompare(b[0], undefined, { numeric: true });
+            });
+
             renderCharts(secSorted, tipoSorted, mediaSorted, actorSorted);
+            renderTimelineChart(dateSorted);
             renderTopicsChart(topicSorted);
             renderTable(dataToRender);
         }
@@ -507,7 +538,7 @@
             if (topMed) html += `<p class="mb-1">• El medio con mayor nivel de noticias fue <strong>${topMed}</strong> (${media[topMed]} menciones).</p>`;
             if (topAct && topAct !== 'N/A') html += `<p class="mb-1">• El vocero / actor principal fue <strong>${topAct}</strong>.</p>`;
             if (topTop && topTop !== 'N/A') html += `<p class="mb-1">• El tema predominante en las 4 columnas analizadas fue <strong>${topTop}</strong> (${topics[topTop]} menciones acumuladas).</p>`;
-            html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier barra o sector para filtrar el tablero.</p>`;
+            html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier barra o punto para filtrar el tablero.</p>`;
 
             document.getElementById('dynamic-conclusions').innerHTML = html;
         }
@@ -526,6 +557,13 @@
                     let rowTopics = getRowTopics(row);
                     return rowTopics.some(t => t.toLowerCase() === value.toLowerCase());
                 }
+                if (row[type] !== undefined) {
+                    return String(row[type]) === String(value);
+                }
+                let firstColKey = row['_first_col_header'] || (Object.keys(row).filter(k => !k.startsWith('_') && k !== 'Sección')[0]);
+                if (firstColKey && row[firstColKey] !== undefined) {
+                    return String(row[firstColKey]) === String(value);
+                }
                 return true;
             });
             processData(filtered);
@@ -540,7 +578,7 @@
             Chart.defaults.color = '#232D4F';
             Chart.defaults.font.family = "'Montserrat', sans-serif";
             Object.keys(charts).forEach(k => {
-                if (charts[k] && k !== 'topics') charts[k].destroy();
+                if (charts[k] && k !== 'topics' && k !== 'timeline') charts[k].destroy();
             });
 
             // 1. Secciones
@@ -610,6 +648,66 @@
                     plugins: { legend: { display: false } },
                     scales: { x: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } } },
                     onClick: (e, el) => { if(el.length) setFilter('Actor', actorData[el[0].index][0]); }
+                }
+            });
+        }
+
+        // Gráfico de Línea de Tiempo (Evolución Diaria)
+        function renderTimelineChart(dateSortedData) {
+            const canvas = document.getElementById('chartTimeline');
+            if (!canvas) return;
+
+            if (charts.timeline) charts.timeline.destroy();
+
+            if (!dateSortedData || dateSortedData.length === 0) return;
+
+            let firstColHeader = globalData[0] ? (globalData[0]['_first_col_header'] || Object.keys(globalData[0]).filter(k => !k.startsWith('_') && k !== 'Sección')[0] || 'Fecha') : 'Fecha';
+
+            charts.timeline = new Chart(canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: dateSortedData.map(d => d[0]),
+                    datasets: [{
+                        label: 'Cantidad de Notas',
+                        data: dateSortedData.map(d => d[1]),
+                        borderColor: '#232D4F',
+                        backgroundColor: 'rgba(35, 45, 79, 0.12)',
+                        fill: true,
+                        tension: 0.25,
+                        pointBackgroundColor: '#E7BA61',
+                        pointBorderColor: '#232D4F',
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Notas: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0, stepSize: 1 }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    onClick: (e, el) => {
+                        if (el.length) {
+                            setFilter(firstColHeader, dateSortedData[el[0].index][0]);
+                        }
+                    }
                 }
             });
         }
