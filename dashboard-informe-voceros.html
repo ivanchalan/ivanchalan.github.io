@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Analítico de Medios - Seguimiento Temático</title>
+    <title>Dashboard para Informe de Voceros</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -75,7 +75,7 @@
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
 
         <div class="text-center my-2">
-            <h1 class="text-2xl sm:text-3xl font-bold text-[#232D4F]">Seguimiento Temático de Medios</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-[#232D4F]">Seguimiento Temático de Voceros en Medios</h1>
             <p class="text-xs sm:text-sm text-gray-500 mt-1">Tablero de Control y Análisis de Cobertura</p>
         </div>
 
@@ -90,7 +90,6 @@
                 </div>
                 <div class="text-lg font-semibold text-gray-800">Cargar Archivo Excel de Seguimiento Temático</div>
                 <p class="text-sm text-gray-500">Arrastra tu archivo aquí o <span class="text-[#232D4F] font-bold underline">haz clic para seleccionar</span></p>
-                <p class="text-xs text-gray-400">Procesa las 4 columnas de temas (Columnas F, G, H e I).</p>
             </div>
         </section>
 
@@ -131,7 +130,7 @@
             <!-- Tarjeta Editable de Notas u Observaciones con Barra Completa de Formato -->
             <div id="custom-notes-card" class="bg-white p-5 rounded-lg shadow border-l-4" style="border-left-color: #232D4F;">
                 <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
-                    <h3 class="text-lg font-bold text-[#232D4F]">Notas u Observaciones</h3>
+                    <h3 class="text-lg font-bold text-[#232D4F]">Análisis y datos del Informe</h3>
                     <div id="notes-toolbar" class="flex flex-wrap items-center gap-1.5">
                         <button type="button" onclick="document.execCommand('bold', false, null)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-[#232D4F] font-bold rounded text-xs border border-gray-300 transition-colors shadow-sm" title="Negrita (Ctrl+B)">
                             <strong>B</strong>
@@ -164,7 +163,7 @@
 
             <!-- Dynamic Conclusions -->
             <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-left-color: #E7BA61;">
-                <h3 class="text-lg font-bold text-[#232D4F] mb-2">Conclusiones e Insights</h3>
+                <h3 class="text-lg font-bold text-[#232D4F] mb-2">Insights</h3>
                 <div id="dynamic-conclusions" class="text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded border border-gray-100">
                     <p class="italic text-gray-400">Cargue datos para generar conclusiones.</p>
                 </div>
@@ -197,8 +196,8 @@
                 <!-- Chart 3: Medios Completos -->
                 <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
                     <div>
-                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Todos los Medios Monitoreados</h3>
-                        <p class="text-xs text-gray-500">Listado completo de medios con número de notas.</p>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Ranking de Medios</h3>
+                        <p class="text-xs text-gray-500">Listado completo de medios con presencia de voceros.</p>
                     </div>
                     <div id="chartMediaContainer" class="relative min-h-[280px]">
                         <canvas id="chartMedia"></canvas>
@@ -208,8 +207,8 @@
                 <!-- Chart 4: Actores Completos -->
                 <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
                     <div>
-                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Todos los Voceros / Actores</h3>
-                        <p class="text-xs text-gray-500">Listado completo de voceros con presencia en notas.</p>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Ranking de Voceros</h3>
+                        <p class="text-xs text-gray-500">Listado completo de voceros con presencia en medios.</p>
                     </div>
                     <div id="chartActoresContainer" class="relative min-h-[280px]">
                         <canvas id="chartActores"></canvas>
@@ -221,7 +220,7 @@
             <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #E7BA61;">
                 <div>
                     <h3 class="text-lg font-bold text-[#232D4F] mb-1">Frecuencia de Temas</h3>
-                    <p class="text-xs text-gray-500">Visualización de la presencia acumulada de temas en las 4 columnas. Haz clic en una barra para filtrar.</p>
+                    <p class="text-xs text-gray-500">Visualización de la presencia acumulada de temas. Haz clic en una barra para filtrar.</p>
                 </div>
                 <div id="chartTopicsContainer" class="relative min-h-[280px]">
                     <canvas id="chartTopics"></canvas>
