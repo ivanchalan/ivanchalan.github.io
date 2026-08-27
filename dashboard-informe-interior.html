@@ -100,7 +100,7 @@
                 </div>
                 <div class="text-lg font-semibold text-gray-800">Cargar Archivo Excel de Agenda Nacional</div>
                 <p class="text-sm text-gray-500">Arrastra tu archivo aquí o <span class="text-[#232D4F] font-bold underline">haz clic para seleccionar</span></p>
-                <p class="text-xs text-gray-400">Procesamiento local seguro y privado. Analiza automáticamente las columnas de Tema, Secciones, Valoración y Provincias.</p>
+                <p class="text-xs text-gray-400">Procesamiento local seguro y privado. Analiza automáticamente las columnas de Secciones, Valoración, Tags y Provincias.</p>
             </div>
         </section>
 
@@ -177,7 +177,7 @@
                 <div id="custom-notes-editor" contenteditable="true" class="p-4 bg-gray-50 border border-gray-200 rounded text-sm text-gray-700 outline-none focus:bg-white focus:border-[#232D4F] transition-colors" placeholder="Escriba aquí sus observaciones..."></div>
             </div>
 
-            <!--Insights -->
+            <!-- Insights -->
             <div class="bg-white p-5 rounded-lg shadow border-t-2 border-l-4" style="border-top-color: #232D4F; border-left-color: #E7BA61;">
                 <h3 class="text-lg font-bold text-[#232D4F] mb-1">Insights</h3>
                 <p class="text-xs text-gray-500 mb-4">Análisis dinámico de los datos cargados.</p>
@@ -208,22 +208,6 @@
                     <div class="relative h-72 flex justify-center">
                         <canvas id="chartValoracion"></canvas>
                     </div>
-                </div>
-            </div>
-
-            <!-- Charts Section 2: Gráfico Consolidado de Temas -->
-            <div class="bg-white p-5 rounded-lg shadow border-t-2" style="border-top-color: #E7BA61;">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Frecuencia de Temas (Consolidado 3 Columnas)</h3>
-                        <p class="text-xs text-gray-500">Suma y analiza la repetición de temas combinando las 3 columnas de Tema del archivo. Haz clic en una barra para filtrar.</p>
-                    </div>
-                    <div id="topic-cols-info" class="text-xs text-gray-400 mt-2 sm:mt-0 italic bg-gray-50 px-3 py-1 rounded border border-gray-200">
-                        Columnas detectadas: Evaluando...
-                    </div>
-                </div>
-                <div class="relative h-80">
-                    <canvas id="chartTemasConsolidado"></canvas>
                 </div>
             </div>
 
@@ -263,11 +247,11 @@
                 </div>
             </div>
 
-            <!-- Nube de Palabras de Títulos -->
+            <!-- Nube de Tags (Columnas F, G y H) -->
             <div class="bg-white p-5 rounded-lg shadow border-t-2" style="border-top-color: #E7BA61;">
-                <h3 class="text-lg font-bold text-[#232D4F] mb-1">Nube de Palabras Clave</h3>
-                <p class="text-xs text-gray-500 mb-4">Haz clic en cualquier término para filtrar instantáneamente el tablero.</p>
-                <div id="word-cloud-container" class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded border border-gray-100 max-h-48 overflow-y-auto"></div>
+                <h3 class="text-lg font-bold text-[#232D4F] mb-1">Nube de Tags</h3>
+                <p class="text-xs text-gray-500 mb-4">Consolidado de las columnas F, G y H. Haz clic en cualquier tag para filtrar instantáneamente el tablero.</p>
+                <div id="word-cloud-container" class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded border border-gray-100 overflow-hidden"></div>
             </div>
 
             <!-- Data Table Section -->
@@ -337,8 +321,6 @@
         const resetFiltersBtn = document.getElementById('reset-filters');
         const tableSearch = document.getElementById('table-search');
 
-        const stopwords = new Set(['a','ante','bajo','cabe','con','contra','de','desde','durante','en','entre','hacia','hasta','mediante','para','por','según','sin','so','sobre','tras','versus','vía','el','la','los','las','un','una','unos','unas','y','e','ni','o','u','pero','sino','porque','que','se','su','sus','le','les','lo','al','del','es','son','fue','ha','han','está','están','este','esta','estos','estas','como','más','ya','sí','porque','cuando','muy','sin','también','me','hasta','hay','donde','quien','todo','nos','todos','uno','contra','otros','fuese','haya','fueron','estaba','estado','tenía','tienen']);
-
         if (uploadSection) {
             uploadSection.addEventListener('click', () => fileInput.click());
             uploadSection.addEventListener('dragover', (e) => { e.preventDefault(); uploadSection.classList.add('border-[#232D4F]'); });
@@ -390,14 +372,6 @@
             reader.readAsArrayBuffer(file);
         }
 
-        function getTopicColumns() {
-            let topicCols = headers.filter(h => /tema|temática|eje|categoría/i.test(h));
-            if (topicCols.length === 0) {
-                topicCols = headers.filter(h => h.toLowerCase().includes('tema'));
-            }
-            return topicCols.slice(0, 3);
-        }
-
         function updateDashboard() {
             applyFilters();
             updateKPIs();
@@ -412,13 +386,14 @@
         function applyFilters() {
             filteredData = rawData.filter(row => {
                 for (let key in currentFilters) {
-                    if (key === 'Palabra') {
-                        let titleText = String(row['Título'] || '').toLowerCase();
-                        if (!titleText.includes(currentFilters['Palabra'])) return false;
-                    } else if (key === 'TemaConsolidado') {
-                        const topicCols = getTopicColumns();
-                        const filterVal = String(currentFilters['TemaConsolidado']).toLowerCase().trim();
-                        const match = topicCols.some(col => String(row[col] || '').toLowerCase().trim() === filterVal);
+                    if (key === 'Tag') {
+                        const targetTag = String(currentFilters['Tag']).toLowerCase().trim();
+                        const tagIndexes = [5, 6, 7]; // Columnas F, G, H
+                        const match = tagIndexes.some(idx => {
+                            const colHeader = headers[idx];
+                            if (!colHeader) return false;
+                            return String(row[colHeader] || '').toLowerCase().trim() === targetTag;
+                        });
                         if (!match) return false;
                     } else if (key === 'Valoración') {
                         const rowVal = String(row['Valoración'] || '').toUpperCase().trim();
@@ -452,7 +427,6 @@
             if (typeof Chart === 'undefined') return;
             renderBarChart('chartSeccion', 'Sección', '#232D4F', null);
             renderValuationChart('chartValoracion');
-            renderTopicsConsolidatedChart('chartTemasConsolidado');
             renderBarChart('chartMedios', 'Medio', '#232D4F', 20);
         }
 
@@ -548,77 +522,6 @@
                         if (elements.length > 0) {
                             const index = elements[0].index;
                             currentFilters['Valoración'] = labels[index];
-                            updateDashboard();
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderTopicsConsolidatedChart(canvasId) {
-            const canvasElem = document.getElementById(canvasId);
-            if (!canvasElem) return;
-            const ctx = canvasElem.getContext('2d');
-            const topicCols = getTopicColumns();
-
-            const topicInfoElem = document.getElementById('topic-cols-info');
-            if (topicCols.length > 0 && topicInfoElem) {
-                topicInfoElem.textContent = `Columnas analizadas: ${topicCols.join(', ')}`;
-            } else if (topicInfoElem) {
-                topicInfoElem.textContent = 'No se detectaron columnas con la palabra "Tema".';
-            }
-
-            const counts = {};
-            filteredData.forEach(row => {
-                topicCols.forEach(col => {
-                    let val = String(row[col] || '').trim();
-                    if (val && val !== 'undefined' && val !== 'null' && val !== '-') {
-                        counts[val] = (counts[val] || 0) + 1;
-                    }
-                });
-            });
-
-            const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 12);
-            const labels = sorted.map(item => item[0]);
-            const data = sorted.map(item => item[1]);
-
-            if (charts[canvasId]) charts[canvasId].destroy();
-
-            charts[canvasId] = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Frecuencia Total',
-                        data: data,
-                        backgroundColor: '#E7BA61',
-                        borderColor: '#232D4F',
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` Total menciones en las 3 columnas: ${context.raw}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { beginAtZero: true, ticks: { font: { family: 'Montserrat', size: 11 } } },
-                        y: { ticks: { font: { family: 'Montserrat', size: 11 } } }
-                    },
-                    onClick: (event, elements) => {
-                        if (elements.length > 0) {
-                            const index = elements[0].index;
-                            currentFilters['TemaConsolidado'] = labels[index];
                             updateDashboard();
                         }
                     }
@@ -728,37 +631,39 @@
             if (!container) return;
             container.innerHTML = '';
 
-            const wordCounts = {};
+            const tagCounts = {};
+            const tagIndexes = [5, 6, 7]; // Columnas F, G, H (base 0)
+
             filteredData.forEach(row => {
-                let title = String(row['Título'] || '').toLowerCase();
-                let clean = title.replace(/[^\w\sáéíóúüñ]/gi, '');
-                let words = clean.split(/\s+/);
-                words.forEach(w => {
-                    w = w.trim();
-                    if (w.length > 3 && !stopwords.has(w)) {
-                        wordCounts[w] = (wordCounts[w] || 0) + 1;
+                tagIndexes.forEach(idx => {
+                    const colHeader = headers[idx];
+                    if (colHeader && row[colHeader] !== undefined) {
+                        let tag = String(row[colHeader] || '').trim();
+                        if (tag && tag !== '-' && tag.toLowerCase() !== 'undefined' && tag.toLowerCase() !== 'null') {
+                            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                        }
                     }
                 });
             });
 
-            const sortedWords = Object.entries(wordCounts).sort((a,b) => b[1] - a[1]).slice(0, 35);
-            if (sortedWords.length === 0) {
-                container.innerHTML = `<span class="text-xs text-gray-400 italic">No hay suficientes palabras para mostrar.</span>`;
+            const sortedTags = Object.entries(tagCounts).sort((a,b) => b[1] - a[1]).slice(0, 30);
+            if (sortedTags.length === 0) {
+                container.innerHTML = `<span class="text-xs text-gray-400 italic">No hay suficientes tags para mostrar en las columnas F, G y H.</span>`;
                 return;
             }
 
-            sortedWords.forEach(([word, count]) => {
-                let tag = document.createElement('span');
-                tag.className = 'word-tag';
-                let fontSize = Math.min(0.85 + (count * 0.05), 1.4);
-                tag.style.fontSize = `${fontSize}rem`;
-                tag.textContent = `${word} (${count})`;
-                tag.title = `Filtrar por palabra: ${word}`;
-                tag.onclick = () => {
-                    currentFilters['Palabra'] = word;
+            sortedTags.forEach(([tag, count]) => {
+                let tagElem = document.createElement('span');
+                tagElem.className = 'word-tag';
+                let fontSize = Math.min(0.85 + (count * 0.04), 1.25);
+                tagElem.style.fontSize = `${fontSize}rem`;
+                tagElem.textContent = `${tag} (${count})`;
+                tagElem.title = `Filtrar por tag: ${tag}`;
+                tagElem.onclick = () => {
+                    currentFilters['Tag'] = tag;
                     updateDashboard();
                 };
-                container.appendChild(tag);
+                container.appendChild(tagElem);
             });
         }
 
@@ -774,17 +679,20 @@
             filteredData.forEach(r => secCounts[r['Sección']] = (secCounts[r['Sección']] || 0) + 1);
             let topSec = Object.entries(secCounts).sort((a,b) => b[1] - a[1])[0];
 
-            let topicCols = getTopicColumns();
-            let topicCounts = {};
+            let tagCounts = {};
+            const tagIndexes = [5, 6, 7];
             filteredData.forEach(r => {
-                topicCols.forEach(col => {
-                    let t = String(r[col] || '').trim();
-                    if (t && t !== '-' && t !== 'undefined') {
-                        topicCounts[t] = (topicCounts[t] || 0) + 1;
+                tagIndexes.forEach(idx => {
+                    const colHeader = headers[idx];
+                    if (colHeader) {
+                        let t = String(r[colHeader] || '').trim();
+                        if (t && t !== '-' && t.toLowerCase() !== 'undefined') {
+                            tagCounts[t] = (tagCounts[t] || 0) + 1;
+                        }
                     }
                 });
             });
-            let topTopic = Object.entries(topicCounts).sort((a,b) => b[1] - a[1])[0];
+            let topTag = Object.entries(tagCounts).sort((a,b) => b[1] - a[1])[0];
 
             let valCounts = { 'POSITIVO': 0, 'NEUTRO': 0, 'NEGATIVO': 0 };
             filteredData.forEach(r => {
@@ -800,11 +708,11 @@
             if (topSec) {
                 html += `<p>• La sección principal es <strong>${topSec[0]}</strong> (${topSec[1]} menciones).</p>`;
             }
-            if (topTopic) {
-                html += `<p>• El tema recurrente más destacado es <strong>"${topTopic[0]}"</strong> (${topTopic[1]} menciones en las 3 columnas).</p>`;
+            if (topTag) {
+                html += `<p>• El tag más recurrente es <strong>"${topTag[0]}"</strong> (${topTag[1]} menciones acumuladas).</p>`;
             }
             html += `<p>• Distribución de tono: <strong>${posPct}%</strong> positivo y <strong>${negPct}%</strong> negativo.</p>`;
-            html += `<p class="text-xs text-gray-400 mt-2">💡 Haz clic en cualquier gráfico o mapa para profundizar tu análisis.</p>`;
+            html += `<p class="text-xs text-gray-400 mt-2">💡 Haz clic en cualquier gráfico o tag para profundizar tu análisis.</p>`;
 
             container.innerHTML = html;
         }
@@ -871,9 +779,8 @@
             filterBar.classList.remove('hidden');
             let html = '';
             for (let key in currentFilters) {
-                let displayKey = key === 'TemaConsolidado' ? 'Tema' : key;
                 html += `<span class="bg-blue-50 text-[#232D4F] border border-[#232D4F]/20 text-xs font-semibold px-2.5 py-1 rounded flex items-center gap-1">
-                    ${displayKey}: <strong>${currentFilters[key]}</strong>
+                    ${key}: <strong>${currentFilters[key]}</strong>
                     <button onclick="removeFilter('${key}')" class="ml-1 text-[#232D4F] hover:text-red-700 font-bold">&times;</button>
                 </span>`;
             }
