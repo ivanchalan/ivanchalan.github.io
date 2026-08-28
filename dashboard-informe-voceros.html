@@ -527,22 +527,21 @@
         }
 
         function generateConclusions(total, sections, media, actors, topics) {
-            if (!total) return;
-            let topSec = Object.keys(sections).reduce((a, b) => sections[a] > sections[b] ? a : b, '');
-            let topMed = Object.keys(media).reduce((a, b) => media[a] > media[b] ? a : b, '');
-            let topAct = Object.keys(actors).length ? Object.keys(actors).reduce((a, b) => actors[a] > actors[b] ? a : b, '') : 'N/A';
-            let topTop = Object.keys(topics).length ? Object.keys(topics).reduce((a, b) => topics[a] > topics[b] ? a : b, '') : 'N/A';
+    if (!total) return;
+    let topSec = Object.keys(sections).reduce((a, b) => sections[a] > sections[b] ? a : b, '');
+    let topMed = Object.keys(media).reduce((a, b) => media[a] > media[b] ? a : b, '');
+    let topAct = Object.keys(actors).length ? Object.keys(actors).reduce((a, b) => actors[a] > actors[b] ? a : b, '') : 'N/A';
+    let topTop = Object.keys(topics).length ? Object.keys(topics).reduce((a, b) => topics[a] > topics[b] ? a : b, '') : 'N/A';
 
-            let html = `<p class="mb-1">• Se analizaron <strong>${total.toLocaleString()} registros</strong> de cobertura mediática.</p>`;
-            if (topSec) html += `<p class="mb-1">• La sección con mayor volumen fue <strong>${topSec}</strong> (${sections[topSec]} publicaciones).</p>`;
-            if (topMed) html += `<p class="mb-1">• El medio con mayor nivel de noticias fue <strong>${topMed}</strong> (${media[topMed]} menciones).</p>`;
-            if (topAct && topAct !== 'N/A') html += `<p class="mb-1">• El vocero / actor principal fue <strong>${topAct}</strong>.</p>`;
-            if (topTop && topTop !== 'N/A') html += `<p class="mb-1">• El tema predominante en las notas analizadas fue <strong>${topTop}</strong> (${topics[topTop]} menciones acumuladas).</p>`;
-            html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier barra o punto para filtrar el tablero.</p>`;
+    let html = `<p class="mb-1">• Se analizaron <strong>${total.toLocaleString()} registros</strong> de cobertura mediática.</p>`;
+    if (topSec) html += `<p class="mb-1">• La sección con mayor volumen fue <strong>${topSec}</strong> (${sections[topSec]} publicaciones).</p>`;
+    if (topMed) html += `<p class="mb-1">• El medio con mayor nivel de noticias fue <strong>${topMed}</strong> (${media[topMed]} menciones).</p>`;
+    if (topAct && topAct !== 'N/A') html += `<p class="mb-1">• El vocero / actor principal fue <strong>${topAct}</strong>.</p>`;
+    if (topTop && topTop !== 'N/A') html += `<p class="mb-1">• El tema predominante en las notas analizadas fue <strong>${topTop}</strong> (${topics[topTop]} menciones acumuladas).</p>`;
+    html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier barra o punto para filtrar el tablero.</p>`;
 
-            document.getElementById('dynamic-conclusions').innerHTML = html;
-        }
-
+    document.getElementById('dynamic-conclusions').innerHTML = html;
+}
         function setFilter(type, value) {
             const activeFilterEl = document.getElementById('active-filter');
             activeFilterEl.classList.remove('hidden');
