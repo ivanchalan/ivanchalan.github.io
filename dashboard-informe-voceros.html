@@ -216,11 +216,11 @@
                 </div>
             </div>
 
-            <!-- Gráfico de Línea de Tiempo: Evolución Diaria (#232D4F) -->
+            <!-- Gráfico de Puntos de Tiempo: Evolución Diaria (#232D4F) -->
             <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
                 <div>
                     <h3 class="text-lg font-bold text-[#232D4F] mb-1">Evolución Temporal de Cobertura</h3>
-                    <p class="text-xs text-gray-500">Cantidad de notas por día (según la primera columna del Excel). Haz clic en un punto para filtrar por fecha.</p>
+                    <p class="text-xs text-gray-500">Cantidad de notas por día. Haz clic en un punto para filtrar por fecha.</p>
                 </div>
                 <div class="relative h-64 w-full">
                     <canvas id="chartTimeline"></canvas>
@@ -652,7 +652,7 @@
             });
         }
 
-        // Gráfico de Línea de Tiempo (Evolución Diaria)
+        // Gráfico de Puntos: Evolución Diaria (sin línea)
         function renderTimelineChart(dateSortedData) {
             const canvas = document.getElementById('chartTimeline');
             if (!canvas) return;
@@ -670,15 +670,13 @@
                     datasets: [{
                         label: 'Cantidad de Notas',
                         data: dateSortedData.map(d => d[1]),
-                        borderColor: '#232D4F',
-                        backgroundColor: 'rgba(35, 45, 79, 0.12)',
-                        fill: true,
-                        tension: 0.25,
-                        pointBackgroundColor: '#E7BA61',
-                        pointBorderColor: '#232D4F',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        borderWidth: 2
+                        showLine: false,               // Desactiva la línea conectora
+                        fill: false,                   // Desactiva el relleno
+                        pointBackgroundColor: '#E7BA61', // Color dorado institucional para los puntos
+                        pointBorderColor: '#232D4F',     // Borde azul institucional
+                        pointRadius: 6,                // Tamaño del punto
+                        pointHoverRadius: 8,           // Tamaño al pasar el cursor
+                        pointBorderWidth: 2
                     }]
                 },
                 options: {
