@@ -101,14 +101,14 @@
         <!-- Dashboard Content -->
         <div id="dashboard-content" class="hidden space-y-6">
 
-            <!-- Active Filter Bar Header -->
-            <div id="active-filter" class="hidden sticky top-0 z-50 bg-white/95 backdrop-blur-md p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4 border-b border-gray-200 transition-all" style="border-left-color: #E7BA61;">
+            <!-- Filtros Activos Flotantes (Multi-filtro identico al Dashboard Interior) -->
+            <div id="filter-bar-container" class="sticky top-0 z-50 hidden bg-white/95 backdrop-blur-md p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4 border-b border-gray-200 transition-all" style="border-left-color: #E7BA61;">
                 <div class="flex items-center space-x-2">
-                    <span class="font-bold text-sm text-gray-600">Filtro Activo:</span>
-                    <span id="filter-text" class="text-sm font-semibold text-[#232D4F]"></span>
+                    <span class="font-bold text-sm text-gray-600">Filtros Activos:</span>
+                    <div id="active-filters" class="flex flex-wrap gap-2"></div>
                 </div>
-                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-xs font-medium transition-colors" onclick="resetFilters()">
-                    Limpiar Filtro
+                <button id="reset-filters" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-xs font-semibold transition-colors" onclick="resetFilters()">
+                    Limpiar Filtros
                 </button>
             </div>
 
@@ -285,6 +285,7 @@
     <script>
         let globalData = [];
         let currentFilteredData = [];
+        let currentFilters = {};
         let charts = {};
         let chartObserver = null;
 
@@ -320,6 +321,8 @@
             if (typeof embeddedExcelData !== 'undefined' && embeddedExcelData && embeddedExcelData.length > 0) {
                 globalData = embeddedExcelData;
                 showDashboard();
+                currentFilters = {};
+                updateFilterUI();
                 processData(globalData);
             }
         };
@@ -373,6 +376,8 @@
                     if (parsedData.length > 0) {
                         globalData = parsedData;
                         showDashboard();
+                        currentFilters = {};
+                        updateFilterUI();
                         processData(globalData);
                     } else {
                         alert("No se pudieron extraer datos del archivo.");
@@ -595,35 +600,78 @@
             document.getElementById('dynamic-conclusions').innerHTML = html;
         }
 
+        // Lógica de Filtros Múltiples (Adaptado exactamente del Dashboard Interior)
+        function matchesFilter(row, type, val) {
+            if (type === 'Sección') return (row['Sección'] || 'General') === val;
+            if (type === 'Tipo de Medio') return getVal(row, ['tipo de medio', 'tipo', 'formato']) === val;
+            if (type === 'Medio') return getVal(row, ['medio', 'fuente', 'outlet']) === val;
+            if (type === 'Actor') return getVal(row, ['actor', 'vocero', 'protagonista']) === val;
+            if (type === 'Tema') {
+                let rowTopics = getRowTopics(row);
+                return rowTopics.some(t => t.toLowerCase() === String(val).toLowerCase());
+            }
+            if (row[type] !== undefined) {
+                return String(row[type]) === String(val);
+            }
+            let firstColKey = row['_first_col_header'] || (Object.keys(row).filter(k => !k.startsWith('_') && k !== 'Sección')[0]);
+            if (firstColKey && row[firstColKey] !== undefined) {
+                return String(row[firstColKey]) === String(val);
+            }
+            return true;
+        }
+
         function setFilter(type, value) {
-            const activeFilterEl = document.getElementById('active-filter');
-            activeFilterEl.classList.remove('hidden');
-            document.getElementById('filter-text').innerText = `${type}: ${value}`;
-            
-            let filtered = globalData.filter(row => {
-                if (type === 'Sección') return (row['Sección'] || 'General') === value;
-                if (type === 'Tipo de Medio') return getVal(row, ['tipo de medio', 'tipo', 'formato']) === value;
-                if (type === 'Medio') return getVal(row, ['medio', 'fuente', 'outlet']) === value;
-                if (type === 'Actor') return getVal(row, ['actor', 'vocero', 'protagonista']) === value;
-                if (type === 'Tema') {
-                    let rowTopics = getRowTopics(row);
-                    return rowTopics.some(t => t.toLowerCase() === value.toLowerCase());
-                }
-                if (row[type] !== undefined) {
-                    return String(row[type]) === String(value);
-                }
-                let firstColKey = row['_first_col_header'] || (Object.keys(row).filter(k => !k.startsWith('_') && k !== 'Sección')[0]);
-                if (firstColKey && row[firstColKey] !== undefined) {
-                    return String(row[firstColKey]) === String(value);
-                }
-                return true;
-            });
-            processData(filtered);
+            if (currentFilters[type] === value) {
+                delete currentFilters[type];
+            } else {
+                currentFilters[type] = value;
+            }
+            applyAndProcessData();
+        }
+
+        function removeFilter(type) {
+            delete currentFilters[type];
+            applyAndProcessData();
         }
 
         function resetFilters() {
-            document.getElementById('active-filter').classList.add('hidden');
-            processData(globalData);
+            currentFilters = {};
+            applyAndProcessData();
+        }
+
+        function applyAndProcessData() {
+            let filtered = globalData.filter(row => {
+                for (let type in currentFilters) {
+                    if (!matchesFilter(row, type, currentFilters[type])) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            updateFilterUI();
+            processData(filtered);
+        }
+
+        function updateFilterUI() {
+            const container = document.getElementById('active-filters');
+            const filterBar = document.getElementById('filter-bar-container');
+            if (!container || !filterBar) return;
+            
+            const keys = Object.keys(currentFilters);
+            if (keys.length === 0) {
+                filterBar.classList.add('hidden');
+                return;
+            }
+
+            filterBar.classList.remove('hidden');
+            let html = '';
+            for (let key in currentFilters) {
+                html += `<span class="bg-[#232D4F] text-white text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                    ${key}: <strong class="text-[#E7BA61]">${currentFilters[key]}</strong>
+                    <button onclick="removeFilter('${key}')" class="ml-1 text-gray-300 hover:text-white font-bold">&times;</button>
+                </span>`;
+            }
+            container.innerHTML = html;
         }
 
         function createBarGradient(ctx, chartArea, startColor, endColor) {
@@ -874,7 +922,6 @@
                                 chart.reset();
                                 chart.update();
                             }
-                            // Deja de observar para que el gráfico quede fijo y no re-anime al hacer scroll
                             chartObserver.unobserve(canvas);
                         }
                     });
@@ -975,12 +1022,11 @@
             if (dz) dz.remove();
 
             const htmlContent = "<!DOCTYPE html>\n" + clone.outerHTML;
-            
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'Reporte_Seguimiento_Medios_Interactivo.html';
+            a.download = 'Informe_Voceros_Interactivo.html';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
