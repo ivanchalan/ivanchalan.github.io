@@ -27,7 +27,13 @@
         .border-official { border-color: #E7BA61; }
         .accent-gold { color: #E7BA61; }
 
-        /* Estilos para formateo enriquecido en el editor de notas */
+        /* Transición suave de entrada */
+        canvas {
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Estilos para editor de notas */
         #custom-notes-editor ul {
             list-style-type: disc;
             padding-left: 1.25rem;
@@ -44,7 +50,6 @@
             text-decoration: underline;
         }
 
-        /* Placeholder para editor de notas */
         [contenteditable=true]:empty:before {
             content: attr(placeholder);
             color: #9ca3af;
@@ -61,7 +66,7 @@
 
     <!-- Header Banner Institucional -->
     <header class="bg-official shadow-md border-b-4 border-official" style="border-bottom-color: #E7BA61;">
-        <div class="w-full px-6 py-3 flex justify-between items-center" style="background-color: #232D4F;">
+        <div class="w-full px-6 py-3 flex justify-between items-center" style="background-color: #212C4C;">
             <div class="flex items-center">
                 <img src="https://ivanchalan.github.io/logousina.png" alt="Logo Usina" class="h-12 object-contain" style="height: 65px">
             </div>
@@ -96,7 +101,7 @@
         <!-- Dashboard Content -->
         <div id="dashboard-content" class="hidden space-y-6">
 
-            <!-- Active Filter Bar Header (Sticky top-0) -->
+            <!-- Active Filter Bar Header -->
             <div id="active-filter" class="hidden sticky top-0 z-50 bg-white/95 backdrop-blur-md p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4 border-b border-gray-200 transition-all" style="border-left-color: #E7BA61;">
                 <div class="flex items-center space-x-2">
                     <span class="font-bold text-sm text-gray-600">Filtro Activo:</span>
@@ -121,7 +126,7 @@
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Medios Monitoreados</p>
                     <p id="kpi-medios" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
                 </div>
-                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #5CB85C;">
+                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #0EA5E9;">
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Voceros / Actores</p>
                     <p id="kpi-actores" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
                 </div>
@@ -174,10 +179,10 @@
                 <!-- Chart 1: Secciones -->
                 <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
                     <div>
-                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Distribución por tipo de actor</h3>
+                        <h3 class="text-lg font-bold text-[#232D4F] mb-1">Distribución por Tipo de Actor</h3>
                         <p class="text-xs text-gray-500">Haz clic en un sector para filtrar.</p>
                     </div>
-                    <div class="relative h-72 w-full">
+                    <div class="relative h-72 w-full flex items-center justify-center">
                         <canvas id="chartSections"></canvas>
                     </div>
                 </div>
@@ -188,7 +193,7 @@
                         <h3 class="text-lg font-bold text-[#232D4F] mb-1">Distribución por Tipo de Medio</h3>
                         <p class="text-xs text-gray-500">Haz clic en un sector para filtrar.</p>
                     </div>
-                    <div class="relative h-72 w-full">
+                    <div class="relative h-72 w-full flex items-center justify-center">
                         <canvas id="chartTipoMedio"></canvas>
                     </div>
                 </div>
@@ -216,18 +221,18 @@
                 </div>
             </div>
 
-            <!-- Gráfico de Puntos de Tiempo: Evolución Diaria (#232D4F) -->
+            <!-- Gráfico de Evolución Temporal (Barras Discretas) -->
             <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
                 <div>
                     <h3 class="text-lg font-bold text-[#232D4F] mb-1">Evolución Temporal de Cobertura</h3>
-                    <p class="text-xs text-gray-500">Cantidad de notas por día. Haz clic en un punto para filtrar por fecha.</p>
+                    <p class="text-xs text-gray-500">Cantidad de entrevistas por día. Haz clic en una barra para filtrar por fecha.</p>
                 </div>
                 <div class="relative h-64 w-full">
                     <canvas id="chartTimeline"></canvas>
                 </div>
             </div>
 
-            <!-- Gráfico de Frecuencia de Temas: Barras Horizontales (#E7BA61) -->
+            <!-- Gráfico de Frecuencia de Temas -->
             <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #E7BA61;">
                 <div>
                     <h3 class="text-lg font-bold text-[#232D4F] mb-1">Frecuencia de Temas</h3>
@@ -281,14 +286,59 @@
         let globalData = [];
         let currentFilteredData = [];
         let charts = {};
+        let chartObserver = null;
+
+        // Plugin con sombra ejecutado antes de dibujar los tooltips (afterDatasetsDraw)
+        const barElevationPlugin = {
+            id: 'barElevation',
+            afterDatasetsDraw(chart) {
+                const activeElements = chart.getActiveElements();
+                if (!activeElements || activeElements.length === 0) return;
+
+                const ctx = chart.ctx;
+                activeElements.forEach(active => {
+                    const meta = chart.getDatasetMeta(active.datasetIndex);
+                    const element = meta.data[active.index];
+                    if (!element || chart.config.type !== 'bar') return;
+
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(100, 116, 139, 0.35)';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 5;
+
+                    element.draw(ctx);
+                    ctx.restore();
+                });
+            }
+        };
 
         window.onload = () => {
+            configureGlobalChartDefaults();
+            Chart.register(barElevationPlugin);
+
             if (typeof embeddedExcelData !== 'undefined' && embeddedExcelData && embeddedExcelData.length > 0) {
                 globalData = embeddedExcelData;
                 showDashboard();
                 processData(globalData);
             }
         };
+
+        function configureGlobalChartDefaults() {
+            Chart.defaults.color = '#475569';
+            Chart.defaults.font.family = "'Montserrat', sans-serif";
+            Chart.defaults.font.size = 12;
+            
+            Chart.defaults.animation.duration = 1800;
+            Chart.defaults.animation.easing = 'easeInOutQuart';
+
+            Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(35, 45, 79, 0.95)';
+            Chart.defaults.plugins.tooltip.titleFont = { family: 'Lora', size: 13, weight: 'bold' };
+            Chart.defaults.plugins.tooltip.bodyFont = { family: 'Montserrat', size: 12 };
+            Chart.defaults.plugins.tooltip.padding = 10;
+            Chart.defaults.plugins.tooltip.cornerRadius = 8;
+            Chart.defaults.plugins.tooltip.boxPadding = 4;
+        }
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -524,24 +574,27 @@
             renderTimelineChart(dateSorted);
             renderTopicsChart(topicSorted);
             renderTable(dataToRender);
+            
+            setupChartObserver();
         }
 
         function generateConclusions(total, sections, media, actors, topics) {
-    if (!total) return;
-    let topSec = Object.keys(sections).reduce((a, b) => sections[a] > sections[b] ? a : b, '');
-    let topMed = Object.keys(media).reduce((a, b) => media[a] > media[b] ? a : b, '');
-    let topAct = Object.keys(actors).length ? Object.keys(actors).reduce((a, b) => actors[a] > actors[b] ? a : b, '') : 'N/A';
-    let topTop = Object.keys(topics).length ? Object.keys(topics).reduce((a, b) => topics[a] > topics[b] ? a : b, '') : 'N/A';
+            if (!total) return;
+            let topSec = Object.keys(sections).reduce((a, b) => sections[a] > sections[b] ? a : b, '');
+            let topMed = Object.keys(media).reduce((a, b) => media[a] > media[b] ? a : b, '');
+            let topAct = Object.keys(actors).length ? Object.keys(actors).reduce((a, b) => actors[a] > actors[b] ? a : b, '') : 'N/A';
+            let topTop = Object.keys(topics).length ? Object.keys(topics).reduce((a, b) => topics[a] > topics[b] ? a : b, '') : 'N/A';
 
-    let html = `<p class="mb-1">• Se analizaron <strong>${total.toLocaleString()} registros</strong> de cobertura mediática.</p>`;
-    if (topSec) html += `<p class="mb-1">• La sección con mayor volumen fue <strong>${topSec}</strong> (${sections[topSec]} publicaciones).</p>`;
-    if (topMed) html += `<p class="mb-1">• El medio con mayor nivel de noticias fue <strong>${topMed}</strong> (${media[topMed]} menciones).</p>`;
-    if (topAct && topAct !== 'N/A') html += `<p class="mb-1">• El vocero / actor principal fue <strong>${topAct}</strong>.</p>`;
-    if (topTop && topTop !== 'N/A') html += `<p class="mb-1">• El tema predominante en las notas analizadas fue <strong>${topTop}</strong> (${topics[topTop]} menciones acumuladas).</p>`;
-    html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier barra o punto para filtrar el tablero.</p>`;
+            let html = `<p class="mb-1">• Se analizaron <strong>${total.toLocaleString()} registros</strong> de cobertura mediática.</p>`;
+            if (topSec) html += `<p class="mb-1">• La sección con mayor volumen fue <strong>${topSec}</strong> (${sections[topSec]} entrevistas).</p>`;
+            if (topMed) html += `<p class="mb-1">• El medio con mayor nivel de entrevistas fue <strong>${topMed}</strong> (${media[topMed]} entrevistas).</p>`;
+            if (topAct && topAct !== 'N/A') html += `<p class="mb-1">• El vocero / actor principal fue <strong>${topAct}</strong>.</p>`;
+            if (topTop && topTop !== 'N/A') html += `<p class="mb-1">• El tema predominante en las notas analizadas fue <strong>${topTop}</strong> (${topics[topTop]} menciones acumuladas).</p>`;
+            html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier barra para filtrar el tablero.</p>`;
 
-    document.getElementById('dynamic-conclusions').innerHTML = html;
-}
+            document.getElementById('dynamic-conclusions').innerHTML = html;
+        }
+
         function setFilter(type, value) {
             const activeFilterEl = document.getElementById('active-filter');
             activeFilterEl.classList.remove('hidden');
@@ -573,9 +626,15 @@
             processData(globalData);
         }
 
+        function createBarGradient(ctx, chartArea, startColor, endColor) {
+            if (!chartArea) return startColor;
+            const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+            gradient.addColorStop(0, startColor);
+            gradient.addColorStop(1, endColor);
+            return gradient;
+        }
+
         function renderCharts(secData, tipoData, mediaData, actorData) {
-            Chart.defaults.color = '#232D4F';
-            Chart.defaults.font.family = "'Montserrat', sans-serif";
             Object.keys(charts).forEach(k => {
                 if (charts[k] && k !== 'topics' && k !== 'timeline') charts[k].destroy();
             });
@@ -585,27 +644,43 @@
                 type: 'doughnut',
                 data: {
                     labels: secData.map(d => d[0]),
-                    datasets: [{ data: secData.map(d => d[1]), backgroundColor: ['#232D4F', '#E7BA61', '#37185b', '#5CB85C', '#8B5CF6', '#D9534F'] }]
+                    datasets: [{ 
+                        data: secData.map(d => d[1]), 
+                        backgroundColor: ['#232D4F', '#E7BA61', '#37185b', '#0EA5E9', '#10B981', '#F59E0B'],
+                        hoverBackgroundColor: ['#161D33', '#F3CE83', '#4D237D', '#38BDF8', '#34D399', '#FBBF24'],
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        hoverOffset: 12
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
+                    cutout: '72%',
+                    plugins: { legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true } } },
                     onClick: (e, el) => { if(el.length) setFilter('Sección', secData[el[0].index][0]); }
                 }
             });
 
             // 2. Tipo de Medio
             charts.tipoMedio = new Chart(document.getElementById('chartTipoMedio').getContext('2d'), {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: tipoData.map(d => d[0]),
-                    datasets: [{ data: tipoData.map(d => d[1]), backgroundColor: ['#232D4F', '#E7BA61', '#37185b', '#D9534F'] }]
+                    datasets: [{ 
+                        data: tipoData.map(d => d[1]), 
+                        backgroundColor: ['#232D4F', '#E7BA61', '#37185b', '#0EA5E9'],
+                        hoverBackgroundColor: ['#161D33', '#F3CE83', '#4D237D', '#38BDF8'],
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        hoverOffset: 12
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
+                    cutout: '72%',
+                    plugins: { legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true } } },
                     onClick: (e, el) => { if(el.length) setFilter('Tipo de Medio', tipoData[el[0].index][0]); }
                 }
             });
@@ -621,14 +696,27 @@
                 type: 'bar',
                 data: {
                     labels: mediaData.map(d => d[0]),
-                    datasets: [{ label: 'Notas', data: mediaData.map(d => d[1]), backgroundColor: '#232D4F', borderRadius: 4 }]
+                    datasets: [{ 
+                        label: 'Notas', 
+                        data: mediaData.map(d => d[1]), 
+                        backgroundColor: (context) => createBarGradient(context.chart.ctx, context.chart.chartArea, '#232D4F', '#475684'),
+                        hoverBackgroundColor: '#3B4D80',
+                        hoverBorderColor: '#94a3b8',
+                        hoverBorderWidth: 1,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barThickness: 16
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     indexAxis: 'y',
                     plugins: { legend: { display: false } },
-                    scales: { x: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } } },
+                    scales: { 
+                        x: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { precision: 0, stepSize: 1 } },
+                        y: { grid: { display: false } }
+                    },
                     onClick: (e, el) => { if(el.length) setFilter('Medio', mediaData[el[0].index][0]); }
                 }
             });
@@ -638,44 +726,61 @@
                 type: 'bar',
                 data: {
                     labels: actorData.map(d => d[0]),
-                    datasets: [{ label: 'Menciones', data: actorData.map(d => d[1]), backgroundColor: '#37185b', borderRadius: 4 }]
+                    datasets: [{ 
+                        label: 'Menciones', 
+                        data: actorData.map(d => d[1]), 
+                        backgroundColor: (context) => createBarGradient(context.chart.ctx, context.chart.chartArea, '#37185b', '#623296'),
+                        hoverBackgroundColor: '#502384',
+                        hoverBorderColor: '#94a3b8',
+                        hoverBorderWidth: 1,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barThickness: 16
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     indexAxis: 'y',
                     plugins: { legend: { display: false } },
-                    scales: { x: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } } },
+                    scales: { 
+                        x: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { precision: 0, stepSize: 1 } },
+                        y: { grid: { display: false } }
+                    },
                     onClick: (e, el) => { if(el.length) setFilter('Actor', actorData[el[0].index][0]); }
                 }
             });
         }
 
-        // Gráfico de Puntos: Evolución Diaria (sin línea)
+        // Gráfico de Barras Discretas: Evolución Temporal Diaria
         function renderTimelineChart(dateSortedData) {
             const canvas = document.getElementById('chartTimeline');
             if (!canvas) return;
 
             if (charts.timeline) charts.timeline.destroy();
-
             if (!dateSortedData || dateSortedData.length === 0) return;
 
             let firstColHeader = globalData[0] ? (globalData[0]['_first_col_header'] || Object.keys(globalData[0]).filter(k => !k.startsWith('_') && k !== 'Sección')[0] || 'Fecha') : 'Fecha';
 
             charts.timeline = new Chart(canvas.getContext('2d'), {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: dateSortedData.map(d => d[0]),
                     datasets: [{
-                        label: 'Cantidad de Notas',
+                        label: 'Cantidad de Entrevistas',
                         data: dateSortedData.map(d => d[1]),
-                        showLine: false,               // Desactiva la línea conectora
-                        fill: false,                   // Desactiva el relleno
-                        pointBackgroundColor: '#E7BA61', // Color dorado institucional para los puntos
-                        pointBorderColor: '#232D4F',     // Borde azul institucional
-                        pointRadius: 6,                // Tamaño del punto
-                        pointHoverRadius: 8,           // Tamaño al pasar el cursor
-                        pointBorderWidth: 2
+                        backgroundColor: (context) => {
+                            const chartArea = context.chart.chartArea;
+                            if (!chartArea) return '#232D4F';
+                            const gradient = context.chart.ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, '#232D4F');
+                            gradient.addColorStop(1, '#475684');
+                            return gradient;
+                        },
+                        hoverBackgroundColor: '#3B4D80',
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        maxBarThickness: 36
                     }]
                 },
                 options: {
@@ -685,31 +790,22 @@
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
-                                    return `Notas: ${context.parsed.y}`;
-                                }
+                                label: function(context) { return `Entrevistas: ${context.parsed.y}`; }
                             }
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { precision: 0, stepSize: 1 }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
+                        y: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { precision: 0, stepSize: 1 } },
+                        x: { grid: { display: false } }
                     },
                     onClick: (e, el) => {
-                        if (el.length) {
-                            setFilter(firstColHeader, dateSortedData[el[0].index][0]);
-                        }
+                        if (el.length) setFilter(firstColHeader, dateSortedData[el[0].index][0]);
                     }
                 }
             });
         }
 
-        // Gráfico de Barras Horizontales para Frecuencia de Temas (#E7BA61)
+        // Gráfico de Frecuencia de Temas
         function renderTopicsChart(topicSortedData) {
             const container = document.getElementById('chartTopicsContainer');
             if (!topicSortedData || topicSortedData.length === 0) {
@@ -729,8 +825,13 @@
                     datasets: [{
                         label: 'Frecuencia de noticias',
                         data: topicSortedData.map(d => d[1]),
-                        backgroundColor: '#E7BA61',
-                        borderRadius: 4
+                        backgroundColor: (context) => createBarGradient(context.chart.ctx, context.chart.chartArea, '#E7BA61', '#F5D899'),
+                        hoverBackgroundColor: '#F3CE83',
+                        hoverBorderColor: '#94a3b8',
+                        hoverBorderWidth: 1,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barThickness: 16
                     }]
                 },
                 options: {
@@ -738,12 +839,54 @@
                     maintainAspectRatio: false,
                     indexAxis: 'y',
                     plugins: { legend: { display: false } },
-                    scales: { x: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } } },
+                    scales: { 
+                        x: { beginAtZero: true, grid: { color: 'rgba(226, 232, 240, 0.6)' }, ticks: { precision: 0, stepSize: 1 } },
+                        y: { grid: { display: false } }
+                    },
                     onClick: (e, el) => { 
                         if(el.length) setFilter('Tema', topicSortedData[el[0].index][0]); 
                     }
                 }
             });
+        }
+
+        // Observador de intersección que ejecuta la animación UNA SOLA VEZ por gráfico
+        function setupChartObserver() {
+            if (chartObserver) chartObserver.disconnect();
+
+            const canvases = document.querySelectorAll('canvas');
+
+            if ('IntersectionObserver' in window) {
+                chartObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const canvas = entry.target;
+                        const chart = Chart.getChart(canvas);
+
+                        if (entry.isIntersecting) {
+                            canvas.style.opacity = '1';
+                            if (chart) {
+                                chart.options.animation = {
+                                    duration: 1800,
+                                    easing: 'easeInOutQuart',
+                                    animateRotate: true,
+                                    animateScale: true
+                                };
+                                chart.reset();
+                                chart.update();
+                            }
+                            // Deja de observar para que el gráfico quede fijo y no re-anime al hacer scroll
+                            chartObserver.unobserve(canvas);
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                canvases.forEach(canvas => {
+                    canvas.style.opacity = '0';
+                    chartObserver.observe(canvas);
+                });
+            } else {
+                canvases.forEach(canvas => canvas.style.opacity = '1');
+            }
         }
 
         function renderTable(data) {
