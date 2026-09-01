@@ -13,52 +13,74 @@
     <!-- Google Charts para Mapas -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!-- Google Fonts: Montserrat y Lora -->
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Montserrat', sans-serif; 
             background-color: #f4f5f7; 
             color: #232D4F; 
         }
-        h1, h2, h3, h4, h5, h6 {
+        h1, h2, h3, h4, h5, h6, .font-serif {
             font-family: 'Lora', serif;
         }
         .bg-official { background-color: #232D4F; }
         .text-official { color: #232D4F; }
         .border-official { border-color: #E7BA61; }
         .accent-gold { color: #E7BA61; }
+        
+        /* Estilos de Tarjetas Fijas con Sombras Modernas */
+        .card-modern {
+            background: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        /* Opacidad inicial para transición suave al aparecer (estilo Dashboard Voceros) */
+        canvas {
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Nube de Tags con Sombra Gris y Colores Constantes */
         .word-tag { 
-            transition: all 0.2s ease; 
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
             cursor: pointer; 
             display: inline-block; 
             margin: 3px; 
-            padding: 4px 10px; 
+            padding: 5px 12px; 
             border-radius: 9999px; 
-            background-color: #e2e8f0; 
+            background-color: #f1f5f9; 
             color: #232D4F; 
             font-size: 0.85rem; 
             font-weight: 500; 
             font-family: 'Montserrat', sans-serif;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
         .word-tag:hover { 
-            background-color: #232D4F; 
-            color: #E7BA61; 
-            transform: translateY(-1px); 
+            background-color: #f1f5f9; 
+            color: #232D4F; 
+            transform: translateY(-3px) scale(1.08); 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            border-color: #cbd5e1;
         }
+
         .editor-btn {
             background-color: #f8fafc;
             border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            padding: 2px 8px;
+            border-radius: 6px;
+            padding: 3px 10px;
             font-size: 0.75rem;
             font-weight: 600;
             color: #232D4F;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             font-family: 'Montserrat', sans-serif;
         }
         .editor-btn:hover {
-            background-color: #e2e8f0;
+            background-color: #232D4F;
+            color: #E7BA61;
+            transform: translateY(-1px);
         }
         #custom-notes-editor {
             min-height: 80px;
@@ -68,18 +90,26 @@
             content: attr(placeholder);
             color: #94a3b8;
         }
+
+        .map-container {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+        }
+        .map-container.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
     <!-- Banner Superior Institucional -->
     <header class="bg-official shadow-md border-b-4 border-official" style="border-bottom-color: #E7BA61;">
-        <div class="w-full px-6 py-3 flex justify-between items-center" style="background-color: #232D4F;">
-            <!-- Logo Izquierdo: Usina -->
+        <div class="w-full px-6 py-3 flex justify-between items-center" style="background-color: #212C4C;">
             <div class="flex items-center">
                 <img src="https://ivanchalan.github.io/logousina.png" alt="Logo Usina" class="h-12 object-contain" style="height: 65px">
             </div>
-            <!-- Logo Derecho: Presidencia -->
             <div class="flex items-center">
                 <img src="https://ivanchalan.github.io/logopresidencia.png" alt="Logo Presidencia" class="h-12 object-contain" style="height: 85px">
             </div>
@@ -88,6 +118,12 @@
 
     <!-- Main Container -->
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Encabezado Principal -->
+        <div class="text-center my-2">
+            <h1 class="text-2xl sm:text-3xl font-bold text-[#232D4F]">Seguimiento Temático de Medios del Interior</h1>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1">Tablero de Control y Análisis de Cobertura</p>
+        </div>
 
         <!-- Upload Section -->
         <section id="upload-section" class="bg-white rounded-lg shadow-sm p-10 text-center border-2 border-dashed border-gray-300 hover:border-[#232D4F] transition-colors cursor-pointer">
@@ -100,162 +136,150 @@
                 </div>
                 <div class="text-lg font-semibold text-gray-800">Cargar Archivo Excel de Agenda Nacional</div>
                 <p class="text-sm text-gray-500">Arrastra tu archivo aquí o <span class="text-[#232D4F] font-bold underline">haz clic para seleccionar</span></p>
-                <p class="text-xs text-gray-400">Procesamiento local seguro y privado. Analiza automáticamente las columnas de Secciones, Valoración, Tags y Provincias.</p>
+                <p class="text-xs text-gray-400">Procesamiento local seguro. Analiza automáticamente las columnas de Secciones, Valoración, Tags y Provincias.</p>
             </div>
         </section>
 
         <!-- Dashboard Content -->
         <div id="dashboard-content" class="hidden space-y-6">
 
-            <!-- Encabezado del Tablero -->
-            <div class="text-center py-2">
-                <h1 class="text-2xl sm:text-3xl font-bold text-[#232D4F]">Seguimiento Temático de Medios del Interior</h1>
-                <p class="text-xs sm:text-sm text-gray-500 mt-1">Tablero de Control y Análisis de Cobertura</p>
-            </div>
-
             <!-- Filtros Activos Flotantes -->
-            <div id="filter-bar-container" class="sticky top-4 z-50 hidden transition-all duration-300">
-                <div class="bg-white p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4" style="border-left-color: #E7BA61;">
-                    <div class="flex items-center space-x-2">
-                        <span class="font-bold text-sm text-gray-600">Filtros Activos:</span>
-                        <div id="active-filters" class="flex flex-wrap gap-2"></div>
-                    </div>
-                    <button id="reset-filters" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1.5 rounded text-sm font-medium transition-colors">
-                        Limpiar Filtros
-                    </button>
+            <div id="filter-bar-container" class="sticky top-0 z-50 hidden bg-white/95 backdrop-blur-md p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4 border-b border-gray-200 transition-all" style="border-left-color: #E7BA61;">
+                <div class="flex items-center space-x-2">
+                    <span class="font-bold text-sm text-gray-600">Filtros Activos:</span>
+                    <div id="active-filters" class="flex flex-wrap gap-2"></div>
                 </div>
+                <button id="reset-filters" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-xs font-semibold transition-colors">
+                    Limpiar Filtros
+                </button>
             </div>
 
             <!-- KPIs Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #232D4F;">
+                <div class="card-modern p-5 border-l-4" style="border-left-color: #232D4F;">
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Noticias</p>
                     <p id="kpi-total" class="text-3xl font-bold text-[#232D4F] mt-1 font-serif">0</p>
                 </div>
-                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #38A89D;">
+                <div class="card-modern p-5 border-l-4" style="border-left-color: #37185b;">
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Medios Registrados</p>
                     <p id="kpi-medios" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
                 </div>
-                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #E7BA61;">
+                <div class="card-modern p-5 border-l-4" style="border-left-color: #E7BA61;">
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Secciones Activas</p>
                     <p id="kpi-secciones" class="text-3xl font-bold text-gray-800 mt-1 font-serif">0</p>
                 </div>
-                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #5CB85C;">
+                <div class="card-modern p-5 border-l-4" style="border-left-color: #5CB85C;">
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Noticias Positivas</p>
-                    <p id="kpi-positivas" class="text-3xl font-bold text-green-700 mt-1 font-serif">0</p>
+                    <p id="kpi-positivas" class="text-3xl font-bold text-green-600 mt-1 font-serif">0</p>
                 </div>
-                <div class="bg-white p-5 rounded-lg shadow border-l-4" style="border-color: #D9534F;">
+                <div class="card-modern p-5 border-l-4" style="border-left-color: #D9534F;">
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Noticias Negativas</p>
-                    <p id="kpi-negativas" class="text-3xl font-bold text-red-700 mt-1 font-serif">0</p>
+                    <p id="kpi-negativas" class="text-3xl font-bold text-red-600 mt-1 font-serif">0</p>
                 </div>
             </div>
 
             <!-- Tarjeta de Notas u Observaciones Personalizadas -->
-            <div id="custom-notes-card" class="bg-white p-5 rounded-lg shadow border-l-4 border-t-2" style="border-left-color: #232D4F; border-top-color: #232D4F;">
+            <div id="custom-notes-card" class="card-modern p-5 border-l-4" style="border-left-color: #232D4F;">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
                     <h3 class="text-lg font-bold text-[#232D4F]">Análisis y datos del Informe</h3>
-                    
-                    <!-- Toolbar wysiwyg -->
                     <div id="editor-toolbar" class="flex flex-wrap gap-1 text-xs">
                         <button type="button" class="editor-btn" onclick="execCmd('bold')"><b>B</b></button>
                         <button type="button" class="editor-btn" onclick="execCmd('italic')"><i>I</i></button>
                         <button type="button" class="editor-btn" onclick="execCmd('underline')"><u>U</u></button>
                         <span class="border-r border-gray-300 mx-1"></span>
-                        <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')">- Lista</button>
+                        <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')">• Lista</button>
                         <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')">1. Lista</button>
                         <span class="border-r border-gray-300 mx-1"></span>
                         <select onchange="execCmd('fontSize', this.value); this.selectedIndex=0;" class="editor-btn">
                             <option value="" disabled selected>Tamaño</option>
-                            <option value="1">Muy Pequeño</option>
-                            <option value="2">Pequeño</option>
-                            <option value="3">Normal</option>
+                            <option value="1">Pequeño</option>
+                            <option value="2">Normal</option>
+                            <option value="3">Mediano</option>
                             <option value="4">Grande</option>
                         </select>
                     </div>
                 </div>
-                
-                <div id="custom-notes-editor" contenteditable="true" class="p-4 bg-gray-50 border border-gray-200 rounded text-sm text-gray-700 outline-none focus:bg-white focus:border-[#232D4F] transition-colors" placeholder="Escriba aquí sus observaciones..."></div>
+                <div id="custom-notes-editor" contenteditable="true" class="p-4 bg-gray-50 border border-gray-200 rounded text-sm text-gray-700 outline-none focus:bg-white focus:border-[#232D4F] transition-all" placeholder="Escriba aquí sus observaciones..."></div>
             </div>
 
             <!-- Insights -->
-            <div class="bg-white p-5 rounded-lg shadow border-t-2 border-l-4" style="border-top-color: #232D4F; border-left-color: #E7BA61;">
+            <div class="card-modern p-5 border-l-4" style="border-left-color: #E7BA61;">
                 <h3 class="text-lg font-bold text-[#232D4F] mb-1">Insights</h3>
-                <p class="text-xs text-gray-500 mb-4">Análisis dinámico de los datos cargados.</p>
-                <div id="insights-container" class="text-sm text-gray-700 space-y-2 bg-gray-50 p-4 rounded border border-gray-100">
+                <div id="insights-container" class="text-sm text-gray-700 space-y-1 bg-gray-50 p-4 rounded border border-gray-100">
                     <p class="italic text-gray-400">Cargue datos para generar conclusiones.</p>
                 </div>
             </div>
 
             <!-- Charts Section 1: Sección y Valoración -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                 <!-- Gráfico 1: Por Sección -->
-                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #232D4F;">
+                <div class="card-modern p-5 flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
                     <div>
                         <h3 class="text-lg font-bold text-[#232D4F] mb-1">Menciones por Sección</h3>
-                        <p class="text-xs text-gray-500 mb-4">Haz clic en una barra para filtrar el tablero.</p>
+                        <p class="text-xs text-gray-500">Haz clic en una barra para filtrar el tablero.</p>
                     </div>
-                    <div class="relative h-72">
+                    <div id="container-chartSeccion" class="relative min-h-[300px] w-full">
                         <canvas id="chartSeccion"></canvas>
                     </div>
                 </div>
 
                 <!-- Gráfico 2: Por Valoración -->
-                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #232D4F;">
+                <div class="card-modern p-5 flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #232D4F;">
                     <div>
                         <h3 class="text-lg font-bold text-[#232D4F] mb-1">Distribución por Valoración</h3>
-                        <p class="text-xs text-gray-500 mb-4">Haz clic en un sector para filtrar.</p>
+                        <p class="text-xs text-gray-500">Haz clic en un sector para filtrar.</p>
                     </div>
-                    <div class="relative h-72 flex justify-center">
+                    <div id="container-chartValoracion" class="relative h-72 w-full flex items-center justify-center">
                         <canvas id="chartValoracion"></canvas>
                     </div>
                 </div>
             </div>
 
             <!-- Maps Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 border-t-2 pt-2" style="border-top-color: transparent;">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Mapa Positivo -->
-                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #5CB85C;">
+                <div class="card-modern p-5 flex flex-col justify-between border-t-2" style="border-top-color: #5CB85C;">
                     <div>
                         <h3 class="text-lg font-bold text-[#232D4F] mb-1">Mapa de Noticias Positivas</h3>
-                        <p class="text-xs text-gray-500 mb-4">A mayor intensidad, más menciones. Haz clic en una provincia para filtrar.</p>
+                        <p class="text-xs text-gray-500 mb-4">Haz clic en una provincia para filtrar. Haz clic nuevamente para restaurar.</p>
                     </div>
                     <div class="relative h-80 flex justify-center w-full">
-                        <div id="map-positive" class="w-full h-full flex items-center justify-center"></div>
+                        <div id="map-positive" class="map-container w-full h-full flex items-center justify-center"></div>
                     </div>
                 </div>
 
                 <!-- Mapa Negativo -->
-                <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-between border-t-2" style="border-top-color: #D9534F;">
+                <div class="card-modern p-5 flex flex-col justify-between border-t-2" style="border-top-color: #D9534F;">
                     <div>
                         <h3 class="text-lg font-bold text-[#232D4F] mb-1">Mapa de Noticias Negativas</h3>
-                        <p class="text-xs text-gray-500 mb-4">A mayor intensidad, más menciones. Haz clic en una provincia para filtrar.</p>
+                        <p class="text-xs text-gray-500 mb-4">Haz clic en una provincia para filtrar. Haz clic nuevamente para restaurar.</p>
                     </div>
                     <div class="relative h-80 flex justify-center w-full">
-                        <div id="map-negative" class="w-full h-full flex items-center justify-center"></div>
+                        <div id="map-negative" class="map-container w-full h-full flex items-center justify-center"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Charts Section 3: Top Medios -->
-            <div class="bg-white p-5 rounded-lg shadow border-t-2" style="border-top-color: #232D4F;">
+            <div class="card-modern p-5 border-t-2" style="border-top-color: #232D4F;">
                 <div>
                     <h3 class="text-lg font-bold text-[#232D4F] mb-1">Top Medios con Mayor Cobertura</h3>
-                    <p class="text-xs text-gray-500 mb-4">Medios de comunicación con más registros.</p>
+                    <p class="text-xs text-gray-500 mb-4">Medios de comunicación con más registros. Haz clic para filtrar.</p>
                 </div>
-                <div class="relative h-80">
+                <div id="container-chartMedios" class="relative min-h-[280px]">
                     <canvas id="chartMedios"></canvas>
                 </div>
             </div>
 
             <!-- Nube de Tags (Columnas F, G y H) -->
-            <div class="bg-white p-5 rounded-lg shadow border-t-2" style="border-top-color: #E7BA61;">
+            <div class="card-modern p-5 border-l-4" style="border-left-color: #E7BA61;">
                 <h3 class="text-lg font-bold text-[#232D4F] mb-1">Nube de Tags</h3>
                 <p class="text-xs text-gray-500 mb-4">Haz clic en cualquier tag para filtrar instantáneamente el tablero.</p>
-                <div id="word-cloud-container" class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded border border-gray-100 overflow-hidden"></div>
+                <div id="word-cloud-container" class="flex flex-wrap gap-2 p-4 bg-gray-50 rounded border border-gray-100 overflow-hidden"></div>
             </div>
 
             <!-- Data Table Section -->
-            <div class="bg-white rounded-lg shadow overflow-hidden border-t-2" style="border-top-color: #232D4F;">
+            <div class="card-modern overflow-hidden border-t-2" style="border-top-color: #232D4F;">
                 <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold text-[#232D4F]">Detalle de Registros</h3>
@@ -301,10 +325,83 @@
         let charts = {};
         let currentFilters = {};
         let googleChartsLoaded = false;
+        let chartObserver = null;
+
+        // Mapeo ISO de provincias argentinas
+        const PROVINCE_ISO_MAP = {
+            "BUENOS AIRES": "AR-B",
+            "CABA": "AR-C",
+            "CIUDAD AUTONOMA DE BUENOS AIRES": "AR-C",
+            "CATAMARCA": "AR-K",
+            "CHACO": "AR-H",
+            "CHUBUT": "AR-U",
+            "CORDOBA": "AR-X",
+            "CORRIENTES": "AR-W",
+            "ENTRE RIOS": "AR-E",
+            "FORMOSA": "AR-P",
+            "JUJUY": "AR-Y",
+            "LA PAMPA": "AR-L",
+            "LA RIOJA": "AR-F",
+            "MENDOZA": "AR-M",
+            "MISIONES": "AR-N",
+            "NEUQUEN": "AR-Q",
+            "RIO NEGRO": "AR-R",
+            "SALTA": "AR-A",
+            "SAN JUAN": "AR-J",
+            "SAN LUIS": "AR-D",
+            "SANTA CRUZ": "AR-Z",
+            "SANTA FE": "AR-S",
+            "SANTIAGO DEL ESTERO": "AR-G",
+            "TIERRA DEL FUEGO": "AR-V",
+            "TUCUMAN": "AR-T"
+        };
 
         function execCmd(command, value = null) {
             document.execCommand(command, false, value);
         }
+
+        // Configuración Global de Chart.js con la animación predeterminada de Dashboard Voceros
+        function configureGlobalChartDefaults() {
+            if (typeof Chart === 'undefined') return;
+            Chart.defaults.color = '#475569';
+            Chart.defaults.font.family = "'Montserrat', sans-serif";
+            Chart.defaults.font.size = 12;
+
+            Chart.defaults.animation.duration = 1800;
+            Chart.defaults.animation.easing = 'easeInOutQuart';
+
+            Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(35, 45, 79, 0.95)';
+            Chart.defaults.plugins.tooltip.titleFont = { family: 'Lora', size: 13, weight: 'bold' };
+            Chart.defaults.plugins.tooltip.bodyFont = { family: 'Montserrat', size: 12 };
+            Chart.defaults.plugins.tooltip.padding = 10;
+            Chart.defaults.plugins.tooltip.cornerRadius = 8;
+            Chart.defaults.plugins.tooltip.boxPadding = 4;
+        }
+
+        // Plugin con sombra para barras
+        const barElevationPlugin = {
+            id: 'barElevation',
+            afterDatasetsDraw(chart) {
+                const activeElements = chart.getActiveElements();
+                if (!activeElements || activeElements.length === 0) return;
+
+                const ctx = chart.ctx;
+                activeElements.forEach(active => {
+                    const meta = chart.getDatasetMeta(active.datasetIndex);
+                    const element = meta.data[active.index];
+                    if (!element || chart.config.type !== 'bar') return;
+
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(100, 116, 139, 0.35)';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 5;
+
+                    element.draw(ctx);
+                    ctx.restore();
+                });
+            }
+        };
 
         google.charts.load('current', { 'packages': ['geochart'] });
         google.charts.setOnLoadCallback(() => {
@@ -313,6 +410,65 @@
                 renderMaps();
             }
         });
+
+        // Crear gradiente continuo para gráficos de barras
+        function createBarGradient(ctx, chartArea, startColor, endColor, isVertical = false) {
+            if (!chartArea) return startColor;
+            let gradient;
+            if (isVertical) {
+                gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+            } else {
+                gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+            }
+            gradient.addColorStop(0, startColor);
+            gradient.addColorStop(1, endColor);
+            return gradient;
+        }
+
+        // Observador de intersección adaptado exactamente al comportamiento de Dashboard Voceros
+        function setupChartObserver() {
+            if (chartObserver) chartObserver.disconnect();
+
+            const canvases = document.querySelectorAll('canvas');
+
+            if ('IntersectionObserver' in window) {
+                chartObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const target = entry.target;
+
+                        if (entry.isIntersecting) {
+                            if (target.tagName.toLowerCase() === 'canvas') {
+                                target.style.opacity = '1';
+                                const chart = Chart.getChart(target);
+                                if (chart) {
+                                    chart.options.animation = {
+                                        duration: 1800,
+                                        easing: 'easeInOutQuart',
+                                        animateRotate: true,
+                                        animateScale: true
+                                    };
+                                    chart.reset();
+                                    chart.update();
+                                }
+                            } else if (target.classList.contains('map-container')) {
+                                target.classList.add('animated');
+                            }
+                            chartObserver.unobserve(target);
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                canvases.forEach(canvas => {
+                    canvas.style.opacity = '0';
+                    chartObserver.observe(canvas);
+                });
+                document.querySelectorAll('.map-container').forEach(mc => {
+                    chartObserver.observe(mc);
+                });
+            } else {
+                canvases.forEach(canvas => canvas.style.opacity = '1');
+            }
+        }
 
         const uploadSection = document.getElementById('upload-section');
         const fileInput = document.getElementById('excel-file');
@@ -364,6 +520,9 @@
                     if (uploadSection) uploadSection.classList.add('hidden');
                     if (dashboardContent) dashboardContent.classList.remove('hidden');
 
+                    configureGlobalChartDefaults();
+                    if (typeof Chart !== 'undefined') Chart.register(barElevationPlugin);
+
                     updateDashboard();
                 } catch (error) {
                     alert("Error al procesar el archivo Excel: " + error.message);
@@ -381,6 +540,24 @@
             renderTable();
             updateInsights();
             updateFilterUI();
+            setupChartObserver();
+        }
+
+        function getProvColumnHeader() {
+            let provCol = headers.length >= 5 ? headers[4] : null;
+            if (!provCol) {
+                provCol = headers.find(h => /provincia|ubicación|jurisdicción/i.test(h));
+            }
+            return provCol;
+        }
+
+        function normalizeProvName(name) {
+            if (!name) return "";
+            return String(name).toUpperCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/^PROVINCIA DE\s+/, "")
+                .replace(/^PROVINCIA\s+/, "")
+                .trim();
         }
 
         function applyFilters() {
@@ -388,7 +565,7 @@
                 for (let key in currentFilters) {
                     if (key === 'Tag') {
                         const targetTag = String(currentFilters['Tag']).toLowerCase().trim();
-                        const tagIndexes = [5, 6, 7]; // Columnas F, G, H
+                        const tagIndexes = [5, 6, 7];
                         const match = tagIndexes.some(idx => {
                             const colHeader = headers[idx];
                             if (!colHeader) return false;
@@ -400,7 +577,12 @@
                         const filterVal = String(currentFilters['Valoración'] || '').toUpperCase().trim();
                         if (rowVal !== filterVal) return false;
                     } else {
-                        if (String(row[key] || '').trim() !== String(currentFilters[key] || '').trim()) {
+                        const provCol = getProvColumnHeader();
+                        if (key === provCol) {
+                            if (normalizeProvName(row[key]) !== normalizeProvName(currentFilters[key])) {
+                                return false;
+                            }
+                        } else if (String(row[key] || '').trim() !== String(currentFilters[key] || '').trim()) {
                             return false;
                         }
                     }
@@ -425,12 +607,75 @@
 
         function renderCharts() {
             if (typeof Chart === 'undefined') return;
-            renderBarChart('chartSeccion', 'Sección', '#232D4F', null);
+            renderVerticalBarChart('chartSeccion', 'Sección', '#232D4F', '#475684');
             renderValuationChart('chartValoracion');
-            renderBarChart('chartMedios', 'Medio', '#232D4F', 20);
+            renderHorizontalBarChart('chartMedios', 'Medio', '#E7BA61', '#F5D899', 20);
         }
 
-        function renderBarChart(canvasId, column, color, limit) {
+        function renderVerticalBarChart(canvasId, column, startColor, endColor) {
+            const canvasElem = document.getElementById(canvasId);
+            if (!canvasElem) return;
+            const ctx = canvasElem.getContext('2d');
+            const counts = {};
+            
+            filteredData.forEach(row => {
+                let val = row[column] || 'No especificado';
+                counts[val] = (counts[val] || 0) + 1;
+            });
+
+            let sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+
+            const labels = sorted.map(item => item[0]);
+            const data = sorted.map(item => item[1]);
+
+            if (charts[canvasId]) charts[canvasId].destroy();
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Registros',
+                        data: data,
+                        backgroundColor: (context) => createBarGradient(context.chart.ctx, context.chart.chartArea, startColor, endColor, true),
+                        hoverBackgroundColor: '#475684',
+                        hoverBorderColor: '#94a3b8',
+                        hoverBorderWidth: 1,
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                            ticks: { precision: 0 } 
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            currentFilters[column] = labels[index];
+                            updateDashboard();
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderHorizontalBarChart(canvasId, column, startColor, endColor, limit) {
             const canvasElem = document.getElementById(canvasId);
             if (!canvasElem) return;
             const ctx = canvasElem.getContext('2d');
@@ -447,6 +692,12 @@
             const labels = sorted.map(item => item[0]);
             const data = sorted.map(item => item[1]);
 
+            const container = canvasElem.parentElement;
+            if (container) {
+                const calculatedHeight = Math.max(280, sorted.length * 28);
+                container.style.height = `${calculatedHeight}px`;
+            }
+
             if (charts[canvasId]) charts[canvasId].destroy();
 
             charts[canvasId] = new Chart(ctx, {
@@ -454,18 +705,33 @@
                 data: {
                     labels: labels,
                     datasets: [{
+                        label: 'Registros',
                         data: data,
-                        backgroundColor: color,
-                        borderRadius: 4
+                        backgroundColor: (context) => createBarGradient(context.chart.ctx, context.chart.chartArea, startColor, endColor, false),
+                        hoverBackgroundColor: '#F3CE83',
+                        hoverBorderColor: '#94a3b8',
+                        hoverBorderWidth: 1,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barThickness: 16
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    indexAxis: 'y',
+                    plugins: { 
+                        legend: { display: false }
+                    },
                     scales: {
-                        x: { ticks: { font: { size: 10, family: 'Montserrat' }, maxRotation: 30 } },
-                        y: { beginAtZero: true }
+                        x: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                            ticks: { precision: 0, stepSize: 1 } 
+                        },
+                        y: { 
+                            grid: { display: false }
+                        }
                     },
                     onClick: (event, elements) => {
                         if (elements.length > 0) {
@@ -495,11 +761,8 @@
 
             const labels = Object.keys(counts);
             const data = Object.values(counts);
-            const backgroundColors = labels.map(l => {
-                if (l === 'POSITIVO') return '#5CB85C';
-                if (l === 'NEGATIVO') return '#D9534F';
-                return '#7F8C8D';
-            });
+            const backgroundColors = ['#5CB85C', '#94A3B8', '#D9534F'];
+            const hoverColors = ['#4cae4c', '#64748b', '#d43f3a'];
 
             if (charts[canvasId]) charts[canvasId].destroy();
 
@@ -509,14 +772,26 @@
                     labels: labels,
                     datasets: [{
                         data: data,
-                        backgroundColor: backgroundColors
+                        backgroundColor: backgroundColors,
+                        hoverBackgroundColor: hoverColors,
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        hoverOffset: 12
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '72%',
                     plugins: { 
-                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, family: 'Montserrat' } } } 
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { 
+                                padding: 15,
+                                usePointStyle: true,
+                                font: { size: 12, family: 'Montserrat', weight: '500' } 
+                            } 
+                        }
                     },
                     onClick: (event, elements) => {
                         if (elements.length > 0) {
@@ -530,13 +805,9 @@
         }
 
         function renderMaps() {
-            if (!window.google || !google.visualization || !google.visualization.arrayToDataTable) return;
+            if (!window.google || !google.visualization || !google.visualization.DataTable) return;
 
-            let provCol = headers.length >= 5 ? headers[4] : null;
-            if (!provCol) {
-                provCol = headers.find(h => /provincia|ubicación|jurisdicción/i.test(h));
-            }
-
+            let provCol = getProvColumnHeader();
             let posMapElement = document.getElementById('map-positive');
             let negMapElement = document.getElementById('map-negative');
 
@@ -550,35 +821,49 @@
             let negCounts = {};
 
             filteredData.forEach(row => {
-                let prov = row[provCol];
-                if (!prov) return;
+                let provRaw = row[provCol];
+                if (!provRaw) return;
+                let norm = normalizeProvName(provRaw);
                 
                 let val = String(row['Valoración'] || '').toUpperCase().trim();
                 if (val === 'POSITIVO') {
-                    posCounts[prov] = (posCounts[prov] || 0) + 1;
+                    posCounts[norm] = (posCounts[norm] || 0) + 1;
                 } else if (val === 'NEGATIVO') {
-                    negCounts[prov] = (negCounts[prov] || 0) + 1;
+                    negCounts[norm] = (negCounts[norm] || 0) + 1;
                 }
             });
 
-            let posDataArr = [['Provincia', 'Menciones Positivas']];
-            for (let p in posCounts) posDataArr.push([p, posCounts[p]]);
-            if (posDataArr.length === 1) posDataArr.push(['Argentina', 0]);
+            let posData = new google.visualization.DataTable();
+            posData.addColumn('string', 'Provincia');
+            posData.addColumn('number', 'Menciones Positivas');
 
-            let negDataArr = [['Provincia', 'Menciones Negativas']];
-            for (let p in negCounts) negDataArr.push([p, negCounts[p]]);
-            if (negDataArr.length === 1) negDataArr.push(['Argentina', 0]);
+            for (let norm in posCounts) {
+                let code = PROVINCE_ISO_MAP[norm] || norm;
+                posData.addRow([{ v: code, f: norm }, posCounts[norm]]);
+            }
+            if (posData.getNumberOfRows() === 0) {
+                posData.addRow([{ v: 'AR', f: 'Argentina' }, 0]);
+            }
 
-            let posData = google.visualization.arrayToDataTable(posDataArr);
-            let negData = google.visualization.arrayToDataTable(negDataArr);
+            let negData = new google.visualization.DataTable();
+            negData.addColumn('string', 'Provincia');
+            negData.addColumn('number', 'Menciones Negativas');
+
+            for (let norm in negCounts) {
+                let code = PROVINCE_ISO_MAP[norm] || norm;
+                negData.addRow([{ v: code, f: norm }, negCounts[norm]]);
+            }
+            if (negData.getNumberOfRows() === 0) {
+                negData.addRow([{ v: 'AR', f: 'Argentina' }, 0]);
+            }
 
             let posOptions = {
                 region: 'AR',
                 resolution: 'provinces',
-                colorAxis: {colors: ['#e5f5e0', '#006d2c']},
+                colorAxis: {colors: ['#e5f5e0', '#2ea043']},
                 backgroundColor: 'transparent',
-                datalessRegionColor: '#f4f5f7',
-                defaultColor: '#f4f5f7',
+                datalessRegionColor: '#f8fafc',
+                defaultColor: '#f8fafc',
                 legend: 'none',
                 tooltip: { textStyle: { fontName: 'Montserrat' } }
             };
@@ -586,10 +871,10 @@
             let negOptions = {
                 region: 'AR',
                 resolution: 'provinces',
-                colorAxis: {colors: ['#fee0d2', '#de2d26']},
+                colorAxis: {colors: ['#fee0d2', '#d7191c']},
                 backgroundColor: 'transparent',
-                datalessRegionColor: '#f4f5f7',
-                defaultColor: '#f4f5f7',
+                datalessRegionColor: '#f8fafc',
+                defaultColor: '#f8fafc',
                 legend: 'none',
                 tooltip: { textStyle: { fontName: 'Montserrat' } }
             };
@@ -603,27 +888,33 @@
             posChart.draw(posData, posOptions);
             negChart.draw(negData, negOptions);
 
-            google.visualization.events.addListener(posChart, 'select', function() {
-                var selection = posChart.getSelection();
+            function handleMapSelect(chart, dataTable) {
+                var selection = chart.getSelection();
                 if (selection.length > 0) {
-                    var province = posData.getValue(selection[0].row, 0);
-                    if(province !== 'Argentina') {
-                        currentFilters[provCol] = province;
-                        updateDashboard();
-                    }
-                }
-            });
+                    var selectedValue = dataTable.getValue(selection[0].row, 0);
+                    var formattedValue = dataTable.getFormattedValue(selection[0].row, 0);
+                    let foundProvName = formattedValue || selectedValue;
 
-            google.visualization.events.addListener(negChart, 'select', function() {
-                var selection = negChart.getSelection();
-                if (selection.length > 0) {
-                    var province = negData.getValue(selection[0].row, 0);
-                    if(province !== 'Argentina') {
-                        currentFilters[provCol] = province;
-                        updateDashboard();
+                    if (foundProvName === selectedValue) {
+                        for (let name in PROVINCE_ISO_MAP) {
+                            if (PROVINCE_ISO_MAP[name] === selectedValue) {
+                                foundProvName = name;
+                                break;
+                            }
+                        }
                     }
+
+                    if (currentFilters[provCol] && normalizeProvName(currentFilters[provCol]) === normalizeProvName(foundProvName)) {
+                        delete currentFilters[provCol];
+                    } else {
+                        currentFilters[provCol] = foundProvName;
+                    }
+                    updateDashboard();
                 }
-            });
+            }
+
+            google.visualization.events.addListener(posChart, 'select', () => handleMapSelect(posChart, posData));
+            google.visualization.events.addListener(negChart, 'select', () => handleMapSelect(negChart, negData));
         }
 
         function renderWordCloud() {
@@ -632,7 +923,7 @@
             container.innerHTML = '';
 
             const tagCounts = {};
-            const tagIndexes = [5, 6, 7]; // Columnas F, G, H (base 0)
+            const tagIndexes = [5, 6, 7];
 
             filteredData.forEach(row => {
                 tagIndexes.forEach(idx => {
@@ -704,15 +995,15 @@
             let negPct = totalVal > 0 ? ((valCounts['NEGATIVO'] / totalVal) * 100).toFixed(1) : 0;
             let posPct = totalVal > 0 ? ((valCounts['POSITIVO'] / totalVal) * 100).toFixed(1) : 0;
 
-            let html = `<p>• Se analizan <strong>${filteredData.length.toLocaleString()}</strong> registros totales.</p>`;
+            let html = `<p class="mb-1">• Se analizan <strong>${filteredData.length.toLocaleString()}</strong> registros totales.</p>`;
             if (topSec) {
-                html += `<p>• La sección principal es <strong>${topSec[0]}</strong> (${topSec[1]} menciones).</p>`;
+                html += `<p class="mb-1">• La sección principal es <strong>${topSec[0]}</strong> (${topSec[1]} menciones).</p>`;
             }
             if (topTag) {
-                html += `<p>• El tag más recurrente es <strong>"${topTag[0]}"</strong> (${topTag[1]} menciones acumuladas).</p>`;
+                html += `<p class="mb-1">• El tag más recurrente es <strong>"${topTag[0]}"</strong> (${topTag[1]} menciones acumuladas).</p>`;
             }
-            html += `<p>• Distribución de tono: <strong>${posPct}%</strong> positivo y <strong>${negPct}%</strong> negativo.</p>`;
-            html += `<p class="text-xs text-gray-400 mt-2">💡 Haz clic en cualquier gráfico o tag para profundizar tu análisis.</p>`;
+            html += `<p class="mb-1">• Distribución de tono: <strong>${posPct}%</strong> positivo y <strong>${negPct}%</strong> negativo.</p>`;
+            html += `<p class="text-xs text-gray-500 mt-2 italic">💡 Haz clic en cualquier gráfico o tag para profundizar tu análisis.</p>`;
 
             container.innerHTML = html;
         }
@@ -747,7 +1038,7 @@
 
             let bodyHTML = '';
             rowsToDisplay.forEach(row => {
-                bodyHTML += '<tr class="hover:bg-gray-50">';
+                bodyHTML += '<tr class="hover:bg-gray-50 border-b border-gray-100">';
                 headers.forEach(h => {
                     let val = row[h] !== undefined ? row[h] : '';
                     if (h === 'Valoración') {
@@ -756,7 +1047,7 @@
                         if (vUpper === 'POSITIVO') colorClass = 'bg-green-100 text-green-800';
                         else if (vUpper === 'NEGATIVO') colorClass = 'bg-red-100 text-red-800';
                         else if (vUpper === 'NEUTRO') colorClass = 'bg-gray-200 text-gray-700';
-                        val = `<span class="px-2 py-0.5 rounded text-xs font-semibold ${colorClass}">${val}</span>`;
+                        val = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold ${colorClass}">${val}</span>`;
                     }
                     bodyHTML += `<td class="px-4 py-2.5 text-xs text-gray-700">${val}</td>`;
                 });
@@ -779,9 +1070,9 @@
             filterBar.classList.remove('hidden');
             let html = '';
             for (let key in currentFilters) {
-                html += `<span class="bg-blue-50 text-[#232D4F] border border-[#232D4F]/20 text-xs font-semibold px-2.5 py-1 rounded flex items-center gap-1">
-                    ${key}: <strong>${currentFilters[key]}</strong>
-                    <button onclick="removeFilter('${key}')" class="ml-1 text-[#232D4F] hover:text-red-700 font-bold">&times;</button>
+                html += `<span class="bg-[#232D4F] text-white text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                    ${key}: <strong class="text-[#E7BA61]">${currentFilters[key]}</strong>
+                    <button onclick="removeFilter('${key}')" class="ml-1 text-gray-300 hover:text-white font-bold">&times;</button>
                 </span>`;
             }
             container.innerHTML = html;
@@ -842,66 +1133,46 @@
                     if (editorToolbar) editorToolbar.remove();
                     if (notesEditor) {
                         notesEditor.removeAttribute('contenteditable');
-                        notesEditor.classList.remove('bg-gray-50', 'outline-none');
-                        notesEditor.classList.add('bg-white');
+                        notesEditor.classList.remove('bg-gray-50', 'focus:bg-white', 'focus:border-[#232D4F]');
                     }
                 }
 
-                const exportContainer = cloneDoc.getElementById('export-section-container');
-                if (exportContainer) exportContainer.remove();
+                const exportSec = cloneDoc.getElementById('export-section-container');
+                if (exportSec) exportSec.remove();
 
-                const safeRawData = JSON.stringify(rawData).replace(/</g, '\\u003c');
-                const safeHeaders = JSON.stringify(headers).replace(/</g, '\\u003c');
+                const scriptTag = cloneDoc.createElement('script');
+                scriptTag.textContent = `
+                    window.addEventListener('DOMContentLoaded', () => {
+                        rawData = ${JSON.stringify(rawData)};
+                        filteredData = [...rawData];
+                        headers = ${JSON.stringify(headers)};
+                        
+                        const uploadSec = document.getElementById('upload-section');
+                        if (uploadSec) uploadSec.style.display = 'none';
+                        const dashContent = document.getElementById('dashboard-content');
+                        if (dashContent) dashContent.classList.remove('hidden');
 
-                const injectionScript = cloneDoc.createElement('script');
-                injectionScript.textContent = `
-                    window.isExportedReport = true;
-                    window.preloadedRawData = ${safeRawData};
-                    window.preloadedHeaders = ${safeHeaders};
-                `;
-                cloneDoc.body.appendChild(injectionScript);
+                        configureGlobalChartDefaults();
+                        if (typeof Chart !== 'undefined') Chart.register(barElevationPlugin);
 
-                const htmlContent = "<!DOCTYPE html>\n" + cloneDoc.documentElement.outerHTML;
-
-                const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `Informe_Agenda_Temas_${new Date().toISOString().slice(0,10)}.html`;
-                document.body.appendChild(link);
-                link.click();
-                
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                }, 100);
-            } catch (err) {
-                alert("Error al generar la exportación: " + err.message);
-            }
-        }
-
-        function initExportedReport() {
-            if (window.isExportedReport && window.preloadedRawData && window.preloadedRawData.length > 0) {
-                rawData = window.preloadedRawData;
-                headers = window.preloadedHeaders;
-                filteredData = [...rawData];
-                
-                if (uploadSection) uploadSection.classList.add('hidden');
-                if (dashboardContent) dashboardContent.classList.remove('hidden');
-                
-                const checkLibs = setInterval(() => {
-                    if (typeof Chart !== 'undefined') {
-                        clearInterval(checkLibs);
                         updateDashboard();
-                    }
-                }, 100);
-            }
-        }
+                    });
+                `;
+                cloneDoc.body.appendChild(scriptTag);
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initExportedReport);
-        } else {
-            initExportedReport();
+                const htmlString = '<!DOCTYPE html>\n' + cloneDoc.documentElement.outerHTML;
+                const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Informe_Interior_Interactivo.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                alert("Error al exportar: " + e.message);
+            }
         }
     </script>
 </body>
