@@ -101,7 +101,7 @@
         <!-- Dashboard Content -->
         <div id="dashboard-content" class="hidden space-y-6">
 
-            <!-- Filtros Activos Flotantes (Multi-filtro identico al Dashboard Interior) -->
+            <!-- Filtros Activos Flotantes -->
             <div id="filter-bar-container" class="sticky top-0 z-50 hidden bg-white/95 backdrop-blur-md p-4 rounded-lg shadow-lg flex flex-wrap justify-between items-center gap-4 border-l-4 border-b border-gray-200 transition-all" style="border-left-color: #E7BA61;">
                 <div class="flex items-center space-x-2">
                     <span class="font-bold text-sm text-gray-600">Filtros Activos:</span>
@@ -232,11 +232,11 @@
                 </div>
             </div>
 
-            <!-- Gráfico de Frecuencia de Temas -->
+            <!-- Gráfico de Frecuencia de Temas (Solamente Tema 1 y Tema 2) -->
             <div class="bg-white p-5 rounded-lg shadow flex flex-col justify-start gap-4 border-t-2" style="border-top-color: #E7BA61;">
                 <div>
                     <h3 class="text-lg font-bold text-[#232D4F] mb-1">Frecuencia de Temas</h3>
-                    <p class="text-xs text-gray-500">Visualización de la presencia acumulada de temas. Haz clic en una barra para filtrar.</p>
+                    <p class="text-xs text-gray-500">Visualización de la presencia acumulada de temas principales. Haz clic en una barra para filtrar.</p>
                 </div>
                 <div id="chartTopicsContainer" class="relative min-h-[280px]">
                     <canvas id="chartTopics"></canvas>
@@ -289,7 +289,6 @@
         let charts = {};
         let chartObserver = null;
 
-        // Plugin con sombra ejecutado antes de dibujar los tooltips (afterDatasetsDraw)
         const barElevationPlugin = {
             id: 'barElevation',
             afterDatasetsDraw(chart) {
@@ -448,10 +447,9 @@
 
             if (headerIdx === -1) return [];
 
+            // Únicamente Tema 1 y Tema 2 (columnas 5 y 6)
             if (!headers[5] || headers[5].startsWith('Col_')) headers[5] = "Tema 1";
             if (!headers[6] || headers[6].startsWith('Col_')) headers[6] = "Tema 2";
-            if (!headers[7] || headers[7].startsWith('Col_')) headers[7] = "Tema 3";
-            if (!headers[8] || headers[8].startsWith('Col_')) headers[8] = "Tema 4";
 
             let result = [];
             let currentSection = "General";
@@ -470,14 +468,21 @@
 
                 if (row.some(c => c !== undefined && c !== null && String(c).trim() !== "")) {
                     let item = { "Sección": currentSection };
+                    
+                    // Excluimos explícitamente Tema 3 y Tema 4 de los objetos devueltos y de la tabla
                     headers.forEach((h, idx) => {
+                        let lowerH = String(h || '').toLowerCase().trim();
+                        if (lowerH.includes('tema 3') || lowerH.includes('tema 4') || lowerH.includes('tema3') || lowerH.includes('tema4')) {
+                            return;
+                        }
                         let val = row[idx];
                         item[h] = formatCellValue(val, h);
                     });
 
                     item['_first_col_header'] = headers[0];
 
-                    let explicitTopics = [5, 6, 7, 8].map(colIdx => {
+                    // Se toman solo índices 5 y 6 (Tema 1 y Tema 2)
+                    let explicitTopics = [5, 6].map(colIdx => {
                         let val = row[colIdx];
                         return formatCellValue(val, headers[colIdx]);
                     }).filter(v => v !== "" && v !== "-" && v.toLowerCase() !== "no definido");
@@ -508,6 +513,12 @@
             for (let k in row) {
                 if (k.startsWith('_')) continue;
                 let lowerK = k.toLowerCase().trim();
+                
+                // Excluir cualquier coincidencia residual de Tema 3 o Tema 4
+                if (lowerK.includes('tema 3') || lowerK.includes('tema 4') || lowerK.includes('tema3') || lowerK.includes('tema4')) {
+                    continue;
+                }
+
                 if (lowerK.includes('tema') || lowerK.includes('eje') || lowerK.includes('subtema') || lowerK.includes('categoría') || lowerK.includes('categoria')) {
                     let val = String(row[k] || '').trim();
                     if (val && val !== '-' && val.toLowerCase() !== 'no definido' && !topics.includes(val)) {
@@ -600,7 +611,6 @@
             document.getElementById('dynamic-conclusions').innerHTML = html;
         }
 
-        // Lógica de Filtros Múltiples (Adaptado exactamente del Dashboard Interior)
         function matchesFilter(row, type, val) {
             if (type === 'Sección') return (row['Sección'] || 'General') === val;
             if (type === 'Tipo de Medio') return getVal(row, ['tipo de medio', 'tipo', 'formato']) === val;
@@ -739,7 +749,7 @@
             const actorHeight = Math.max(280, actorData.length * 28);
             document.getElementById('chartActoresContainer').style.height = `${actorHeight}px`;
 
-            // 3. Medios Completos
+            // 3. Medios
             charts.media = new Chart(document.getElementById('chartMedia').getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -769,7 +779,7 @@
                 }
             });
 
-            // 4. Actores Completos
+            // 4. Actores
             charts.actores = new Chart(document.getElementById('chartActores').getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -800,7 +810,6 @@
             });
         }
 
-        // Gráfico de Barras Discretas: Evolución Temporal Diaria
         function renderTimelineChart(dateSortedData) {
             const canvas = document.getElementById('chartTimeline');
             if (!canvas) return;
@@ -853,7 +862,7 @@
             });
         }
 
-        // Gráfico de Frecuencia de Temas
+        // Gráfico de Temas basado únicamente en Tema 1 y Tema 2
         function renderTopicsChart(topicSortedData) {
             const container = document.getElementById('chartTopicsContainer');
             if (!topicSortedData || topicSortedData.length === 0) {
@@ -898,7 +907,6 @@
             });
         }
 
-        // Observador de intersección que ejecuta la animación UNA SOLA VEZ por gráfico
         function setupChartObserver() {
             if (chartObserver) chartObserver.disconnect();
 
